@@ -54,6 +54,7 @@ from chirp.wxui import radiothread
 from chirp.wxui import report
 from chirp.wxui import serialtrace
 from chirp.wxui import settingsedit
+from chirp.wxui import theme
 from chirp import CHIRP_VERSION
 
 EditorSetChanged, EVT_EDITORSET_CHANGED = wx.lib.newevent.NewCommandEvent()
@@ -379,11 +380,13 @@ class ChirpLiveEditorSet(ChirpEditorSet):
         return any(t.pending != 0 for t in self._threads)
 
 
-class ChirpWelcomePanel(wx.Panel):
-    """Fake "editorset" that just displays the welcome image."""
+class ChirpWelcomePanel(theme.NVGPanel):
+    """Fake "editorset" that just displays the welcome screen."""
 
     def __init__(self, *a, **k):
         super(ChirpWelcomePanel, self).__init__(*a, **k)
+        self._cable_text = ''
+        self._cable_level = 'warn'
 
         vbox = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(vbox)
@@ -391,8 +394,9 @@ class ChirpWelcomePanel(wx.Panel):
         # Quick actions for the most common tasks, so a new user does not
         # have to find them in the menus
         actions = wx.BoxSizer(wx.HORIZONTAL)
-        vbox.Add(actions, border=12, flag=wx.ALL | wx.ALIGN_CENTER_HORIZONTAL)
+        self._actions = actions
         frame = wx.GetTopLevelParent(self)
+        self._buttons = []
         for ident, label, art, tip in (
                 (getattr(frame, '_download_menu_item', None),
                  _('Download from radio'), wx.ART_GO_DOWN,
@@ -401,16 +405,36 @@ class ChirpWelcomePanel(wx.Panel):
                  _('Open a saved radio image or CSV file'))):
             if ident is None:
                 continue
-            btn = wx.Button(self, label=label)
-            btn.SetBitmap(wx.ArtProvider.GetBitmapBundle(art, wx.ART_BUTTON,
-                                                         (24, 24)))
+            btn = wx.Button(self, label=theme.label(label))
+            if theme.enabled():
+                btn.SetBitmap(theme.art(art, wx.ART_BUTTON, (24, 24),
+                                        'accent'))
+                btn.SetFont(theme.mono_font(12, bold=True))
+            else:
+                btn.SetBitmap(wx.ArtProvider.GetBitmapBundle(
+                    art, wx.ART_BUTTON, (24, 24)))
+                font = btn.GetFont()
+                font.SetPointSize(font.GetPointSize() + 2)
+                btn.SetFont(font)
+            btn._nvg_keep_font = True
             btn.SetToolTip(tip)
-            font = btn.GetFont()
-            font.SetPointSize(font.GetPointSize() + 2)
-            btn.SetFont(font)
             btn.Bind(wx.EVT_BUTTON,
                      functools.partial(self._post_menu, frame, ident))
             actions.Add(btn, border=8, flag=wx.LEFT | wx.RIGHT)
+            self._buttons.append(btn)
+
+        if theme.enabled():
+            # Everything else is painted (see paint_extra); the buttons sit
+            # between the title and the reticle.
+            self._top_space = vbox.AddSpacer(10)
+            vbox.Add(actions, flag=wx.ALIGN_CENTER_HORIZONTAL)
+            vbox.AddStretchSpacer()
+            for btn in self._buttons:
+                theme.apply(btn)
+            self.Bind(wx.EVT_SIZE, self._nvg_resized)
+            return
+
+        vbox.Add(actions, border=12, flag=wx.ALL | wx.ALIGN_CENTER_HORIZONTAL)
 
         # Search for welcome_screen_en_US, welcome_screen_en, welcome_screen
         locale = wx.App.Get()._lc.GetCanonicalName()
@@ -432,6 +456,66 @@ class ChirpWelcomePanel(wx.Panel):
     @staticmethod
     def _post_menu(frame, ident, event):
         wx.PostEvent(frame, wx.CommandEvent(wx.wxEVT_MENU, ident))
+
+    RETICLE_AT = (0.5, 0.64)
+
+    def _title_height(self):
+        return max(150, int(self.GetClientSize()[1] * 0.25))
+
+    def _nvg_resized(self, event):
+        self._top_space.AssignSpacer((10, self._title_height()))
+        self.Layout()
+        self.Refresh()
+        event.Skip()
+
+    def set_cable(self, text, level):
+        """Shown inside the reticle (night vision theme only)"""
+        self._cable_text = text
+        self._cable_level = level
+        self.Refresh()
+
+    def paint_extra(self, dc, w, h):
+        cx, cy, r = self.reticle()
+        y = max(24, self._title_height() - 130)
+        y += self.draw_centered(dc, 'CHIRP', theme.stencil_font(48),
+                                theme.colour('accent'), w // 2, y)
+        self.draw_centered(dc, _('RADIO PROGRAMMER') + '  //  NVG',
+                           theme.mono_font(12, bold=True),
+                           theme.colour('dim'), w // 2, y + 2)
+
+        # Cable status, "target acquired" style
+        level = {'good': 'accent', 'warn': 'warn',
+                 'bad': 'bad'}.get(self._cable_level, 'fg')
+        status = self._cable_text or _('Searching for cables...')
+        font = theme.mono_font(13, bold=True)
+        dc.SetFont(font)
+        th = dc.GetTextExtent(status)[1]
+        self.draw_centered(dc, status.upper(), font, theme.colour(level),
+                           cx, cy - th // 2)
+        marker = ({'good': _('READY'), 'warn': _('STANDBY'),
+                   'bad': _('NO SIGNAL')}).get(self._cable_level, '')
+        self.draw_centered(dc, '[ %s ]' % marker,
+                           theme.mono_font(10, bold=True),
+                           theme.colour(level), cx, cy + th)
+
+        # Procedure, bottom left
+        font = theme.mono_font(10)
+        lines = [_('PROCEDURE'),
+                 '01  ' + _('Connect the cable to the radio and the PC'),
+                 '02  ' + _('Turn the radio on'),
+                 '03  ' + _('Press DOWNLOAD FROM RADIO')]
+        dc.SetFont(font)
+        lh = dc.GetTextExtent('Ag')[1] + 4
+        y = h - 40 - lh * len(lines)
+        for i, line in enumerate(lines):
+            dc.SetTextForeground(theme.colour('accent' if i == 0 else 'dim'))
+            dc.DrawText(line.upper(), 40, y + i * lh)
+
+        # Version, bottom right
+        dc.SetTextForeground(theme.colour('faint'))
+        text = 'CHIRP %s' % CHIRP_VERSION
+        tw = dc.GetTextExtent(text)[0]
+        dc.DrawText(text.upper(), w - 40 - tw, h - 40 - lh)
 
     def close(self):
         pass
@@ -483,6 +567,9 @@ class ChirpMain(wx.Frame):
             style=(wx.aui.AUI_NB_CLOSE_ON_ALL_TABS |
                    wx.aui.AUI_NB_SCROLL_BUTTONS |
                    wx.aui.AUI_NB_WINDOWLIST_BUTTON))
+        if theme.enabled():
+            self._editors.SetArtProvider(theme.make_tab_art())
+            self._editors.SetBackgroundColour(theme.colour('bg'))
 
         if len(ALL_MAIN_WINDOWS) == 1:
             # Only add the welcome page to the first window opened
@@ -500,6 +587,9 @@ class ChirpMain(wx.Frame):
 
         self.statusbar = self.CreateStatusBar(3)
         self.statusbar.SetStatusWidths([-1, 320, 200])
+        if theme.enabled():
+            self.statusbar.SetFont(theme.mono_font(9))
+        theme.apply(self)
 
         self._update_window_for_editor()
 
@@ -636,6 +726,7 @@ class ChirpMain(wx.Frame):
                                      editorset,
                                      os.path.basename(editorset.filename),
                                      select=select)
+        theme.apply(editorset)
         self.Bind(EVT_EDITORSET_CHANGED, self._editor_changed, editorset)
         self.Bind(common.EVT_STATUS_MESSAGE, self._editor_status, editorset)
         editorset.Bind(common.EVT_EDITOR_REFRESH,
@@ -888,6 +979,13 @@ class ChirpMain(wx.Frame):
         self.Bind(wx.EVT_MENU, self._menu_show_toolbar, toolbar_item)
         toolbar_item.Check(CONF.get_bool('show_toolbar', 'prefs', True))
 
+        nvg_item = wx.MenuItem(view_menu, wx.NewId(),
+                               _('Night vision look'),
+                               kind=wx.ITEM_CHECK)
+        view_menu.Append(nvg_item)
+        self.Bind(wx.EVT_MENU, self._menu_nvg_theme, nvg_item)
+        nvg_item.Check(theme.enabled())
+
         lang_item = wx.MenuItem(view_menu, wx.NewId(),
                                 _('Language') + '...')
         self.Bind(wx.EVT_MENU, self._menu_language, lang_item)
@@ -1105,28 +1203,44 @@ class ChirpMain(wx.Frame):
         tb.SetToolBitmapSize((24, 24))
 
         def bm(stock):
+            if theme.enabled():
+                return theme.art(stock, wx.ART_TOOLBAR, (24, 24), 'accent')
             return wx.ArtProvider.GetBitmapBundle(stock, wx.ART_TOOLBAR,
                                                   (24, 24))
 
+        lbl = theme.label
         # The tools share the menu item IDs, so the existing menu handlers
         # (and enable/disable logic) apply to them as well.
-        tb.AddTool(self._download_menu_item, _('Download from radio'),
+        tb.AddTool(self._download_menu_item, lbl(_('Download from radio')),
                    bm(wx.ART_GO_DOWN),
                    _('Read the memories and settings from the radio'))
-        tb.AddTool(self._upload_menu_item, _('Upload to radio'),
+        tb.AddTool(self._upload_menu_item, lbl(_('Upload to radio')),
                    bm(wx.ART_GO_UP),
                    _('Write this tab to the radio'))
         tb.AddSeparator()
-        tb.AddTool(wx.ID_OPEN, _('Open'), bm(wx.ART_FILE_OPEN),
+        tb.AddTool(wx.ID_OPEN, lbl(_('Open')), bm(wx.ART_FILE_OPEN),
                    _('Open a file'))
-        tb.AddTool(wx.ID_SAVE, _('Save'), bm(wx.ART_FILE_SAVE),
+        tb.AddTool(wx.ID_SAVE, lbl(_('Save')), bm(wx.ART_FILE_SAVE),
                    _('Save file'))
         tb.AddSeparator()
         tb.AddStretchableSpace()
         self._toolbar_cable = wx.StaticText(tb, label='')
+        if theme.enabled():
+            tb.SetFont(theme.mono_font(9, bold=True))
+            tb.SetBackgroundColour(theme.colour('panel'))
+            tb.SetForegroundColour(theme.colour('accent'))
+            self._toolbar_cable.SetFont(theme.mono_font(10, bold=True))
+            self._toolbar_cable._nvg_keep_fg = True
+            self._toolbar_cable._nvg_keep_font = True
         tb.AddControl(self._toolbar_cable)
         tb.Realize()
         return tb
+
+    def _menu_nvg_theme(self, event):
+        CONF.set_bool('nvg_theme', event.IsChecked(), 'prefs')
+        wx.MessageBox(_('The new look is applied the next time CHIRP '
+                        'starts.'), 'CHIRP', wx.ICON_INFORMATION,
+                      parent=self)
 
     def _menu_show_toolbar(self, event):
         show = event.IsChecked()
@@ -1147,14 +1261,28 @@ class ChirpMain(wx.Frame):
             text = _('Cable: %s') % ', '.join(
                 '%s (%s)' % (p.short_device, p.chip or _('USB'))
                 for p in cables)
+            level = 'good'
         elif bad:
             text = _('Cable on %s needs a different driver') % (
                 bad[0].short_device)
+            level = 'bad'
         else:
             text = _('No programming cable connected')
+            level = 'warn'
         self.statusbar.SetStatusText(text, i=1)
-        self._toolbar_cable.SetLabel(text + '  ')
+        if theme.enabled():
+            self._toolbar_cable.SetForegroundColour(theme.colour(
+                {'good': 'accent'}.get(level, level)))
+            self._toolbar_cable.SetLabel('%s %s  ' % (
+                {'good': '●', 'warn': '○'}.get(level, '✖'),
+                text.upper()))
+        else:
+            self._toolbar_cable.SetLabel(text + '  ')
         self.GetToolBar().Realize()
+        for i in range(self._editors.GetPageCount()):
+            page = self._editors.GetPage(i)
+            if isinstance(page, ChirpWelcomePanel):
+                page.set_cable(text, level)
         for port in ports:
             if port.device in added and port.is_cable:
                 self.statusbar.SetStatusText(

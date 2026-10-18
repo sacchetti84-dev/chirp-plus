@@ -69,6 +69,19 @@ TRANSLATIONS = {
     'USB': 'USB',
     'Download from the radio or open a file first.':
         'Prima scarica dalla radio o apri un file.',
+    'Searching for cables...': 'Ricerca cavi in corso...',
+    'PROCEDURE': 'PROCEDURA',
+    'Night vision look': 'Aspetto visore notturno',
+    'The new look is applied the next time CHIRP starts.':
+        'Il nuovo aspetto verrà applicato al prossimo avvio di CHIRP.',
+    'RADIO PROGRAMMER': 'PROGRAMMATORE RADIO',
+    'Connect the cable to the radio and the PC':
+        'Collega il cavo alla radio e al PC',
+    'Turn the radio on': 'Accendi la radio',
+    'Press DOWNLOAD FROM RADIO': 'Premi SCARICA DALLA RADIO',
+    'READY': 'PRONTO',
+    'STANDBY': 'IN ATTESA',
+    'NO SIGNAL': 'NESSUN SEGNALE',
 }
 
 

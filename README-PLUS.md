@@ -25,6 +25,16 @@ funzioni dell'originale, più queste modifiche:
 - "Cerca...": trova la radio scrivendo parte del nome (es. `uv5r`, `uv9r`).
 - Traduzione italiana completa delle nuove voci.
 
+## Aspetto "visore notturno" (`chirp/wxui/theme.py`)
+- Nero e verde fosforo, accenti lime; avvisi in ambra, errori in rosso.
+- Tema scuro nativo di Windows per menu, barre del titolo, barre di scorrimento
+  e finestre di sistema.
+- Pagina iniziale a mirino (griglia, reticolo, angoli) con titolo in Stencil e
+  stato del cavo al centro del reticolo (PRONTO / IN ATTESA / NESSUN SEGNALE).
+- Griglia memorie, impostazioni, schede e dialoghi in font monospace (Cascadia
+  Mono, poi Consolas), etichette in maiuscolo, icone ricolorate.
+- Si spegne da Visualizza > Aspetto visore notturno (vale dal riavvio).
+
 ## Uso
 Il programma compilato è in `%LOCALAPPDATA%\Programs\CHIRP-Plus\chirpwx.exe`;
 lo ZIP è in `dist\`. Usa le stesse impostazioni del CHIRP ufficiale

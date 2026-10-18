@@ -148,6 +148,8 @@ def chirpmain():
     # about duplicate "Windows bitmap file" handlers
     import wx.richtext
     app = wx.App()
+    from chirp.wxui import theme
+    theme.init_app(app)
     if args.force_language:
         force_lang = wx.Locale.FindLanguageInfo(args.force_language)
         if force_lang is None:

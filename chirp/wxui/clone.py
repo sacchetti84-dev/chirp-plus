@@ -35,6 +35,7 @@ from chirp.wxui import common
 from chirp.wxui import developer
 from chirp.wxui import portdetect
 from chirp.wxui import serialtrace
+from chirp.wxui import theme
 
 _ = wx.GetTranslation
 LOG = logging.getLogger(__name__)
@@ -217,6 +218,7 @@ class ChirpRadioPromptDialog(wx.Dialog):
                 '%s %s' % (self.radio.VENDOR, self.radio.MODEL)))
         vbox.Add(self.cb, border=20, flag=wx.ALL)
         vbox.Add(bs, flag=wx.ALL, border=10)
+        theme.style_dialog(self)
         self.Fit()
         self.Centre()
 
@@ -357,6 +359,7 @@ class ChirpModelSearchDialog(wx.Dialog):
         self.Bind(wx.EVT_CHAR_HOOK, self._key)
 
         self._filter(None)
+        theme.style_dialog(self)
         self.SetSize((480, 520))
         self.SetMinSize((360, 300))
         self.Centre()
@@ -480,6 +483,14 @@ class ChirpCloneDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self._action)
 
         vbox = wx.BoxSizer(wx.VERTICAL)
+        self._header = None
+        if theme.enabled():
+            self._header = wx.StaticText(self, label='')
+            self._header.SetFont(theme.stencil_font(20))
+            self._header.SetForegroundColour(theme.colour('accent'))
+            self._header._nvg_keep_fg = self._header._nvg_keep_font = True
+            vbox.Add(self._header, border=15, flag=wx.LEFT | wx.TOP)
+            self.set_title(self.GetTitle())
         intro = wx.StaticText(self, label=_(
             'Connect the programming cable to the radio and to the '
             'computer, then turn the radio on. The cable port is detected '
@@ -542,6 +553,16 @@ class ChirpCloneDialog(wx.Dialog):
         self._monitor = portdetect.get_monitor()
         self._monitor.add_listener(self._ports_changed_bg)
         self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
+        if theme.enabled():
+            theme.style_dialog(self)
+            # The monospace font changes control sizes
+            self.Fit()
+
+    def set_title(self, title):
+        self.SetTitle(title)
+        if self._header is not None:
+            self._header.SetLabel('■ ' + title.upper())
+            self.Layout()
 
     def _destroyed(self, event):
         event.Skip()
@@ -640,11 +661,20 @@ class ChirpCloneDialog(wx.Dialog):
         art = {'good': wx.ART_TICK_MARK,
                'warn': wx.ART_WARNING,
                'bad': wx.ART_ERROR}.get(level, wx.ART_INFORMATION)
-        self._port_icon.SetBitmap(
-            wx.ArtProvider.GetBitmap(art, wx.ART_MENU, (16, 16)))
-        self._port_status.SetForegroundColour(
-            PORT_COLORS.get(level, wx.SystemSettings.GetColour(
-                wx.SYS_COLOUR_WINDOWTEXT)))
+        if theme.enabled():
+            tone = {'good': 'accent', 'warn': 'warn',
+                    'bad': 'bad'}.get(level, 'fg')
+            self._port_icon.SetBitmap(theme.art(art, wx.ART_MENU, (16, 16),
+                                                tone))
+            self._port_status.SetForegroundColour(theme.colour(tone))
+            self._port_status._nvg_keep_fg = True
+            text = text.upper()
+        else:
+            self._port_icon.SetBitmap(
+                wx.ArtProvider.GetBitmap(art, wx.ART_MENU, (16, 16)))
+            self._port_status.SetForegroundColour(
+                PORT_COLORS.get(level, wx.SystemSettings.GetColour(
+                    wx.SYS_COLOUR_WINDOWTEXT)))
         self._port_status.SetLabel(text)
         self._port_status.Wrap(420)
         self._port_status.SetToolTip(text)
@@ -1001,7 +1031,7 @@ class ChirpCloneDialog(wx.Dialog):
 class ChirpDownloadDialog(ChirpCloneDialog):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        self.SetTitle(_('Download from radio'))
+        self.set_title(_('Download from radio'))
         self.FindWindowById(wx.ID_OK).SetLabel(_('Download'))
         if (CONF.get_bool('always_start_recent', 'state') and
                 CONF.get('recent_models', 'state')):
@@ -1134,7 +1164,7 @@ class ChirpUploadDialog(ChirpCloneDialog):
     def __init__(self, radio, *a, **k):
         super(ChirpUploadDialog, self).__init__(*a, allow_detected_models=True,
                                                 **k)
-        self.SetTitle(_('Upload to radio'))
+        self.set_title(_('Upload to radio'))
         self.FindWindowById(wx.ID_OK).SetLabel(_('Upload'))
         self._radio = radio
 

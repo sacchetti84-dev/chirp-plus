@@ -39,6 +39,7 @@ from chirp.wxui import config
 from chirp.wxui import common
 from chirp.wxui import developer
 from chirp.wxui import memquery
+from chirp.wxui import theme
 
 _ = wx.GetTranslation
 LOG = logging.getLogger(__name__)
@@ -126,15 +127,21 @@ class ChirpRowLabelRenderer(glr.GridDefaultRowLabelRenderer):
         self.bgcolor = None
 
     def set_error(self):
-        self.bgcolor = '#FF0000'
+        self.bgcolor = theme.PALETTE['bad'] if theme.enabled() else '#FF0000'
 
     def set_progress(self):
-        self.bgcolor = '#98FB98'
+        self.bgcolor = (theme.PALETTE['select'] if theme.enabled()
+                        else '#98FB98')
 
     def clear_error(self):
         self.bgcolor = None
 
     def Draw(self, grid, dc, rect, row):
+        if theme.enabled():
+            hAlign, vAlign = grid.GetRowLabelAlignment()
+            theme.draw_label(grid, dc, rect, grid.GetRowLabelValue(row),
+                             hAlign, vAlign, fill=self.bgcolor)
+            return
         if self.bgcolor:
             dc.SetBrush(wx.Brush(self.bgcolor))
             dc.SetPen(wx.TRANSPARENT_PEN)
@@ -976,6 +983,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._grid.DisableDragRowSize()
         self._grid.EnableDragCell()
         self._grid.SetFocus()
+        theme.style_grid(self._grid)
         self._default_cell_bg_color = self._grid.GetCellBackgroundColour(0, 0)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -996,6 +1004,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                                    style=wx.FONTSTYLE_NORMAL,
                                    weight=wx.FONTWEIGHT_NORMAL)
         self._variable_font = self._grid.GetDefaultCellFont()
+        if theme.enabled():
+            # The night vision look is a terminal: monospace everywhere
+            self._fixed_font = self._variable_font = theme.mono_font(10)
         self.update_font(False)
 
         self._grid.Bind(wx.grid.EVT_GRID_COL_SORT,
@@ -1581,7 +1592,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         except AttributeError:
             # Older wxPython doesn't have GetAppearance(), so just assume light
             darkmode = False
-        if darkmode:
+        if theme.enabled():
+            immutable_color = theme.colour('readonly')
+        elif darkmode:
             immutable_color = wx.SystemSettings.GetColour(
                 wx.SYS_COLOUR_GRAYTEXT)
         else:

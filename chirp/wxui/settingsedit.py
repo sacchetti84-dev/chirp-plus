@@ -21,6 +21,7 @@ import wx.dataview
 
 from chirp import settings
 from chirp.wxui import common
+from chirp.wxui import theme
 
 LOG = logging.getLogger(__name__)
 
@@ -107,6 +108,7 @@ class ChirpSettingsEdit(common.ChirpEditor):
     def _load_settings(self):
         for group in self._settings:
             self._add_group(group)
+        theme.apply(self)
         self.Layout()
 
     def _add_group(self, group, parent=None):
