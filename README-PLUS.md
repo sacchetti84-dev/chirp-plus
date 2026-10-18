@@ -46,6 +46,10 @@ funzioni dell'originale, più queste modifiche:
 - Griglia memorie, impostazioni, schede e dialoghi in font monospace (Cascadia
   Mono, poi Consolas), etichette in maiuscolo, icone ricolorate.
 - Si spegne da Visualizza > Aspetto visore notturno (vale dal riavvio).
+- Icone Tabler (MIT) prese dal pacchetto di Pathfinder, in
+  `chirp/share/icons`: barra strumenti, menu, dialoghi e pagina iniziale.
+  Sono SVG colorate al volo con i colori del tema (nitide anche in alta
+  risoluzione).
 
 ## Uso
 Il programma compilato è in `%LOCALAPPDATA%\Programs\CHIRP-Plus\chirpwx.exe`;

@@ -397,22 +397,20 @@ class ChirpWelcomePanel(theme.NVGPanel):
         self._actions = actions
         frame = wx.GetTopLevelParent(self)
         self._buttons = []
-        for ident, label, art, tip in (
+        for ident, label, icon, tip in (
                 (getattr(frame, '_download_menu_item', None),
-                 _('Download from radio'), wx.ART_GO_DOWN,
+                 _('Download from radio'), 'download',
                  _('Connect the cable and read your radio')),
-                (wx.ID_OPEN, _('Open a file'), wx.ART_FILE_OPEN,
+                (wx.ID_OPEN, _('Open a file'), 'folders',
                  _('Open a saved radio image or CSV file'))):
             if ident is None:
                 continue
             btn = wx.Button(self, label=theme.label(label))
+            btn.SetBitmap(theme.icon(icon, 24, 'accent'))
+            btn.SetBitmapMargins(6, 0)
             if theme.enabled():
-                btn.SetBitmap(theme.art(art, wx.ART_BUTTON, (24, 24),
-                                        'accent'))
                 btn.SetFont(theme.mono_font(12, bold=True))
             else:
-                btn.SetBitmap(wx.ArtProvider.GetBitmapBundle(
-                    art, wx.ART_BUTTON, (24, 24)))
                 font = btn.GetFont()
                 font.SetPointSize(font.GetPointSize() + 2)
                 btn.SetFont(font)
@@ -558,6 +556,7 @@ class ChirpMain(wx.Frame):
             chirp_platform.get_platform().set_last_dir(d)
 
         self.SetMenuBar(self.make_menubar())
+        self._set_menu_icons()
         self.make_toolbar()
         if not CONF.get_bool('show_toolbar', 'prefs', True):
             self.GetToolBar().Hide()
@@ -1218,26 +1217,26 @@ class ChirpMain(wx.Frame):
                                 wx.TB_HORZ_LAYOUT | wx.TB_NODIVIDER)
         tb.SetToolBitmapSize((24, 24))
 
-        def bm(stock):
-            if theme.enabled():
-                return theme.art(stock, wx.ART_TOOLBAR, (24, 24), 'accent')
-            return wx.ArtProvider.GetBitmapBundle(stock, wx.ART_TOOLBAR,
-                                                  (24, 24))
+        def bm(name):
+            return theme.icon(name, 24, 'accent')
 
         lbl = theme.label
         # The tools share the menu item IDs, so the existing menu handlers
         # (and enable/disable logic) apply to them as well.
         tb.AddTool(self._download_menu_item, lbl(_('Download from radio')),
-                   bm(wx.ART_GO_DOWN),
+                   bm('download'),
                    _('Read the memories and settings from the radio'))
         tb.AddTool(self._upload_menu_item, lbl(_('Upload to radio')),
-                   bm(wx.ART_GO_UP),
+                   bm('upload'),
                    _('Write this tab to the radio'))
         tb.AddSeparator()
-        tb.AddTool(wx.ID_OPEN, lbl(_('Open')), bm(wx.ART_FILE_OPEN),
+        tb.AddTool(wx.ID_OPEN, lbl(_('Open')), bm('folders'),
                    _('Open a file'))
-        tb.AddTool(wx.ID_SAVE, lbl(_('Save')), bm(wx.ART_FILE_SAVE),
+        tb.AddTool(wx.ID_SAVE, lbl(_('Save')), bm('device-floppy'),
                    _('Save file'))
+        tb.AddSeparator()
+        tb.AddTool(self._export_excel_item, lbl(_('Export Excel')),
+                   bm('file-text'), _('Export to Excel...'))
         tb.AddSeparator()
         tb.AddStretchableSpace()
         self._toolbar_cable = wx.StaticText(tb, label='')
@@ -1251,6 +1250,30 @@ class ChirpMain(wx.Frame):
         tb.AddControl(self._toolbar_cable)
         tb.Realize()
         return tb
+
+    def _set_menu_icons(self):
+        icons = {
+            wx.ID_NEW: 'plus',
+            wx.ID_OPEN: 'folders',
+            wx.ID_SAVE: 'device-floppy',
+            wx.ID_CLOSE: 'x',
+            wx.ID_PRINT: 'printer',
+            wx.ID_EXIT: 'logout',
+            wx.ID_FIND: 'search',
+            wx.ID_DELETE: 'trash',
+            wx.ID_PASTE: 'clipboard-text',
+            self._download_menu_item: 'download',
+            self._upload_menu_item: 'upload',
+            self._import_menu_item: 'file-text',
+            self._export_menu_item: 'file-text',
+            self._import_excel_item: 'file-text',
+            self._export_excel_item: 'file-text',
+        }
+        menubar = self.GetMenuBar()
+        for ident, name in icons.items():
+            item = menubar.FindItemById(ident)
+            if item:
+                item.SetBitmap(theme.icon(name, 16, 'fg'))
 
     def _menu_nvg_theme(self, event):
         CONF.set_bool('nvg_theme', event.IsChecked(), 'prefs')
@@ -1763,6 +1786,8 @@ class ChirpMain(wx.Frame):
             return
 
     def _menu_export(self, event, excel=False):
+        if not self._require_editorset():
+            return
         if excel:
             title = _('Export to Excel')
             ext = '.xlsx'

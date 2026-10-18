@@ -553,10 +553,23 @@ class ChirpCloneDialog(wx.Dialog):
         self._monitor = portdetect.get_monitor()
         self._monitor.add_listener(self._ports_changed_bg)
         self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
+        for btn, name in ((self._refresh, 'refresh'),
+                          (self._recent, 'history'),
+                          (self._search_model, 'search'),
+                          (self.FindWindowById(wx.ID_CANCEL), 'x')):
+            if btn:
+                btn.SetBitmap(theme.icon(name, 16, 'accent'))
         if theme.enabled():
             theme.style_dialog(self)
             # The monospace font changes control sizes
             self.Fit()
+
+    def _set_action(self, label, icon):
+        """Label and icon of the button that starts the clone"""
+        btn = self.FindWindowById(wx.ID_OK)
+        btn.SetLabel(label)
+        btn.SetBitmap(theme.icon(icon, 16, 'accent'))
+        self.Fit()
 
     def set_title(self, title):
         self.SetTitle(title)
@@ -658,20 +671,17 @@ class ChirpCloneDialog(wx.Dialog):
     def _set_port_status(self, level, text, info=None):
         if info is not None and info.hint:
             text = '%s - %s' % (text, wx.GetTranslation(info.hint))
-        art = {'good': wx.ART_TICK_MARK,
-               'warn': wx.ART_WARNING,
-               'bad': wx.ART_ERROR}.get(level, wx.ART_INFORMATION)
+        icon = {'good': 'circle-check',
+                'warn': 'alert-triangle',
+                'bad': 'circle-x'}.get(level, 'info-circle')
+        tone = {'good': 'accent', 'warn': 'warn',
+                'bad': 'bad'}.get(level, 'fg')
+        self._port_icon.SetBitmap(theme.icon(icon, 18, tone))
         if theme.enabled():
-            tone = {'good': 'accent', 'warn': 'warn',
-                    'bad': 'bad'}.get(level, 'fg')
-            self._port_icon.SetBitmap(theme.art(art, wx.ART_MENU, (16, 16),
-                                                tone))
             self._port_status.SetForegroundColour(theme.colour(tone))
             self._port_status._nvg_keep_fg = True
             text = text.upper()
         else:
-            self._port_icon.SetBitmap(
-                wx.ArtProvider.GetBitmap(art, wx.ART_MENU, (16, 16)))
             self._port_status.SetForegroundColour(
                 PORT_COLORS.get(level, wx.SystemSettings.GetColour(
                     wx.SYS_COLOUR_WINDOWTEXT)))
@@ -1032,7 +1042,7 @@ class ChirpDownloadDialog(ChirpCloneDialog):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
         self.set_title(_('Download from radio'))
-        self.FindWindowById(wx.ID_OK).SetLabel(_('Download'))
+        self._set_action(_('Download'), 'download')
         if (CONF.get_bool('always_start_recent', 'state') and
                 CONF.get('recent_models', 'state')):
             self._do_recent()
@@ -1165,7 +1175,7 @@ class ChirpUploadDialog(ChirpCloneDialog):
         super(ChirpUploadDialog, self).__init__(*a, allow_detected_models=True,
                                                 **k)
         self.set_title(_('Upload to radio'))
-        self.FindWindowById(wx.ID_OK).SetLabel(_('Upload'))
+        self._set_action(_('Upload'), 'upload')
         self._radio = radio
 
         self.select_vendor_model(self._radio.VENDOR, model_value(self._radio))

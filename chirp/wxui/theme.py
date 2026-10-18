@@ -98,34 +98,39 @@ def label(text):
     return text.upper() if enabled() else text
 
 
-def tint_bitmap(bitmap, name='fg'):
-    """Recolor an icon to a single phosphor tone, keeping its shape"""
-    if not enabled() or not bitmap.IsOk():
-        return bitmap
-    img = bitmap.ConvertToImage()
-    if not img.HasAlpha():
-        # Turns a mask (if any) into transparency
-        img.InitAlpha()
-    # SetData() below drops the alpha channel, so keep it aside
-    alpha = bytes(img.GetAlpha())
-    target = colour(name)
-    grey = img.ConvertToGreyscale()
-    data = bytearray(grey.GetData())
-    out = bytearray(len(data))
-    for i in range(0, len(data), 3):
-        # Brighter source pixels become brighter phosphor
-        level = 0.45 + 0.55 * (data[i] / 255.0)
-        out[i] = int(target.Red() * level)
-        out[i + 1] = int(target.Green() * level)
-        out[i + 2] = int(target.Blue() * level)
-    img.SetData(bytes(out))
-    img.SetAlpha(alpha)
-    return wx.Bitmap(img)
+# Icon colors for the classic (light) look
+CLASSIC_TONES = {
+    'fg': '#2E3A2E',
+    'dim': '#5F6B5F',
+    'accent': '#1B7F2A',
+    'warn': '#B35C00',
+    'bad': '#C62828',
+}
+
+_ICON_CACHE = {}
 
 
-def art(art_id, client=wx.ART_TOOLBAR, size=(24, 24), name='fg'):
-    bmp = wx.ArtProvider.GetBitmap(art_id, client, size)
-    return tint_bitmap(bmp, name)
+def icon(name, size=24, tone='fg'):
+    """A Tabler icon from chirp/share/icons as a wx.BitmapBundle.
+
+    The SVGs draw with currentColor, which becomes the theme color for
+    @tone (a PALETTE key). Bundles scale cleanly on high DPI screens.
+    """
+    color = (PALETTE if enabled() else CLASSIC_TONES).get(
+        tone, PALETTE.get(tone, '#000000'))
+    key = (name, size, color)
+    if key not in _ICON_CACHE:
+        from importlib import resources
+        try:
+            svg = resources.files('chirp.share').joinpath(
+                'icons', '%s.svg' % name).read_text(encoding='utf-8')
+        except (FileNotFoundError, OSError) as e:
+            LOG.warning('Missing icon %s: %s', name, e)
+            return wx.BitmapBundle()
+        svg = svg.replace('currentColor', color)
+        _ICON_CACHE[key] = wx.BitmapBundle.FromSVG(svg.encode('utf-8'),
+                                                   wx.Size(size, size))
+    return _ICON_CACHE[key]
 
 
 def apply(window):

@@ -3716,3 +3716,6 @@ msgstr "File Excel"
 
 msgid "Export can only write CSV or Excel (.xlsx) files"
 msgstr "L'esportazione può scrivere solo file CSV o Excel (.xlsx)"
+
+msgid "Export Excel"
+msgstr "Esporta Excel"
