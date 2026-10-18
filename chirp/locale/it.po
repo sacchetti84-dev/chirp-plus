@@ -3552,3 +3552,119 @@ msgstr "non specificato"
 #, python-brace-format
 msgid "{bank} is full"
 msgstr "{bank} è pieno"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Chip Prolific contraffatto o non supportato: il driver di Windows attuale si"
+" rifiuta di usarlo. Installa un driver Prolific più vecchio oppure usa un "
+"cavo CH340/FTDI."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Porta seriale Bluetooth, non è un cavo di programmazione"
+
+msgid "Built-in serial port of the computer"
+msgstr "Porta seriale integrata nel computer"
+
+msgid "Programming cable detected"
+msgstr "Cavo di programmazione rilevato"
+
+msgid "USB serial device"
+msgstr "Dispositivo seriale USB"
+
+msgid "Serial port"
+msgstr "Porta seriale"
+
+msgid "Search radio"
+msgstr "Cerca radio"
+
+msgid "Search again for connected cables"
+msgstr "Cerca di nuovo i cavi collegati"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Trova la tua radio scrivendo parte del nome"
+
+msgid "Upload"
+msgstr "Carica"
+
+msgid "Find your radio"
+msgstr "Trova la tua radio"
+
+msgid "Refresh"
+msgstr "Aggiorna"
+
+msgid "Search..."
+msgstr "Cerca..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Collega il cavo di programmazione alla radio e al computer, poi accendi la "
+"radio. La porta del cavo viene rilevata automaticamente."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Nessuna porta seriale trovata. Controlla il cavo e il suo driver, poi premi "
+"Aggiorna."
+
+msgid "Manually entered port"
+msgstr "Porta inserita manualmente"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr "Scrivi parte della marca o del modello (per esempio \"UV-5R\" o \"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Nuovo cavo collegato su %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "Il cavo su %s è stato scollegato"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "Trovati %i cavi, selezionato %s: verifica che sia quello giusto"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr ""
+"%s probabilmente non è il tuo cavo, %s sembra un cavo di programmazione"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Nessun cavo di programmazione riconosciuto, selezionato %s"
+
+msgid "Show toolbar"
+msgstr "Mostra barra strumenti"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Leggi memorie e impostazioni dalla radio"
+
+msgid "Write this tab to the radio"
+msgstr "Scrivi questa scheda nella radio"
+
+msgid "Connect the cable and read your radio"
+msgstr "Collega il cavo e leggi la tua radio"
+
+msgid "Open a saved radio image or CSV file"
+msgstr "Apri un'immagine radio salvata o un file CSV"
+
+msgid "Cable: %s"
+msgstr "Cavo: %s"
+
+msgid "No programming cable connected"
+msgstr "Nessun cavo di programmazione collegato"
+
+msgid "Cable on %s needs a different driver"
+msgstr "Il cavo su %s richiede un driver diverso"
+
+msgid "Serial port %s disconnected"
+msgstr "Porta seriale %s scollegata"
+
+msgid "Programming cable connected on %s"
+msgstr "Cavo di programmazione collegato su %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Prima scarica dalla radio o apri un file."

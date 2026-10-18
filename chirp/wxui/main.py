@@ -46,6 +46,7 @@ from chirp.wxui import common
 from chirp.wxui import clone
 from chirp.wxui import developer
 from chirp.wxui import memedit
+from chirp.wxui import portdetect
 from chirp.wxui import printing
 from chirp.wxui import query_sources
 from chirp.wxui import radioinfo
@@ -387,6 +388,30 @@ class ChirpWelcomePanel(wx.Panel):
         vbox = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(vbox)
 
+        # Quick actions for the most common tasks, so a new user does not
+        # have to find them in the menus
+        actions = wx.BoxSizer(wx.HORIZONTAL)
+        vbox.Add(actions, border=12, flag=wx.ALL | wx.ALIGN_CENTER_HORIZONTAL)
+        frame = wx.GetTopLevelParent(self)
+        for ident, label, art, tip in (
+                (getattr(frame, '_download_menu_item', None),
+                 _('Download from radio'), wx.ART_GO_DOWN,
+                 _('Connect the cable and read your radio')),
+                (wx.ID_OPEN, _('Open a file'), wx.ART_FILE_OPEN,
+                 _('Open a saved radio image or CSV file'))):
+            if ident is None:
+                continue
+            btn = wx.Button(self, label=label)
+            btn.SetBitmap(wx.ArtProvider.GetBitmapBundle(art, wx.ART_BUTTON,
+                                                         (24, 24)))
+            btn.SetToolTip(tip)
+            font = btn.GetFont()
+            font.SetPointSize(font.GetPointSize() + 2)
+            btn.SetFont(font)
+            btn.Bind(wx.EVT_BUTTON,
+                     functools.partial(self._post_menu, frame, ident))
+            actions.Add(btn, border=8, flag=wx.LEFT | wx.RIGHT)
+
         # Search for welcome_screen_en_US, welcome_screen_en, welcome_screen
         locale = wx.App.Get()._lc.GetCanonicalName()
         locale_base_path = resources.files('chirp.share')
@@ -403,6 +428,10 @@ class ChirpWelcomePanel(wx.Panel):
         width, height = self.GetSize()
         img = wx.StaticBitmap(self, wx.ID_ANY, bmp)
         vbox.Add(img, 1, flag=wx.EXPAND)
+
+    @staticmethod
+    def _post_menu(frame, ident, event):
+        wx.PostEvent(frame, wx.CommandEvent(wx.wxEVT_MENU, ident))
 
     def close(self):
         pass
@@ -445,10 +474,9 @@ class ChirpMain(wx.Frame):
             chirp_platform.get_platform().set_last_dir(d)
 
         self.SetMenuBar(self.make_menubar())
-
-        # Stock items look good on linux, terrible on others,
-        # so punt on this for the moment.
-        # self.make_toolbar()
+        self.make_toolbar()
+        if not CONF.get_bool('show_toolbar', 'prefs', True):
+            self.GetToolBar().Hide()
 
         self._editors = wx.aui.AuiNotebook(
             self,
@@ -470,10 +498,13 @@ class ChirpMain(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self._window_close)
         self.Bind(common.EVT_CROSS_EDITOR_ACTION, self._editor_cross_action)
 
-        self.statusbar = self.CreateStatusBar(2)
-        self.statusbar.SetStatusWidths([-1, 200])
+        self.statusbar = self.CreateStatusBar(3)
+        self.statusbar.SetStatusWidths([-1, 320, 200])
 
         self._update_window_for_editor()
+
+        portdetect.get_monitor().add_listener(self._ports_changed_bg)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
 
         vbox = wx.BoxSizer()
         self.SetSizer(vbox)
@@ -850,6 +881,13 @@ class ChirpMain(wx.Frame):
         self.Bind(wx.EVT_MENU, self._menu_restore_tabs, restore_tabs)
         restore_tabs.Check(CONF.get_bool('restore_tabs', 'prefs', False))
 
+        toolbar_item = wx.MenuItem(view_menu, wx.NewId(),
+                                   _('Show toolbar'),
+                                   kind=wx.ITEM_CHECK)
+        view_menu.Append(toolbar_item)
+        self.Bind(wx.EVT_MENU, self._menu_show_toolbar, toolbar_item)
+        toolbar_item.Check(CONF.get_bool('show_toolbar', 'prefs', True))
+
         lang_item = wx.MenuItem(view_menu, wx.NewId(),
                                 _('Language') + '...')
         self.Bind(wx.EVT_MENU, self._menu_language, lang_item)
@@ -1062,25 +1100,77 @@ class ChirpMain(wx.Frame):
             p.print_preview(mems)
 
     def make_toolbar(self):
-        tb = self.CreateToolBar()
+        tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.TB_FLAT | wx.TB_TEXT |
+                                wx.TB_HORZ_LAYOUT | wx.TB_NODIVIDER)
+        tb.SetToolBitmapSize((24, 24))
 
         def bm(stock):
-            return wx.ArtProvider.GetBitmap(stock,
-                                            wx.ART_TOOLBAR, (32, 32))
+            return wx.ArtProvider.GetBitmapBundle(stock, wx.ART_TOOLBAR,
+                                                  (24, 24))
 
-        tbopen = tb.AddTool(wx.NewId(), _('Open'), bm(wx.ART_FILE_OPEN),
-                            _('Open a file'))
-        tb.AddTool(wx.NewId(), _('Save'), bm(wx.ART_FILE_SAVE),
+        # The tools share the menu item IDs, so the existing menu handlers
+        # (and enable/disable logic) apply to them as well.
+        tb.AddTool(self._download_menu_item, _('Download from radio'),
+                   bm(wx.ART_GO_DOWN),
+                   _('Read the memories and settings from the radio'))
+        tb.AddTool(self._upload_menu_item, _('Upload to radio'),
+                   bm(wx.ART_GO_UP),
+                   _('Write this tab to the radio'))
+        tb.AddSeparator()
+        tb.AddTool(wx.ID_OPEN, _('Open'), bm(wx.ART_FILE_OPEN),
+                   _('Open a file'))
+        tb.AddTool(wx.ID_SAVE, _('Save'), bm(wx.ART_FILE_SAVE),
                    _('Save file'))
-        tb.AddTool(wx.NewId(), _('Close'), bm(wx.ART_CLOSE),
-                   _('Close file'))
-        tb.AddTool(wx.NewId(), _('Download'), bm(wx.ART_GO_DOWN),
-                   _('Download from radio'))
-        tb.AddTool(wx.NewId(), 'Upload', bm(wx.ART_GO_UP),
-                   _('Upload to radio'))
-
-        self.Bind(wx.EVT_MENU, self._menu_open, tbopen)
+        tb.AddSeparator()
+        tb.AddStretchableSpace()
+        self._toolbar_cable = wx.StaticText(tb, label='')
+        tb.AddControl(self._toolbar_cable)
         tb.Realize()
+        return tb
+
+    def _menu_show_toolbar(self, event):
+        show = event.IsChecked()
+        CONF.set_bool('show_toolbar', show, 'prefs')
+        self.GetToolBar().Show(show)
+        self.SendSizeEvent()
+
+    def _ports_changed_bg(self, ports, added, removed):
+        # Called from the port monitor thread
+        wx.CallAfter(self._ports_changed, ports, added, removed)
+
+    def _ports_changed(self, ports, added, removed):
+        if not self:
+            return
+        cables = [p for p in ports if p.is_cable]
+        bad = [p for p in ports if not p.usable]
+        if cables:
+            text = _('Cable: %s') % ', '.join(
+                '%s (%s)' % (p.short_device, p.chip or _('USB'))
+                for p in cables)
+        elif bad:
+            text = _('Cable on %s needs a different driver') % (
+                bad[0].short_device)
+        else:
+            text = _('No programming cable connected')
+        self.statusbar.SetStatusText(text, i=1)
+        self._toolbar_cable.SetLabel(text + '  ')
+        self.GetToolBar().Realize()
+        for port in ports:
+            if port.device in added and port.is_cable:
+                self.statusbar.SetStatusText(
+                    _('Programming cable connected on %s') %
+                    port.short_device)
+            elif port.device in added and not port.usable:
+                self.statusbar.SetStatusText(
+                    wx.GetTranslation(port.warning))
+        for device in removed:
+            self.statusbar.SetStatusText(
+                _('Serial port %s disconnected') % device)
+
+    def _destroyed(self, event):
+        event.Skip()
+        if event.GetEventObject() is self:
+            portdetect.get_monitor().remove_listener(self._ports_changed_bg)
 
     def adj_menu_open_recent(self, filename):
         """Update the "open recent" menu
@@ -1262,9 +1352,9 @@ class ChirpMain(wx.Frame):
         if self.current_editorset:
             radio = self.current_editorset.radio
             radio_name = '%s %s' % (radio.VENDOR, radio.MODEL)
-            self.statusbar.SetStatusText(radio_name, i=1)
+            self.statusbar.SetStatusText(radio_name, i=2)
         else:
-            self.statusbar.SetStatusText('', i=1)
+            self.statusbar.SetStatusText('', i=2)
 
         items = [
             (wx.ID_CLOSE, can_close),
@@ -1470,7 +1560,18 @@ class ChirpMain(wx.Frame):
             self._update_window_for_editor()
             return True
 
+    def _require_editorset(self):
+        """Toolbar tools stay enabled (MSW does not draw the labels of
+        disabled ones), so explain when there is nothing to act on."""
+        if self.current_editorset is not None:
+            return True
+        wx.MessageBox(_('Download from the radio or open a file first.'),
+                      'CHIRP', wx.ICON_INFORMATION, parent=self)
+        return False
+
     def _menu_save(self, event):
+        if not self._require_editorset():
+            return
         editorset = self.current_editorset
         if not editorset.modified:
             return
@@ -1734,6 +1835,8 @@ class ChirpMain(wx.Frame):
         self.add_editorset(editorset)
 
     def _menu_upload(self, event):
+        if not self._require_editorset():
+            return
         radio = self.current_editorset.radio
         fn = self._make_backup(radio, 'upload')
         report.report_model(radio, 'upload')
@@ -2142,7 +2245,8 @@ GNU General Public License for more details."""
 def display_update_notice(version):
     LOG.info('Server reports %s is latest' % version)
 
-    if version == CHIRP_VERSION:
+    # Builds of this fork are tagged like next-20261016-plus
+    if version == CHIRP_VERSION.removesuffix('-plus'):
         return
 
     if CONF.get_bool("skip_update_check", "state"):

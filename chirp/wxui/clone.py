@@ -33,6 +33,7 @@ from chirp import errors
 from chirp.wxui import config
 from chirp.wxui import common
 from chirp.wxui import developer
+from chirp.wxui import portdetect
 from chirp.wxui import serialtrace
 
 _ = wx.GetTranslation
@@ -41,6 +42,14 @@ CONF = config.get()
 HELPME = _('Help Me...')
 CUSTOM = _('Custom...')
 ID_RECENT = wx.NewId()
+ID_REFRESH_PORTS = wx.NewId()
+ID_SEARCH_MODEL = wx.NewId()
+
+PORT_COLORS = {
+    'good': wx.Colour(0x1B, 0x7F, 0x2A),
+    'warn': wx.Colour(0xB3, 0x5C, 0x00),
+    'bad': wx.Colour(0xC6, 0x28, 0x28),
+}
 
 
 def is_prolific_warning(string):
@@ -312,12 +321,98 @@ def detected_value(parent_rclass, rclass):
 CUSTOM_PORTS = []
 
 
+class ChirpModelSearchDialog(wx.Dialog):
+    """Find a radio model by typing part of its vendor or model name."""
+    def __init__(self, parent, entries):
+        """:param entries: list of (vendor, model, display) tuples"""
+        super().__init__(parent, title=_('Find your radio'),
+                         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
+        self._entries = entries
+        self._shown = []
+        self.selection = None
+
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(vbox)
+        hint = wx.StaticText(
+            self, label=_('Type part of the vendor or model name '
+                          '(for example "UV-5R" or "Baofeng")'))
+        vbox.Add(hint, border=10, flag=wx.ALL)
+        self._search = wx.SearchCtrl(self, style=wx.TE_PROCESS_ENTER)
+        self._search.ShowCancelButton(True)
+        self._search.SetDescriptiveText(_('Search radio'))
+        vbox.Add(self._search, border=10,
+                 flag=wx.EXPAND | wx.LEFT | wx.RIGHT)
+        self._list = wx.ListBox(self, style=wx.LB_SINGLE)
+        vbox.Add(self._list, proportion=1, border=10, flag=wx.EXPAND | wx.ALL)
+        bs = self.CreateButtonSizer(wx.OK | wx.CANCEL)
+        vbox.Add(bs, border=10, flag=wx.ALL | wx.EXPAND)
+
+        self._search.Bind(wx.EVT_TEXT, self._filter)
+        self._search.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self._clear)
+        self._search.Bind(wx.EVT_TEXT_ENTER, self._accept)
+        # Newer wx reports Enter in a search control as a search event
+        self._search.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN, self._accept)
+        self._list.Bind(wx.EVT_LISTBOX_DCLICK, self._accept)
+        self.Bind(wx.EVT_BUTTON, self._accept, id=wx.ID_OK)
+        self.Bind(wx.EVT_CHAR_HOOK, self._key)
+
+        self._filter(None)
+        self.SetSize((480, 520))
+        self.SetMinSize((360, 300))
+        self.Centre()
+        self._search.SetFocus()
+
+    def _clear(self, event):
+        self._search.SetValue('')
+
+    def _key(self, event):
+        # Let up/down move through the results while typing in the search
+        step = {wx.WXK_UP: -1, wx.WXK_DOWN: 1}.get(event.GetKeyCode())
+        if step is None or not self._shown:
+            event.Skip()
+            return
+        idx = self._list.GetSelection() + step
+        self._list.SetSelection(max(0, min(len(self._shown) - 1, idx)))
+
+    def _filter(self, event):
+        words = self._search.GetValue().lower().split()
+
+        def matches(entry):
+            text = ('%s %s' % (entry[0], entry[2])).lower()
+            # Ignore dashes so "uv5r" finds "UV-5R"
+            squashed = text.replace('-', '').replace(' ', '')
+            return all(w in text or w.replace('-', '') in squashed
+                       for w in words)
+
+        self._shown = [e for e in self._entries if matches(e)]
+        self._list.Set(['%s %s' % (e[0], e[2]) for e in self._shown])
+        if self._shown:
+            self._list.SetSelection(0)
+        ok = self.FindWindowById(wx.ID_OK)
+        if ok:
+            ok.Enable(bool(self._shown))
+
+    def _accept(self, event):
+        idx = self._list.GetSelection()
+        if idx == wx.NOT_FOUND or not self._shown:
+            return
+        vendor, model, _display = self._shown[idx]
+        self.selection = (vendor, model)
+        self.EndModal(wx.ID_OK)
+
+
 class ChirpCloneDialog(wx.Dialog):
     def __init__(self, *a, **k):
         allow_detected_models = k.pop('allow_detected_models', False)
         super(ChirpCloneDialog, self).__init__(
             *a, title=_('Communicate with radio'), **k)
         self._clone_thread = None
+        self._running = False
+        # Set when the user explicitly picks a port in this dialog, so that
+        # automatic detection never fights with them.
+        self._user_chose_port = False
+        self._model_ready = False
+        self._portinfo = {}
         grid = wx.FlexGridSizer(2, 5, 5)
         grid.AddGrowableCol(1)
         bs = self.CreateButtonSizer(wx.OK | wx.CANCEL)
@@ -330,16 +425,34 @@ class ChirpCloneDialog(wx.Dialog):
         def _add_grid(label, control):
             grid.Add(wx.StaticText(self, label=label),
                      proportion=1, border=10,
-                     flag=wx.ALIGN_CENTER | wx.RIGHT | wx.LEFT)
+                     flag=wx.ALIGN_CENTER_VERTICAL | wx.RIGHT | wx.LEFT)
             grid.Add(control,
                      proportion=1, border=10,
                      flag=wx.EXPAND | wx.RIGHT | wx.LEFT)
 
-        self._port = wx.Choice(self, choices=[])
-        self._port.SetMaxSize((50, -1))
-        self.set_ports()
+        port_panel = wx.Panel(self)
+        port_vbox = wx.BoxSizer(wx.VERTICAL)
+        port_panel.SetSizer(port_vbox)
+        port_hbox = wx.BoxSizer(wx.HORIZONTAL)
+        port_vbox.Add(port_hbox, flag=wx.EXPAND)
+        self._port = wx.Choice(port_panel, choices=[])
+        self._port.SetMinSize((260, -1))
+        self._refresh = wx.Button(port_panel, ID_REFRESH_PORTS,
+                                  label=_('Refresh'))
+        self._refresh.SetToolTip(_('Search again for connected cables'))
+        port_hbox.Add(self._port, proportion=1, border=10, flag=wx.RIGHT)
+        port_hbox.Add(self._refresh)
+        status_hbox = wx.BoxSizer(wx.HORIZONTAL)
+        port_vbox.Add(status_hbox, border=4, flag=wx.TOP | wx.EXPAND)
+        self._port_icon = wx.StaticBitmap(port_panel)
+        self._port_status = wx.StaticText(port_panel, label='')
+        status_hbox.Add(self._port_icon, border=4,
+                        flag=wx.RIGHT | wx.ALIGN_CENTER_VERTICAL)
+        status_hbox.Add(self._port_status, proportion=1,
+                        flag=wx.ALIGN_CENTER_VERTICAL)
         self.Bind(wx.EVT_CHOICE, self._selected_port, self._port)
-        _add_grid(_('Port'), self._port)
+        _add_grid(_('Port'), port_panel)
+        self.set_ports()
 
         panel = wx.Panel(self)
         hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -348,8 +461,13 @@ class ChirpCloneDialog(wx.Dialog):
         self.Bind(wx.EVT_CHOICE, self._selected_vendor, self._vendor)
         self._recent = wx.Button(panel, ID_RECENT, label=_('Recent...'))
         self._recent.Enable(bool(CONF.get('recent_models', 'state')))
+        self._search_model = wx.Button(panel, ID_SEARCH_MODEL,
+                                       label=_('Search...'))
+        self._search_model.SetToolTip(
+            _('Find your radio by typing part of its name'))
         hbox.Add(self._vendor, proportion=1, border=10, flag=wx.RIGHT)
-        hbox.Add(self._recent)
+        hbox.Add(self._recent, border=5, flag=wx.RIGHT)
+        hbox.Add(self._search_model)
         _add_grid(_('Vendor'), panel)
 
         self._model_choices = []
@@ -362,9 +480,15 @@ class ChirpCloneDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self._action)
 
         vbox = wx.BoxSizer(wx.VERTICAL)
+        intro = wx.StaticText(self, label=_(
+            'Connect the programming cable to the radio and to the '
+            'computer, then turn the radio on. The cable port is detected '
+            'automatically.'))
+        intro.Wrap(460)
+        vbox.Add(intro, border=15, flag=wx.LEFT | wx.RIGHT | wx.TOP)
         vbox.Add(grid, proportion=1,
                  flag=wx.TOP | wx.BOTTOM | wx.EXPAND,
-                 border=20)
+                 border=15)
         self.model_msg = wx.StaticText(
             self,
             label='',
@@ -409,28 +533,73 @@ class ChirpCloneDialog(wx.Dialog):
             LOG.warning('Last vendor/model (%s/%s) not found',
                         CONF.get('last_vendor', 'state'),
                         CONF.get('last_model', 'state'))
+        self._model_ready = True
+        self._select_port_for_model()
 
-        self.SetMinSize((400, 200))
+        self.SetMinSize((520, 300))
         self.Fit()
 
+        self._monitor = portdetect.get_monitor()
+        self._monitor.add_listener(self._ports_changed_bg)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
+
+    def _destroyed(self, event):
+        event.Skip()
+        if event.GetEventObject() is self:
+            self._monitor.remove_listener(self._ports_changed_bg)
+
+    def _ports_changed_bg(self, ports, added, removed):
+        # Called from the monitor thread
+        wx.CallAfter(self._ports_changed, ports, added, removed)
+
+    def _ports_changed(self, ports, added, removed):
+        if not self or self._running:
+            # Dialog is gone, or we are talking to the radio right now
+            return
+        known = {p.device for p in self._portinfo.values()}
+        new_devices = {p.device for p in ports}
+        if new_devices == known:
+            return
+        current = self.get_selected_port()
+        new_cables = [p for p in ports if p.device in added and p.is_cable]
+        if new_cables:
+            # A cable was just plugged in: that is almost certainly the one
+            # the user wants, even if they picked something else before.
+            cable = new_cables[0]
+            self._user_chose_port = False
+            self.set_ports(ports, select=cable.device)
+            self._set_port_status(
+                'good', _('New cable connected on %s') % cable.short_device,
+                cable)
+        elif current in removed:
+            self._user_chose_port = False
+            self.set_ports(ports)
+            self._set_port_status(
+                'bad', _('The cable on %s was disconnected') % current)
+        else:
+            self.set_ports(ports, select=current)
+
+    def _preferred_ports(self):
+        preferred = []
+        if self._model_ready:
+            try:
+                rconfig = config.get_for_radio(self.get_selected_rclass())
+                preferred.append(rconfig.get('last_port'))
+            except Exception as e:
+                LOG.debug('No per-model port: %s', e)
+        preferred.append(CONF.get('last_port', 'state'))
+        return [p for p in preferred if p]
+
     def set_ports(self, system_ports=None, select=None):
-        if not system_ports:
-            system_ports = list_ports.comports()
+        if system_ports and isinstance(system_ports[0], portdetect.PortInfo):
+            ports = system_ports
+        else:
+            # An empty list means "nothing found", None means "go look"
+            ports = portdetect.scan(system_ports or None)
 
-        # These are ports that we should never offer to the user because
-        # they get picked up by the list but are not usable or relevant.
-        filter_ports = [
-            # MacOS unpaired bluetooth serial
-            '/dev/cu.Bluetooth-Incoming-Port',
-            '/dev/cu.debug-console',
-            '/dev/cu.wlan-debug',
-        ]
-
-        LOG.debug('All system ports: %s', [x.__dict__ for x in system_ports])
-        self.ports = [(port.device, port_label(port))
-                      for port in sorted(system_ports,
-                                         key=port_sort_key)
-                      if port.device not in filter_ports]
+        LOG.debug('All system ports: %s', ports)
+        self._portinfo = {p.device: p for p in ports}
+        self.ports = [(p.device, p.label) for p in ports]
 
         favorite_ports = CONF.get('favorite_ports', 'state') or ''
         for port in favorite_ports.split(','):
@@ -442,7 +611,7 @@ class ChirpCloneDialog(wx.Dialog):
                 self.ports.insert(0, (port, port))
 
         if not select:
-            select = CONF.get('last_port', 'state')
+            select = portdetect.choose_port(ports, self._preferred_ports())
 
         if not self.ports:
             LOG.warning('No ports available; action will be disabled')
@@ -458,11 +627,60 @@ class ChirpCloneDialog(wx.Dialog):
         else:
             if self.ports:
                 port = self.ports[0]
-                self._port.SetStringSelection(port[0])
+                self._port.SetStringSelection(port[1])
             else:
                 port = '(no ports available)'
             LOG.warning('Last port %r is unavailable, defaulting to %s',
                         select, port)
+        self._update_port_status()
+
+    def _set_port_status(self, level, text, info=None):
+        if info is not None and info.hint:
+            text = '%s - %s' % (text, wx.GetTranslation(info.hint))
+        art = {'good': wx.ART_TICK_MARK,
+               'warn': wx.ART_WARNING,
+               'bad': wx.ART_ERROR}.get(level, wx.ART_INFORMATION)
+        self._port_icon.SetBitmap(
+            wx.ArtProvider.GetBitmap(art, wx.ART_MENU, (16, 16)))
+        self._port_status.SetForegroundColour(
+            PORT_COLORS.get(level, wx.SystemSettings.GetColour(
+                wx.SYS_COLOUR_WINDOWTEXT)))
+        self._port_status.SetLabel(text)
+        self._port_status.Wrap(420)
+        self._port_status.SetToolTip(text)
+        self.Layout()
+
+    def _update_port_status(self):
+        if not self.ports:
+            self._set_port_status(
+                'bad', _('No serial port found. Check the cable and its '
+                         'driver, then press Refresh.'))
+            return
+        device = self.get_selected_port()
+        info = self._portinfo.get(device)
+        cables = [p for p in self._portinfo.values() if p.is_cable]
+        if info is None:
+            self._set_port_status('info', _('Manually entered port'))
+        elif not info.usable:
+            self._set_port_status('bad', info.short_device, info)
+        elif info.is_cable:
+            if len(cables) > 1:
+                self._set_port_status(
+                    'warn', _('%i cables found, %s selected: check that it '
+                              'is the right one') % (len(cables),
+                                                     info.short_device))
+            else:
+                self._set_port_status('good', info.chip or info.short_device,
+                                      info)
+        elif cables:
+            self._set_port_status(
+                'warn', _('%s is probably not your cable, %s looks like a '
+                          'programming cable') % (info.short_device,
+                                                  cables[0].short_device))
+        else:
+            self._set_port_status(
+                'warn', _('No programming cable recognized, %s selected') %
+                info.short_device, info)
 
     def get_selected_port(self):
         selected = self._port.GetStringSelection()
@@ -495,7 +713,8 @@ class ChirpCloneDialog(wx.Dialog):
         if r == wx.CANCEL:
             return
         after = list_ports.comports()
-        changed = set(after) - set(before)
+        before_devs = {p.device for p in before}
+        changed = [p for p in after if p.device not in before_devs]
         found = None
         if not changed:
             wx.MessageBox(
@@ -505,17 +724,20 @@ class ChirpCloneDialog(wx.Dialog):
             self.set_ports(after)
             return
         elif len(changed) == 1:
-            found = list(changed)[0]
-            wx.MessageBox(
-                '%s\n%s' % (_('Your cable appears to be on port:'),
-                            port_label(found)),
-                _('USB Port Finder'), parent=self)
+            found = portdetect.classify(changed[0])
+            msg = '%s\n%s' % (_('Your cable appears to be on port:'),
+                              found.label)
+            if found.warning:
+                msg += '\n\n' + wx.GetTranslation(found.warning)
+            wx.MessageBox(msg, _('USB Port Finder'), parent=self)
         else:
             wx.MessageBox(
-                _('More than one port found: %s') % ', '.join(changed),
+                _('More than one port found: %s') % ', '.join(
+                    p.device for p in changed),
                 _('USB Port Finder'), parent=self)
             self.set_ports(after)
             return
+        self._user_chose_port = True
         self.set_ports(after, select=found.device)
 
     def _prolific_assist(self, event):
@@ -544,22 +766,48 @@ class ChirpCloneDialog(wx.Dialog):
         self._vendor.Disable()
         self._model.Disable()
         self._recent.Disable()
+        self._search_model.Disable()
 
     def enable_model_select(self):
         self._vendor.Enable()
         self._model.Enable()
         self._recent.Enable()
+        self._search_model.Enable()
 
     def disable_running(self):
+        self._running = True
         self._port.Disable()
+        self._refresh.Disable()
         self.FindWindowById(wx.ID_OK).Disable()
 
     def enable_running(self):
+        self._running = False
         self._port.Enable()
+        self._refresh.Enable()
         self.FindWindowById(wx.ID_OK).Enable()
 
     def _persist_choices(self):
         raise NotImplementedError()
+
+    def _refresh_ports(self):
+        current = self.get_selected_port() if self._user_chose_port else None
+        self.set_ports(select=current)
+
+    def _search_models(self):
+        entries = []
+        for vendor in sorted(self._vendors):
+            for rclass in self._vendors[vendor]:
+                display = model_value(rclass)
+                detected = get_model_label(rclass)
+                if detected:
+                    display += ' (+ %s)' % detected
+                entries.append((vendor, model_value(rclass), display))
+        with ChirpModelSearchDialog(self, entries) as d:
+            if d.ShowModal() != wx.ID_OK or not d.selection:
+                return
+            vendor, model = d.selection
+        self.select_vendor_model(vendor, model)
+        self._selected_model(None)
 
     def _selected_port(self, event):
         okay_btn = self.FindWindowById(self.GetAffirmativeId())
@@ -569,12 +817,17 @@ class ChirpCloneDialog(wx.Dialog):
                                       parent=self)
             if port:
                 CUSTOM_PORTS.append(port)
+                self._user_chose_port = True
             self.set_ports(select=port or None)
             return
         elif self._port.GetStringSelection() == HELPME:
             self._port_assist(event)
             return
-        elif is_prolific_warning(self._port.GetStringSelection()):
+        self._user_chose_port = True
+        self._update_port_status()
+        info = self._portinfo.get(self.get_selected_port())
+        if (is_prolific_warning(self._port.GetStringSelection()) or
+                (info is not None and not info.usable)):
             self._prolific_assist(event)
             okay_btn.Enable(False)
             return
@@ -657,17 +910,24 @@ class ChirpCloneDialog(wx.Dialog):
         self._select_port_for_model()
 
     def _select_port_for_model(self):
+        if not self._model_ready:
+            # Still building the dialog; __init__ calls us when ready
+            return
         vendor = self._vendor.GetStringSelection()
         model = self._model.GetStringSelection()
+        if self._user_chose_port:
+            LOG.debug('Keeping user-chosen port %s for %s %s',
+                      self.get_selected_port(), vendor, model)
+            return
 
-        rclass = self.get_selected_rclass()
-        rconfig = config.get_for_radio(rclass)
-        last_port = rconfig.get('last_port')
-        if last_port and self.set_selected_port(last_port):
-            LOG.debug('Automatically chose last-used port %s for %s %s',
-                      last_port, vendor, model)
+        ports = list(self._portinfo.values())
+        port = portdetect.choose_port(ports, self._preferred_ports())
+        if port and self.set_selected_port(port):
+            LOG.debug('Automatically chose port %s for %s %s',
+                      port, vendor, model)
         else:
             LOG.debug('No recent/available port for %s %s', vendor, model)
+        self._update_port_status()
 
     def _remember_port_for_selected(self):
         rclass = self.get_selected_rclass()
@@ -702,7 +962,9 @@ class ChirpCloneDialog(wx.Dialog):
     def cancel_action(self):
         if isinstance(self, ChirpDownloadDialog):
             self.enable_model_select()
+        self._running = False
         self._port.Enable()
+        self._refresh.Enable()
         s = chirp_common.Status()
         s.cur = 0
         s.max = 1
@@ -723,6 +985,12 @@ class ChirpCloneDialog(wx.Dialog):
                 self._clone_thread.stop()
             self.EndModal(id)
             return
+        elif id == ID_REFRESH_PORTS:
+            self._refresh_ports()
+            return
+        elif id == ID_SEARCH_MODEL:
+            self._search_models()
+            return
         try:
             self._actual_action(event)
         except Exception as e:
@@ -733,6 +1001,8 @@ class ChirpCloneDialog(wx.Dialog):
 class ChirpDownloadDialog(ChirpCloneDialog):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
+        self.SetTitle(_('Download from radio'))
+        self.FindWindowById(wx.ID_OK).SetLabel(_('Download'))
         if (CONF.get_bool('always_start_recent', 'state') and
                 CONF.get('recent_models', 'state')):
             self._do_recent()
@@ -864,6 +1134,8 @@ class ChirpUploadDialog(ChirpCloneDialog):
     def __init__(self, radio, *a, **k):
         super(ChirpUploadDialog, self).__init__(*a, allow_detected_models=True,
                                                 **k)
+        self.SetTitle(_('Upload to radio'))
+        self.FindWindowById(wx.ID_OK).SetLabel(_('Upload'))
         self._radio = radio
 
         self.select_vendor_model(self._radio.VENDOR, model_value(self._radio))
