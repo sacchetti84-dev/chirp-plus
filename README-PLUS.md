@@ -25,6 +25,18 @@ funzioni dell'originale, più queste modifiche:
 - "Cerca...": trova la radio scrivendo parte del nome (es. `uv5r`, `uv9r`).
 - Traduzione italiana completa delle nuove voci.
 
+## Import/export Excel (`chirp/drivers/generic_xlsx.py`)
+- File > Esporta in Excel... (Ctrl+Maiusc+E): salva le memorie in `.xlsx`
+  con le stesse colonne del CSV di CHIRP, numeri come numeri, intestazione
+  bloccata e filtro automatico. Se selezioni più righe esporta solo quelle.
+- File > Importa da Excel...: legge `.xlsx` e anche i vecchi `.xls`
+  (Excel 97-2003) e sostituisce le memorie della scheda aperta. I file Excel
+  si possono anche aprire direttamente con Apri e copiare/incollare i canali.
+- Va bene anche un foglio scritto a mano: basta la riga di intestazione
+  (almeno `Location` e `Frequency`); righe vuote e colonne extra sono
+  ignorate. I `.xls` si possono solo leggere: per salvarli usa Salva con nome
+  in formato Excel (.xlsx).
+
 ## Aspetto "visore notturno" (`chirp/wxui/theme.py`)
 - Nero e verde fosforo, accenti lime; avvisi in ambra, errori in rosso.
 - Tema scuro nativo di Windows per menu, barre del titolo, barre di scorrimento

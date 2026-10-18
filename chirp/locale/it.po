@@ -3701,3 +3701,18 @@ msgstr "IN ATTESA"
 
 msgid "NO SIGNAL"
 msgstr "NESSUN SEGNALE"
+
+msgid "Export to Excel"
+msgstr "Esporta in Excel"
+
+msgid "Import from Excel..."
+msgstr "Importa da Excel..."
+
+msgid "Export to Excel..."
+msgstr "Esporta in Excel..."
+
+msgid "Excel Files"
+msgstr "File Excel"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "L'esportazione può scrivere solo file CSV o Excel (.xlsx)"

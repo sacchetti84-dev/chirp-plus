@@ -82,6 +82,12 @@ TRANSLATIONS = {
     'READY': 'PRONTO',
     'STANDBY': 'IN ATTESA',
     'NO SIGNAL': 'NESSUN SEGNALE',
+    'Export to Excel': 'Esporta in Excel',
+    'Import from Excel...': 'Importa da Excel...',
+    'Export to Excel...': 'Esporta in Excel...',
+    'Excel Files': 'File Excel',
+    'Export can only write CSV or Excel (.xlsx) files':
+        "L'esportazione può scrivere solo file CSV o Excel (.xlsx)",
 }
 
 

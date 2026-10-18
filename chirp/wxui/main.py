@@ -863,6 +863,22 @@ class ChirpMain(wx.Frame):
         export_item.SetAccel(wx.AcceleratorEntry(wx.MOD_CONTROL, ord('E')))
         self.Bind(wx.EVT_MENU, self._menu_export, export_item)
 
+        self._import_excel_item = wx.NewId()
+        import_excel = file_menu.Append(wx.MenuItem(
+            file_menu, self._import_excel_item, _('Import from Excel...')))
+        self.Bind(wx.EVT_MENU,
+                  functools.partial(self._menu_import, excel=True),
+                  import_excel)
+
+        self._export_excel_item = wx.NewId()
+        export_excel = file_menu.Append(wx.MenuItem(
+            file_menu, self._export_excel_item, _('Export to Excel...')))
+        export_excel.SetAccel(wx.AcceleratorEntry(
+            wx.MOD_CONTROL | wx.ACCEL_SHIFT, ord('E')))
+        self.Bind(wx.EVT_MENU,
+                  functools.partial(self._menu_export, excel=True),
+                  export_excel)
+
         if developer.developer_mode():
             loadmod_item = file_menu.Append(wx.MenuItem(file_menu, wx.NewId(),
                                                         _('Load Module...')))
@@ -1499,6 +1515,8 @@ class ChirpMain(wx.Frame):
             (wx.ID_SELECTALL, is_memedit),
             (self._print_preview_item, is_memedit),
             (self._export_menu_item, can_close),
+            (self._export_excel_item, can_close),
+            (self._import_excel_item, is_memedit and can_edit),
             (self._fixed_item, is_memedit or is_bank),
             (self._large_item, is_memedit or is_bank),
             (self._reload_driver_item, can_saveas),
@@ -1574,7 +1592,7 @@ class ChirpMain(wx.Frame):
     def _menu_new(self, event):
         self.open_file('Untitled.csv', exists=False)
 
-    def _do_open(self):
+    def _do_open(self, wildcard=None):
         all_extensions = ['*.img']
         formats = [_('Chirp Image Files') + ' (*.img)|*.img',
                    _('All Files') + ' (*.*)|*.*']
@@ -1590,7 +1608,8 @@ class ChirpMain(wx.Frame):
         formats.insert(i_index,
                        (_('All supported formats') + '|' +
                         ';'.join(all_extensions)))
-        wildcard = '|'.join(formats)
+        if wildcard is None:
+            wildcard = '|'.join(formats)
         with wx.FileDialog(self, _('Open a file'),
                            chirp_platform.get_platform().get_last_dir(),
                            wildcard=wildcard,
@@ -1711,8 +1730,12 @@ class ChirpMain(wx.Frame):
         self._update_editorset_title(self.current_editorset)
 
     @common.error_proof(errors.ImageDetectFailed, FileNotFoundError)
-    def _menu_import(self, event):
-        filename = self._do_open()
+    def _menu_import(self, event, excel=False):
+        if excel:
+            filename = self._do_open(
+                wildcard='%s (*.xlsx;*.xls)|*.xlsx;*.xls' % _('Excel Files'))
+        else:
+            filename = self._do_open()
         if filename is None:
             return
         d = wx.MessageDialog(
@@ -1739,12 +1762,19 @@ class ChirpMain(wx.Frame):
         else:
             return
 
-    def _menu_export(self, event):
-        wildcard = 'CSV %s (*.csv)|*.csv' % _('Files')
+    def _menu_export(self, event, excel=False):
+        if excel:
+            title = _('Export to Excel')
+            ext = '.xlsx'
+            wildcard = '%s (*.xlsx)|*.xlsx' % _('Excel Files')
+        else:
+            title = _('Export to CSV')
+            ext = '.csv'
+            wildcard = 'CSV %s (*.csv)|*.csv' % _('Files')
         defcsv = os.path.splitext(os.path.basename(
-                self.current_editorset.filename))[0] + '.csv'
+                self.current_editorset.filename))[0] + ext
         style = wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT | wx.FD_CHANGE_DIR
-        with wx.FileDialog(self, _('Export to CSV'), defaultFile=defcsv,
+        with wx.FileDialog(self, title, defaultFile=defcsv,
                            wildcard=wildcard, style=style) as fd:
             if fd.ShowModal() == wx.ID_CANCEL:
                 return

@@ -31,6 +31,7 @@ from chirp import chirp_common
 from chirp import directory
 from chirp import bandplan
 from chirp.drivers import generic_csv
+from chirp.drivers import generic_xlsx
 from chirp import errors
 from chirp import import_logic
 from chirp import settings
@@ -2814,8 +2815,13 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._grid.Scroll(*pos)
 
     def _export_to_file(self, filename):
-        if not filename.lower().endswith('.csv'):
-            raise Exception(_('Export can only write CSV files'))
+        if filename.lower().endswith('.csv'):
+            radio_cls = generic_csv.CSVRadio
+        elif filename.lower().endswith('.xlsx'):
+            radio_cls = generic_xlsx.ExcelRadio
+        else:
+            raise Exception(_('Export can only write CSV or Excel (.xlsx) '
+                              'files'))
         selected = self._grid.GetSelectedRows()
         if len(selected) <= 1:
             selected = range(0, self._grid.GetNumberRows())
@@ -2826,7 +2832,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             if isinstance(m.number, int) and m.number >= 0:
                 max_memory = m.number
                 break
-        r = generic_csv.CSVRadio(None, max_memory=max_memory)
+        r = radio_cls(None, max_memory=max_memory)
         # The CSV driver defaults to a single non-empty memory at location
         # zero, so delete it before we go to export.
         r.erase_memory(0)
@@ -2843,7 +2849,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                     LOG.error('Failed to export memory %i: %s', m.number, e)
             r.set_memory(m)
         r.save(filename)
-        LOG.info('Wrote exported CSV to %s' % filename)
+        LOG.info('Wrote exported %s to %s', radio_cls.MODEL, filename)
 
     def get_selected_memories(self, or_all=True):
         rows = self._grid.GetSelectedRows()

@@ -213,7 +213,12 @@ class CSVRadio(chirp_common.FileBackedRadio):
 
     def _load(self, f):
         reader = csv.reader(f, delimiter=self.SEPCHAR, quotechar='"')
+        return self._load_rows(reader)
 
+    def _load_rows(self, reader):
+        """Parse rows (lists of strings): a header line, then memories.
+
+        Shared by the CSV and spreadsheet drivers."""
         self._comments = []
         good = 0
         lineno = 0
@@ -274,24 +279,32 @@ class CSVRadio(chirp_common.FileBackedRadio):
             self._write_to(f)
 
     def _write_to(self, f):
-        comments = list(self._comments)
         writer = csv.writer(f, delimiter=self.SEPCHAR)
+        for row in self._rows():
+            writer.writerow(row)
+
+    def _rows(self):
+        """Yield the rows to write: comments, the header, then memories.
+
+        Shared by the CSV and spreadsheet drivers."""
+        comments = list(self._comments)
 
         for index, comment in comments[:]:
             if index >= 0:
                 break
-            writer.writerow([comment])
+            yield [comment]
             comments.pop(0)
 
-        writer.writerow(chirp_common.Memory.CSV_FORMAT)
+        yield chirp_common.Memory.CSV_FORMAT
 
         for mem in self.memories:
             for index, comment in comments[:]:
                 if index >= mem.number:
                     break
-                writer.writerow([comment])
+                yield [comment]
                 comments.pop(0)
-            write_memory(writer, mem)
+            if not mem.empty:
+                yield mem.to_csv()
 
     def as_string(self):
         string = io.StringIO(newline='')

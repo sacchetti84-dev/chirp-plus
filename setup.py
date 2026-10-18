@@ -14,6 +14,9 @@ setup(name='chirp',
           'yattag',
           'suds',
           'lark',
+          # Excel import/export (chirp/drivers/generic_xlsx.py)
+          'openpyxl',
+          'xlrd',
       ],
       extras_require={
           'wx': ['wxPython'],
