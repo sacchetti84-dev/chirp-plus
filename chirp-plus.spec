@@ -43,20 +43,41 @@ a = Analysis(
     noarchive=False,
 )
 pyz = PYZ(a.pure)
+icon = os.path.join(ROOT, 'chirp', 'share', 'chirp.ico')
+console = bool(os.environ.get('CHIRP_CONSOLE'))
+# Written by tools/build_windows.py: Windows file properties
+version_file = os.environ.get('CHIRP_VERSION_FILE') or None
 
-exe = EXE(
-    pyz,
-    a.scripts,
-    [],
-    exclude_binaries=True,
-    name='chirpwx',
-    console=bool(os.environ.get('CHIRP_CONSOLE')),
-    icon=os.path.join(ROOT, 'chirp', 'share', 'chirp.ico'),
-    contents_directory='.',
-)
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    name='CHIRP-Plus',
-)
+if os.environ.get('CHIRP_ONEFILE'):
+    # One self-contained CHIRP-Plus.exe to share: unpacks itself in a
+    # temporary folder at every start (a few seconds)
+    exe = EXE(
+        pyz,
+        a.scripts,
+        a.binaries,
+        a.datas,
+        [],
+        name='CHIRP-Plus',
+        console=console,
+        icon=icon,
+        version=version_file,
+        upx=False,
+    )
+else:
+    exe = EXE(
+        pyz,
+        a.scripts,
+        [],
+        exclude_binaries=True,
+        name='chirpwx',
+        console=console,
+        icon=icon,
+        version=version_file,
+        contents_directory='.',
+    )
+    coll = COLLECT(
+        exe,
+        a.binaries,
+        a.datas,
+        name='CHIRP-Plus',
+    )
