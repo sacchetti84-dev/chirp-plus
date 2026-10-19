@@ -7,6 +7,7 @@ gives a ChirpMemEdit loaded with the UV-5R test image.
 import os
 import sys
 import tempfile
+import time
 from unittest import mock
 
 import pytest
@@ -31,8 +32,10 @@ _CONF = config.get()
 _CONF.set_bool('north_america', False, 'bandplan')
 _CONF.set_bool('iaru_r1', True, 'bandplan')
 
+from chirp import chirp_common  # noqa: E402
 from chirp import directory  # noqa: E402
 from chirp.wxui import memedit as memedit_mod  # noqa: E402
+from chirp.wxui import radiothread  # noqa: E402
 from chirp.wxui import cellops  # noqa: E402
 from chirp.wxui import common  # noqa: E402
 
@@ -87,6 +90,8 @@ def no_dialogs(monkeypatch):
     def fail(*a, **k):
         raise AssertionError('Dialog opened: %r' % (a,))
     monkeypatch.setattr(wx, 'MessageBox', fail)
+    monkeypatch.setattr(wx, 'MessageDialog', fail)
+    monkeypatch.setattr(wx, 'ProgressDialog', fail)
     monkeypatch.setattr(common.error_proof, 'show_error', fail)
 
 
@@ -295,3 +300,360 @@ def test_validate(memedit):
     mem.freq = 30000000
     warnings, errors = memedit.validate(mem)
     assert errors
+
+
+# Cell selection, bulk edits and fill down
+
+def _seed(radio, names):
+    """Store valid memories {number: name} straight in the radio."""
+    for number, name in names.items():
+        mem = chirp_common.Memory(number=number)
+        mem.freq = 145500000 + number * 25000
+        mem.name = name
+        mem.mode = 'FM'
+        mem.power = radio.get_features().valid_power_levels[0]
+        assert radio.validate_memory(mem) == []
+        radio.set_memory(mem)
+
+
+def _seeded(memedit, names):
+    _seed(memedit._radio, names)
+    memedit.refresh()
+    wx.SafeYield()
+
+
+def _set_tone(memedit, number, tone):
+    mem = memedit._radio.get_memory(number)
+    mem.tmode = 'Tone'
+    mem.rtone = tone
+    memedit._radio.set_memory(mem)
+    memedit.refresh()
+
+
+def _select(memedit, top, bottom, name):
+    col = _col_index(memedit, name)
+    memedit._grid.ClearSelection()
+    memedit._grid.SelectBlock(top, col, bottom, col)
+
+
+def _tones(memedit, numbers):
+    return [(memedit._radio.get_memory(n).tmode,
+             memedit._radio.get_memory(n).rtone) for n in numbers]
+
+
+class Dialogs:
+    """Stands in for wx.MessageDialog and records what it was told."""
+
+    def __init__(self):
+        self.shown = []
+
+    def __call__(self, parent, message, caption='', style=0, **k):
+        dialogs = self
+
+        class Dialog:
+            def SetExtendedMessage(self, text):
+                self.extended = text
+
+            def ShowModal(self):
+                dialogs.shown.append((caption, message,
+                                      getattr(self, 'extended', '')))
+                return wx.ID_OK
+
+            def Destroy(self):
+                pass
+
+        return Dialog()
+
+
+def test_grid_selects_cells(memedit):
+    assert (memedit._grid.GetSelectionMode() ==
+            wx.grid.Grid.GridSelectCells)
+    # Dragging over cells selects them; channels drag from the row number
+    assert not memedit._grid.CanDragCell()
+
+
+def test_selected_cells_skip_hidden_rows_and_columns(memedit):
+    hidden = [c for c in range(memedit._grid.GetNumberCols())
+              if not memedit._grid.IsColShown(c)]
+    assert hidden
+    memedit._grid.HideRow(2)
+    memedit._grid.SelectBlock(1, 0, 3, memedit._grid.GetNumberCols() - 1)
+    cells = memedit.selected_cells()
+    assert {r for r, c in cells} == {1, 3}
+    assert not {c for r, c in cells} & set(hidden)
+    assert cells == sorted(cells)
+    assert 2 not in memedit.visible_rows()
+    assert memedit.visible_rows()[:3] == [0, 1, 3]
+
+
+def test_whole_row_selection_still_works(memedit):
+    memedit._grid.SelectRow(2)
+    assert memedit.get_selected_rows_safe() == [2]
+
+
+def test_rectangle_over_all_visible_columns_is_whole_rows(memedit):
+    shown = [c for c in range(memedit._grid.GetNumberCols())
+             if memedit._grid.IsColShown(c)]
+    memedit._grid.SelectBlock(3, shown[0], 4, shown[-1])
+    assert memedit.get_selected_rows_safe() == [3, 4]
+
+
+def test_cell_selection_is_not_whole_rows(memedit):
+    memedit._grid.SetGridCursor(6, 0)
+    _select(memedit, 2, 4, 'name')
+    assert memedit.get_selected_rows_safe() == [6]
+
+
+class FakeMouse:
+    def __init__(self, grid, row, down, shift=False):
+        rect = grid.CellToRect(row, 0)
+        self.x, self.y = 5, rect.GetY() + rect.GetHeight() // 2
+        self.down = down
+        self.shift = shift
+
+    def CmdDown(self):
+        return False
+
+    ControlDown = CmdDown
+
+    def ShiftDown(self):
+        return self.shift
+
+    def LeftDown(self):
+        return self.down
+
+    def GetX(self):
+        return self.x
+
+    def GetY(self):
+        return self.y
+
+
+def test_row_number_shift_click_selects_whole_rows(memedit):
+    grid = memedit._grid
+    memedit._row_click(FakeMouse(grid, 1, True))
+    memedit._row_click(FakeMouse(grid, 1, False))
+    assert list(grid.GetSelectedRows()) == [1]
+    memedit._row_click(FakeMouse(grid, 3, True, shift=True))
+    memedit._row_click(FakeMouse(grid, 3, False, shift=True))
+    assert list(grid.GetSelectedRows()) == [1, 2, 3]
+    assert memedit.get_selected_rows_safe() == [1, 2, 3]
+
+
+def test_column_header_click_does_not_select_column(memedit):
+    # Sorting stays (EVT_GRID_COL_SORT); the default handler that would
+    # select the whole column in cell mode is not reached
+    header = FakeEvent(-1, 2, '')
+    memedit._label_click(header)
+    assert not header.skipped
+    corner = FakeEvent(-1, -1, '')
+    memedit._label_click(corner)
+    assert corner.skipped
+
+
+def test_fill_down_ctcss(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 6)})
+    _set_tone(memedit, 1, 100.0)
+    _select(memedit, 1, 5, 'rtone')
+    memedit.fill_down()
+    assert _tones(memedit, range(1, 6)) == [('Tone', 100.0)] * 5
+    assert memedit.memory_for_row(5).rtone == 100.0
+    rtone = _col_index(memedit, 'rtone')
+    assert (memedit._grid.GetCellValue(5, rtone) ==
+            memedit._grid.GetCellValue(1, rtone))
+    assert _tones(memedit, [0, 6]) == [('', 88.5), ('', 88.5)]
+
+
+def test_fill_down_is_one_undo(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 6)})
+    _set_tone(memedit, 1, 100.0)
+    _select(memedit, 1, 5, 'rtone')
+    queued = len(memedit._undo_queue)
+    memedit.fill_down()
+    assert len(memedit._undo_queue) == queued + 1
+    assert memedit._undo_queue[0].name == 'Fill 4 cells'
+    memedit._undo(None)
+    assert _tones(memedit, range(2, 6)) == [('', 88.5)] * 4
+    assert _tones(memedit, [1]) == [('Tone', 100.0)]
+
+
+def test_fill_down_skips_filtered_rows(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 6)})
+    _set_tone(memedit, 1, 100.0)
+    memedit._grid.HideRow(3)
+    _select(memedit, 1, 5, 'rtone')
+    memedit.fill_down()
+    assert _tones(memedit, [2, 4, 5]) == [('Tone', 100.0)] * 3
+    assert _tones(memedit, [3]) == [('', 88.5)]
+    assert memedit._undo_queue[0].name == 'Fill 3 cells'
+
+
+def test_fill_down_in_sorted_view(memedit):
+    # Digits sort before the names already in the image
+    _seeded(memedit, {1: '0E', 2: '0D', 3: '0C', 4: '0B', 5: '0A'})
+    _set_tone(memedit, 5, 100.0)
+    name_col = _col_index(memedit, 'name')
+    memedit._grid.SetSortingColumn(name_col, True)
+    memedit._table.sort_via(name_col, True)
+    memedit.refresh()
+    rows = [memedit.mem2row(n) for n in (5, 4, 3, 2, 1)]
+    # Sorted by name: 0A (memory 5) on top, 0E (memory 1) at the bottom
+    assert rows == [1, 2, 3, 4, 5]
+    assert [memedit.row2mem(r) for r in rows] == [5, 4, 3, 2, 1]
+    _select(memedit, rows[0], rows[-1], 'rtone')
+    memedit.fill_down()
+    assert _tones(memedit, [5, 4, 3, 2, 1]) == [('Tone', 100.0)] * 5
+    for n, name in ((1, '0E'), (2, '0D'), (4, '0B')):
+        assert memedit._radio.get_memory(n).name == name
+    assert _tones(memedit, [0, 6]) == [('', 88.5), ('', 88.5)]
+
+
+def test_undo_after_rejection_restores_only_changed(memedit, monkeypatch):
+    dialogs = Dialogs()
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    # Memory 1 of the image fails validation (split to 0.00165 MHz)
+    _seeded(memedit, {2: 'M2', 3: 'M3'})
+    _set_tone(memedit, 0, 100.0)
+    _select(memedit, 0, 3, 'rtone')
+    memedit.fill_down()
+    assert _tones(memedit, [2, 3]) == [('Tone', 100.0)] * 2
+    assert _tones(memedit, [1]) == [('', 88.5)]
+    assert memedit._radio.get_memory(1).duplex == 'split'
+
+    assert len(dialogs.shown) == 1
+    caption, message, extended = dialogs.shown[0]
+    assert caption == 'Some cells were not changed'
+    assert extended.startswith('[1]: ')
+    assert 'Tx freq' in extended
+
+    undo = memedit._undo_queue[0]
+    assert undo.name == 'Fill 3 cells'
+    assert sorted(m.number for m in undo._mem_before) == [2, 3]
+    memedit._undo(None)
+    assert _tones(memedit, [2, 3]) == [('', 88.5)] * 2
+    assert _tones(memedit, [0]) == [('Tone', 100.0)]
+    assert memedit._radio.get_memory(1).duplex == 'split'
+
+
+def test_bulk_edit_summary_is_capped(memedit, monkeypatch):
+    dialogs = Dialogs()
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    _seeded(memedit, {n: 'M%i' % n for n in range(2, 25)})
+    col = _col_index(memedit, 'freq')
+    edits = [cellops.CellEdit(row, col, None) for row in range(0, 25)]
+    result = memedit.bulk_edit('Clear', edits)
+    assert not result.changed
+    assert len(result.problems) == 25
+    # Nothing changed, nothing to undo
+    assert not memedit._undo_queue
+    assert len(dialogs.shown) == 1
+    caption, message, extended = dialogs.shown[0]
+    lines = extended.split('\n')
+    assert len(lines) == 20
+    assert lines[-1] == '...and 6 more'
+
+
+def test_bulk_edit_writes_only_visible_rows(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 4)})
+    memedit._grid.HideRow(2)
+    col = _col_index(memedit, 'name')
+    result = memedit.bulk_edit('Names', [cellops.CellEdit(r, col, 'X')
+                                         for r in (1, 2, 3)])
+    assert [m.number for m in result.changed] == [1, 3]
+    assert memedit._radio.get_memory(2).name == 'M2'
+    assert memedit._radio.get_memory(3).name == 'X'
+    assert memedit._undo_queue[0].name == 'Names'
+
+
+class FakeProgress:
+    """Stands in for wx.ProgressDialog; aborts at `abort_at` if set."""
+    made = []
+    abort_at = None
+
+    def __init__(self, title, message, maximum=100, parent=None, style=0):
+        self.maximum = maximum
+        self.style = style
+        self.values = []
+        self.destroyed = False
+        FakeProgress.made.append(self)
+
+    def Update(self, value, newmsg=''):
+        self.values.append(value)
+        abort = self.abort_at is not None and value >= self.abort_at
+        return (not abort, False)
+
+    def Destroy(self):
+        self.destroyed = True
+
+
+def _pump(until, timeout=20):
+    deadline = time.monotonic() + timeout
+    while not until():
+        assert time.monotonic() < deadline, 'Timed out waiting'
+        wx.SafeYield()
+        time.sleep(0.005)
+
+
+@pytest.fixture
+def live_memedit(wx_app):
+    directory.import_drivers()
+    radio = directory.get_radio_by_image(IMAGE)
+    _seed(radio, {n: 'M%i' % n for n in range(1, 26)})
+    mem = radio.get_memory(1)
+    mem.tmode = 'Tone'
+    mem.rtone = 100.0
+    radio.set_memory(mem)
+    frame = wx.Frame(None)
+    _make_menubar(frame)
+    editor = memedit_mod.ChirpLiveMemEdit(radio, frame)
+    thread = radiothread.RadioThread(radio)
+    thread.start()
+    editor.set_radio_thread(thread)
+    editor.refresh()
+    rows = editor._grid.GetNumberRows()
+    try:
+        _pump(lambda: len(editor._memory_cache) == rows and
+              not editor._jobs)
+        yield editor
+    finally:
+        thread.end()
+        thread.join(5)
+        frame.Destroy()
+        wx.SafeYield()
+
+
+def test_live_bulk_edit_shows_progress(live_memedit, monkeypatch):
+    monkeypatch.setattr(wx, 'ProgressDialog', FakeProgress)
+    monkeypatch.setattr(FakeProgress, 'made', [])
+    _select(live_memedit, 1, 25, 'rtone')
+    live_memedit.fill_down()
+    progress, = FakeProgress.made
+    assert progress.style & wx.PD_CAN_ABORT
+    assert progress.maximum == 24
+    assert progress.values[-1] == 24
+    assert progress.destroyed
+    _pump(lambda: not live_memedit._jobs)
+    assert _tones(live_memedit, range(1, 26)) == [('Tone', 100.0)] * 25
+
+
+def test_live_bulk_edit_abort_keeps_what_was_written(live_memedit,
+                                                     monkeypatch):
+    monkeypatch.setattr(wx, 'ProgressDialog', FakeProgress)
+    monkeypatch.setattr(FakeProgress, 'made', [])
+    monkeypatch.setattr(FakeProgress, 'abort_at', 5)
+    _select(live_memedit, 1, 25, 'rtone')
+    live_memedit.fill_down()
+    _pump(lambda: not live_memedit._jobs)
+    assert _tones(live_memedit, range(1, 7)) == [('Tone', 100.0)] * 6
+    assert _tones(live_memedit, range(7, 26)) == [('', 88.5)] * 19
+    undo = live_memedit._undo_queue[0]
+    assert undo.name == 'Fill 24 cells'
+    assert sorted(m.number for m in undo._mem_before) == [2, 3, 4, 5, 6]
+
+
+def test_small_live_bulk_edit_has_no_progress(live_memedit):
+    # wx.ProgressDialog fails the test if it is opened
+    _select(live_memedit, 1, 5, 'rtone')
+    live_memedit.fill_down()
+    _pump(lambda: not live_memedit._jobs)
+    assert _tones(live_memedit, range(1, 6)) == [('Tone', 100.0)] * 5

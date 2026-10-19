@@ -990,10 +990,11 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._table = ChirpGridTable(self._features, self._col_defs)
         # AssignTable added in wxPython 4.1, so use the older interface for
         # earlier version support (i.e. Ubuntu Jammy)
+        # Cells can be selected one by one or in rectangles; the row
+        # number still selects whole rows (see _row_click)
         self._grid.SetTable(self._table, takeOwnership=True,
-                            selmode=wx.grid.Grid.SelectRows)
+                            selmode=wx.grid.Grid.GridSelectCells)
         self._grid.DisableDragRowSize()
-        self._grid.EnableDragCell()
         self._grid.SetFocus()
         theme.style_grid(self._grid)
         self._default_cell_bg_color = self._grid.GetCellBackgroundColour(0, 0)
@@ -1031,7 +1032,10 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                         self._memory_rclick)
         self._grid.Bind(wx.grid.EVT_GRID_LABEL_RIGHT_CLICK,
                         self._memory_rclick)
-        self._grid.Bind(wx.grid.EVT_GRID_CELL_BEGIN_DRAG, self._memory_drag)
+        self._grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_CLICK,
+                        self._label_click)
+        # Memories are dragged from the row numbers only (_row_click and
+        # _rowheader_mouseover); a drag over the cells selects them
         self.Bind(wx.EVT_KEY_DOWN, self._keyboard_overrides)
         # Bind key events on the inner grid window so the context-menu key
         # (WXK_WINDOWS_MENU / Apps key) and Shift+F10 reach our handler even
@@ -1241,12 +1245,15 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             try:
                 first_row = cur_selected[0]
             except IndexError:
-                first_row = 0
+                # Clicking a cell no longer selects its row: start the
+                # block from the cursor, as the row selection used to
+                first_row = max(self._grid.GetGridCursorRow(), 0)
             if event.ShiftDown():
                 # Find the block the user wants and select all of it
                 start = min(row, first_row)
                 end = max(row, first_row)
-                self._grid.SelectBlock(start, 0, end, 0)
+                self._grid.SelectBlock(start, 0, end,
+                                       self._grid.GetNumberCols() - 1)
             elif multi and row in cur_selected:
                 # The row is currently selected and we were clicked with the
                 # multi-select key held, so we need to select everything *but*
@@ -1262,6 +1269,14 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         else:
             # Unclick but we started a drag
             self._dragging_rows = None
+
+    def _label_click(self, event):
+        if event.GetRow() < 0 and event.GetCol() >= 0:
+            # A column header click sorts; without Skip() the cell
+            # selection mode does not also select the whole column, which
+            # a later fill or clear would then write to
+            return
+        event.Skip()
 
     def _rowheader_mouseover(self, event):
         x, y = self._grid.CalcUnscrolledPosition(event.GetX(), event.GetY())
@@ -2799,16 +2814,135 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
     def get_selected_rows_safe(self):
         """Return the currently-selected rows
 
-        If no rows are selected, use the row of the cursor
+        Whole rows count: those selected from the row number and the
+        rectangles that cover every visible column. If there are none
+        (nothing selected, or only some cells), use the row of the cursor
         """
-        selected = self._grid.GetSelectedRows()
+        selected = set(self._grid.GetSelectedRows())
+        shown = self._shown_cols()
+        for block in self._grid.GetSelectedBlocks():
+            if (shown and block.GetLeftCol() <= shown[0] and
+                    block.GetRightCol() >= shown[-1]):
+                selected.update(range(block.GetTopRow(),
+                                      block.GetBottomRow() + 1))
         if not selected:
-            selected = [self._grid.GetGridCursorRow()]
-        else:
-            # Filter out any rows that aren't actually visible because of
-            # hide-empty or an active filter query
-            selected = [r for r in selected if self._grid.IsRowShown(r)]
-        return selected
+            return [self._grid.GetGridCursorRow()]
+        # Filter out any rows that aren't actually visible because of
+        # hide-empty or an active filter query
+        return [r for r in sorted(selected) if self._grid.IsRowShown(r)]
+
+    def _shown_cols(self):
+        return [c for c in range(self._grid.GetNumberCols())
+                if self._grid.IsColShown(c)]
+
+    def visible_rows(self):
+        """Rows not hidden by hide-empty or a filter, top to bottom."""
+        return [r for r in range(self._grid.GetNumberRows())
+                if self._grid.IsRowShown(r)]
+
+    def selected_cells(self):
+        """Selected (row, col) cells, by row then column.
+
+        Only visible rows and columns; the cursor alone is not a
+        selection.
+        """
+        shown = set(self._shown_cols())
+        cells = set()
+        for block in self._grid.GetSelectedBlocks():
+            cols = [c for c in range(block.GetLeftCol(),
+                                     block.GetRightCol() + 1)
+                    if c in shown]
+            for row in range(block.GetTopRow(), block.GetBottomRow() + 1):
+                if self._grid.IsRowShown(row):
+                    cells.update((row, col) for col in cols)
+        return sorted(cells)
+
+    def bulk_edit(self, name, edits):
+        """Apply cell edits as one undo step named `name`.
+
+        Edits in hidden rows are dropped. Each changed memory is stored
+        (with a progress dialog on a live radio for big edits) and one
+        summary lists the cells that were not changed.
+        """
+        if not self.editable:
+            return cellops.BulkResult([], [])
+        edits = [e for e in edits if self._grid.IsRowShown(e.row)]
+        result = cellops.apply_edits(self, edits)
+        if result.changed:
+            with self.undo_context(name):
+                self._store_bulk(result.changed,
+                                 self._bulk_needs_progress(len(edits)))
+            wx.PostEvent(self, common.EditorChanged(self.GetId()))
+        if result.problems:
+            self._show_bulk_problems(result.problems)
+        return result
+
+    def _bulk_needs_progress(self, count):
+        return False
+
+    def _store_bulk(self, mems, progress):
+        if not progress:
+            for mem in mems:
+                self.set_memory(mem)
+            return
+        dialog = wx.ProgressDialog(
+            _('Writing memories'), '', maximum=len(mems), parent=self,
+            style=wx.PD_CAN_ABORT | wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
+        try:
+            for i, mem in enumerate(mems):
+                if not self._set_memory_and_wait(mem, dialog, i + 1):
+                    # What was written stays, and is part of the undo step
+                    LOG.info('Bulk edit aborted after %i of %i memories',
+                             i + 1, len(mems))
+                    break
+        finally:
+            dialog.Destroy()
+
+    def _set_memory_and_wait(self, mem, dialog, done):
+        """Store `mem` and wait for the radio; False if the user aborts."""
+        jobs = getattr(self, '_jobs', {})
+        before = set(jobs)
+        self.set_memory(mem)
+        mine = set(jobs) - before
+        message = _('Memory %s') % (mem.extd_number or mem.number)
+        while True:
+            keep_going, _skip = dialog.Update(done, message)
+            if not keep_going:
+                return False
+            if mine.isdisjoint(jobs):
+                return True
+            wx.MilliSleep(20)
+
+    def _show_bulk_problems(self, problems):
+        lines = ['[%s]: %s' % problem for problem in problems[:19]]
+        if len(problems) > 19:
+            lines.append(_('...and %i more') % (len(problems) - 19))
+        d = wx.MessageDialog(self, _('Some cells were not changed'),
+                             _('Some cells were not changed'),
+                             wx.OK | wx.ICON_WARNING)
+        d.SetExtendedMessage('\n'.join(lines))
+        d.ShowModal()
+        d.Destroy()
+
+    def fill_down(self):
+        """Copy the top selected cell of each column to the others below.
+
+        The text shown in the cell is copied; an empty one clears the
+        cells below, except in empty memories.
+        """
+        rows_by_col = {}
+        for row, col in self.selected_cells():
+            rows_by_col.setdefault(col, []).append(row)
+        edits = []
+        for col, rows in sorted(rows_by_col.items()):
+            text = self._grid.GetCellValue(rows[0], col) or None
+            for row in rows[1:]:
+                mem = self._memory_cache.get(row)
+                if text is None and (mem is None or mem.empty):
+                    continue
+                edits.append(cellops.CellEdit(row, col, text))
+        if edits:
+            self.bulk_edit(_('Fill %i cells') % len(edits), edits)
 
     def cb_move(self, direction):
         if self.is_sorted:
@@ -2954,7 +3088,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
 
 class ChirpLiveMemEdit(ChirpMemEdit, common.ChirpAsyncEditor):
-    pass
+    def _bulk_needs_progress(self, count):
+        # Each memory goes to the radio right away, which takes a while
+        return count > 20
 
 
 class DVMemoryAsSettings(settings.RadioSettingGroup):
