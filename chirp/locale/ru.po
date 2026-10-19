@@ -3818,9 +3818,6 @@ msgstr "{bank} полон"
 #~ msgid "My callsign"
 #~ msgstr "Мой позывной"
 
-#~ msgid "Name"
-#~ msgstr "Имя"
-
 #~ msgid "None"
 #~ msgstr "Ничего"
 
@@ -3916,9 +3913,6 @@ msgstr "{bank} полон"
 
 #~ msgid "Setting memory {number}"
 #~ msgstr "Установка памяти {number}"
-
-#~ msgid "Shift"
-#~ msgstr "Сдвиг"
 
 #~ msgid "Show Empty"
 #~ msgstr "Показывать пустые"
@@ -4038,3 +4032,633 @@ msgstr "{bank} полон"
 #, fuzzy
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{vendor} {model} на {port}"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Поддельный или неподдерживаемый чип Prolific: текущий драйвер Windows "
+"отказывается с ним работать. Установите более старый драйвер Prolific или "
+"используйте кабель CH340/FTDI."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Последовательный порт Bluetooth, не кабель программирования"
+
+msgid "Built-in serial port of the computer"
+msgstr "Встроенный последовательный порт компьютера"
+
+msgid "Programming cable detected"
+msgstr "Обнаружен кабель программирования"
+
+msgid "USB serial device"
+msgstr "Последовательное USB-устройство"
+
+msgid "Serial port"
+msgstr "Последовательный порт"
+
+msgid "Search radio"
+msgstr "Поиск станции"
+
+msgid "Search again for connected cables"
+msgstr "Снова искать подключённые кабели"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Найдите свою станцию, введя часть её названия"
+
+msgid "Upload"
+msgstr "Отправить"
+
+msgid "Find your radio"
+msgstr "Найдите свою станцию"
+
+msgid "Refresh"
+msgstr "Обновить"
+
+msgid "Search..."
+msgstr "Поиск..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Подключите кабель программирования к станции и к компьютеру, затем включите "
+"станцию. Порт кабеля определяется автоматически."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Последовательный порт не найден. Проверьте кабель и его драйвер, затем "
+"нажмите «Обновить»."
+
+msgid "Manually entered port"
+msgstr "Порт, введённый вручную"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr ""
+"Введите часть названия изготовителя или модели (например \"UV-5R\" или "
+"\"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Новый кабель подключён к %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "Кабель на %s отключён"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "Найдено кабелей: %i, выбран %s: проверьте, что это нужный"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr "%s, вероятно, не ваш кабель, %s похож на кабель программирования"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Кабель программирования не распознан, выбран %s"
+
+msgid "Show toolbar"
+msgstr "Показать панель инструментов"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Прочитать ячейки памяти и параметры из станции"
+
+msgid "Write this tab to the radio"
+msgstr "Записать эту вкладку в станцию"
+
+msgid "Cable: %s"
+msgstr "Кабель: %s"
+
+msgid "No programming cable connected"
+msgstr "Кабель программирования не подключён"
+
+msgid "Cable on %s needs a different driver"
+msgstr "Кабелю на %s нужен другой драйвер"
+
+msgid "Serial port %s disconnected"
+msgstr "Последовательный порт %s отключён"
+
+msgid "Programming cable connected on %s"
+msgstr "Кабель программирования подключён к %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Сначала загрузите данные из станции или откройте файл."
+
+msgid "Searching for cables..."
+msgstr "Поиск кабелей..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "ПРОГРАММАТОР СТАНЦИЙ"
+
+msgid "Export to Excel"
+msgstr "Экспорт в Excel"
+
+msgid "Import from Excel..."
+msgstr "Импорт из Excel..."
+
+msgid "Export to Excel..."
+msgstr "Экспорт в Excel..."
+
+msgid "Excel Files"
+msgstr "Файлы Excel"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Экспорт может записывать только файлы CSV или Excel (.xlsx)"
+
+msgid "Export Excel"
+msgstr "Экспорт Excel"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "внимание"
+
+msgid "error"
+msgstr "ошибка"
+
+msgid "info"
+msgstr "инфо"
+
+msgid "reads the radio"
+msgstr "читает станцию"
+
+msgid "writes the radio"
+msgstr "записывает станцию"
+
+msgid "file"
+msgstr "файл"
+
+msgid "tones"
+msgstr "тоны"
+
+msgid "built-in"
+msgstr "встроенный"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Показать консоль событий"
+
+msgid "Look"
+msgstr "Оформление"
+
+msgid "Terminal"
+msgstr "Терминал"
+
+msgid "Classic"
+msgstr "Классическое"
+
+msgid "Saved %s"
+msgstr "Сохранено %s"
+
+msgid "Downloaded %s %s"
+msgstr "Загружено из %s %s"
+
+msgid "legend"
+msgstr "обозначения"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s запущен, поддерживаемых моделей: %(count)i"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Открыт %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Экспортировано %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Отправлено в %s %s"
+
+msgid "Programming cable"
+msgstr "Кабель программирования"
+
+msgid "Other ports"
+msgstr "Другие порты"
+
+msgid "%i radio models supported"
+msgstr "Поддерживаемых моделей: %i"
+
+msgid "commands"
+msgstr "команды"
+
+msgid "Last radio"
+msgstr "Последняя станция"
+
+msgid "Serial port %s connected"
+msgstr "Последовательный порт %s подключён"
+
+msgid "Detect radio and download..."
+msgstr "Определить станцию и загрузить..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "Спросить у подключённой станции её модель (только чтение)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Пробую %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Ни одна станция не ответила. Проверьте, что она включена, кабель вставлен до"
+" упора и громкость прибавлена, затем повторите."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Ожидание готовности станции..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Эти модели используют одинаковый протокол и структуру памяти. Выберите "
+"модель, указанную на вашей станции:"
+
+msgid "Radio detected"
+msgstr "Станция определена"
+
+msgid "Detect"
+msgstr "Определить"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Сначала выберите последовательный порт кабеля"
+
+msgid "Looking for a radio on %s"
+msgstr "Поиск станции на %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "Станция ответила: %(ident)s, совместима с %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Отправка завершена, обратное чтение для проверки"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "Чтение станции для сравнения с %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Сравнение со станцией: различаются каналов %(memories)i и параметров "
+"%(settings)i"
+
+msgid "Changes in the radio"
+msgstr "Изменения в станции"
+
+msgid "Verify"
+msgstr "Проверка"
+
+msgid "Compare with the radio before uploading"
+msgstr "Сравнить со станцией перед отправкой"
+
+msgid "Read back and verify after uploading"
+msgstr "После отправки прочитать и проверить"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Проверка не удалась: не удалось прочитать станцию (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "Отправка завершена, но обратное чтение станции не удалось: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Проверка НЕ ПРОЙДЕНА: различий между образом и станцией: %i"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"Станция не содержит отправленные данные (различий: %i). Повторите отправку."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Проверка пройдена: станция содержит отправленный образ (%s)"
+
+msgid "byte by byte"
+msgstr "побайтно"
+
+msgid "channel by channel"
+msgstr "поканально"
+
+msgid "added"
+msgstr "добавлено"
+
+msgid "removed"
+msgstr "удалено"
+
+msgid "changed"
+msgstr "изменено"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "Станция уже содержит этот образ: ничего не изменится."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr "В станции изменится каналов %(memories)i и параметров %(settings)i."
+
+msgid "Change"
+msgstr "Изменение"
+
+msgid "Where"
+msgstr "Где"
+
+msgid "In the radio now"
+msgstr "Сейчас в станции"
+
+msgid "After upload"
+msgstr "После отправки"
+
+msgid "Memory %s"
+msgstr "Ячейка %s"
+
+msgid "image"
+msgstr "образ"
+
+msgid "Program several radios..."
+msgstr "Запрограммировать несколько станций..."
+
+msgid "Program several radios"
+msgstr "Запрограммировать несколько станций"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"В несколько станций можно записать только образы, загруженные из станции "
+"(режим клонирования)."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"В каждую станцию записывается один и тот же образ. Для каждой станции: "
+"подключите кабель, включите станцию, затем нажмите кнопку (или Enter). "
+"Дождитесь результата, прежде чем переставлять кабель."
+
+msgid "Read back and verify each radio"
+msgstr "Прочитать и проверить каждую станцию"
+
+msgid "Writing radio %i..."
+msgstr "Запись станции %i..."
+
+msgid "Batch: writing radio %i"
+msgstr "Серия: запись станции %i"
+
+msgid "written"
+msgstr "записана"
+
+msgid "not checked"
+msgstr "не проверена"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Серия: станция %(n)i %(result)s, проверка %(verify)s"
+
+msgid "Program radio %i"
+msgstr "Запрограммировать станцию %i"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Станций: %(done)i   ok: %(good)i   с ошибкой: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Дождитесь окончания текущей станции."
+
+msgid "Image"
+msgstr "Образ"
+
+msgid "Result"
+msgstr "Результат"
+
+msgid "Time"
+msgstr "Время"
+
+msgid "ERROR: %s"
+msgstr "ОШИБКА: %s"
+
+msgid "%i differences"
+msgstr "Различий: %i"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "Станция %i готова: подключите следующую и нажмите кнопку"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"Станция %i с ошибкой: проверьте её и нажмите кнопку, чтобы продолжить со "
+"следующей"
+
+msgid "Check frequencies..."
+msgstr "Проверить частоты..."
+
+msgid "Memory map..."
+msgstr "Карта памяти..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Для нового оформления нужно перезапустить CHIRP. Перезапустить сейчас? "
+"Сначала будет предложено сохранить открытые файлы."
+
+msgid "Restart now"
+msgstr "Перезапустить сейчас"
+
+msgid "Later"
+msgstr "Позже"
+
+msgid "Pocket channel card"
+msgstr "Карманная карточка каналов"
+
+msgid "Pocket channel card..."
+msgstr "Карманная карточка каналов..."
+
+msgid "Backups..."
+msgstr "Резервные копии..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr ""
+"Проверка частот работает с образами, а не со станциями в реальном времени."
+
+msgid "Frequency check"
+msgstr "Проверка частот"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Проверка частот: ошибок %(bad)i, предупреждений %(warn)i, замечаний %(info)i"
+
+msgid "Pocket card for %s"
+msgstr "Карманная карточка для %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr "Карта памяти доступна для образов, загруженных из станции."
+
+msgid "Memory map"
+msgstr "Карта памяти"
+
+msgid "Backups"
+msgstr "Резервные копии"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"CHIRP сохраняет копию станции при каждой загрузке и перед каждой отправкой. "
+"Синий: прочитано из станции, оранжевый: перед записью."
+
+msgid "Compare with open tab"
+msgstr "Сравнить с открытой вкладкой"
+
+msgid "Open folder"
+msgstr "Открыть папку"
+
+msgid "Backup compared with the open tab"
+msgstr "Резервная копия в сравнении с открытой вкладкой"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "download"
+msgstr "загрузка"
+
+msgid "upload"
+msgstr "отправка"
+
+msgid "In the backup"
+msgstr "В копии"
+
+msgid "In the open tab"
+msgstr "В открытой вкладке"
+
+msgid "open tab"
+msgstr "открытая-вкладка"
+
+msgid "errors"
+msgstr "ошибки"
+
+msgid "warnings"
+msgstr "предупреждения"
+
+msgid "notes"
+msgstr "замечания"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Правила для Италии. Это подсказка, а не юридическое заключение: проверьте "
+"свою лицензию и сертификацию станции."
+
+msgid "Channel"
+msgstr "Канал"
+
+msgid "Level"
+msgstr "Уровень"
+
+msgid "Band"
+msgstr "Диапазон"
+
+msgid "Message"
+msgstr "Сообщение"
+
+msgid "No problems found."
+msgstr "Проблем не найдено."
+
+msgid "channels"
+msgstr "каналы"
+
+msgid "names"
+msgstr "названия"
+
+msgid "settings"
+msgstr "параметры"
+
+msgid "messages and ident"
+msgstr "сообщения и идентификатор"
+
+msgid "service (squelch, limits): careful"
+msgstr "сервис (шумоподавитель, границы): осторожно"
+
+msgid "unknown data (calibration?)"
+msgstr "неизвестные данные (калибровка?)"
+
+msgid "Start"
+msgstr "Начало"
+
+msgid "End"
+msgstr "Конец"
+
+msgid "Bytes"
+msgstr "Байт"
+
+msgid "Name"
+msgstr "Название"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i байт: %(known)i описаны драйвером, %(unknown)i содержат данные, "
+"которые драйвер не описывает"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "Различаются каналов %(memories)i и параметров %(settings)i."
+
+msgid "No differences."
+msgstr "Различий нет."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "передаёт на %(freq)s, вне известных диапазонов"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr ""
+"передаёт на %(freq)s (%(band)s): только приём, установите Дуплекс в off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: для передачи нужна лицензия"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s допускает %(max)s Вт, этот канал использует %(watts)s Вт"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM-вещание"
+
+msgid "airband"
+msgstr "авиадиапазон"
+
+msgid "amateur 2 m"
+msgstr "радиолюбители 2 м"
+
+msgid "marine VHF"
+msgstr "морской УКВ"
+
+msgid "amateur 70 cm"
+msgstr "радиолюбители 70 см"
+
+msgid "amateur satellite 70 cm"
+msgstr "любительские спутники 70 см"
+
+msgid "needs a maritime radio licence"
+msgstr "нужна лицензия морской радиосвязи"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "только с сертифицированными станциями PMR446 и несъёмной антенной"
+
+msgid "Ch"
+msgstr "Кан"
+
+msgid "MHz"
+msgstr "МГц"
+
+msgid "Shift"
+msgstr "Сдвиг"

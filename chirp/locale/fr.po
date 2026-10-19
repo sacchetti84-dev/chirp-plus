@@ -3804,9 +3804,6 @@ msgstr "{bank} pleine"
 #~ msgid "My callsign"
 #~ msgstr "Mon indicatif"
 
-#~ msgid "Name"
-#~ msgstr "Nom"
-
 #~ msgid "None"
 #~ msgstr "Aucun"
 
@@ -3897,9 +3894,6 @@ msgstr "{bank} pleine"
 
 #~ msgid "Setting memory {number}"
 #~ msgstr "Régler la mémoire {number}"
-
-#~ msgid "Shift"
-#~ msgstr "Décalage"
 
 #~ msgid "Show Empty"
 #~ msgstr "Montrer vides"
@@ -4015,3 +4009,640 @@ msgstr "{bank} pleine"
 
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{vendor} {model} sur {port}"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Puce Prolific contrefaite ou non prise en charge : le pilote Windows actuel "
+"refuse de l'utiliser. Installez un pilote Prolific plus ancien ou utilisez "
+"un câble CH340/FTDI."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Port série Bluetooth, ce n'est pas un câble de programmation"
+
+msgid "Built-in serial port of the computer"
+msgstr "Port série intégré de l'ordinateur"
+
+msgid "Programming cable detected"
+msgstr "Câble de programmation détecté"
+
+msgid "USB serial device"
+msgstr "Périphérique série USB"
+
+msgid "Serial port"
+msgstr "Port série"
+
+msgid "Search radio"
+msgstr "Rechercher une radio"
+
+msgid "Search again for connected cables"
+msgstr "Rechercher à nouveau les câbles branchés"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Trouvez votre radio en tapant une partie de son nom"
+
+msgid "Upload"
+msgstr "Envoyer"
+
+msgid "Find your radio"
+msgstr "Trouver votre radio"
+
+msgid "Refresh"
+msgstr "Actualiser"
+
+msgid "Search..."
+msgstr "Rechercher..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Branchez le câble de programmation sur la radio et sur l'ordinateur, puis "
+"allumez la radio. Le port du câble est détecté automatiquement."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Aucun port série trouvé. Vérifiez le câble et son pilote, puis appuyez sur "
+"Actualiser."
+
+msgid "Manually entered port"
+msgstr "Port saisi manuellement"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr ""
+"Tapez une partie du fabricant ou du modèle (par exemple \"UV-5R\" ou "
+"\"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Nouveau câble branché sur %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "Le câble sur %s a été débranché"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "%i câbles trouvés, %s sélectionné : vérifiez que c'est le bon"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr ""
+"%s n'est probablement pas votre câble, %s ressemble à un câble de "
+"programmation"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Aucun câble de programmation reconnu, %s sélectionné"
+
+msgid "Show toolbar"
+msgstr "Afficher la barre d'outils"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Lire les mémoires et les réglages de la radio"
+
+msgid "Write this tab to the radio"
+msgstr "Écrire cet onglet dans la radio"
+
+msgid "Cable: %s"
+msgstr "Câble : %s"
+
+msgid "No programming cable connected"
+msgstr "Aucun câble de programmation branché"
+
+msgid "Cable on %s needs a different driver"
+msgstr "Le câble sur %s nécessite un autre pilote"
+
+msgid "Serial port %s disconnected"
+msgstr "Port série %s débranché"
+
+msgid "Programming cable connected on %s"
+msgstr "Câble de programmation branché sur %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Téléchargez d'abord depuis la radio ou ouvrez un fichier."
+
+msgid "Searching for cables..."
+msgstr "Recherche des câbles..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "PROGRAMMATEUR RADIO"
+
+msgid "Export to Excel"
+msgstr "Exporter vers Excel"
+
+msgid "Import from Excel..."
+msgstr "Importer depuis Excel..."
+
+msgid "Export to Excel..."
+msgstr "Exporter vers Excel..."
+
+msgid "Excel Files"
+msgstr "Fichiers Excel"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "L'export ne peut écrire que des fichiers CSV ou Excel (.xlsx)"
+
+msgid "Export Excel"
+msgstr "Exporter Excel"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "attention"
+
+msgid "error"
+msgstr "erreur"
+
+msgid "info"
+msgstr "info"
+
+msgid "reads the radio"
+msgstr "lit la radio"
+
+msgid "writes the radio"
+msgstr "écrit la radio"
+
+msgid "file"
+msgstr "fichier"
+
+msgid "tones"
+msgstr "tonalités"
+
+msgid "built-in"
+msgstr "intégré"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Afficher la console des événements"
+
+msgid "Look"
+msgstr "Apparence"
+
+msgid "Terminal"
+msgstr "Terminal"
+
+msgid "Classic"
+msgstr "Classique"
+
+msgid "Saved %s"
+msgstr "Enregistré %s"
+
+msgid "Downloaded %s %s"
+msgstr "Téléchargé %s %s"
+
+msgid "legend"
+msgstr "légende"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s démarré, %(count)i modèles de radio pris en charge"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Ouvert %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Exporté %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Envoyé vers %s %s"
+
+msgid "Programming cable"
+msgstr "Câble de programmation"
+
+msgid "Other ports"
+msgstr "Autres ports"
+
+msgid "%i radio models supported"
+msgstr "%i modèles de radio pris en charge"
+
+msgid "commands"
+msgstr "commandes"
+
+msgid "Last radio"
+msgstr "Dernière radio"
+
+msgid "Serial port %s connected"
+msgstr "Port série %s branché"
+
+msgid "Detect radio and download..."
+msgstr "Détecter la radio et télécharger..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "Demander à la radio branchée quel modèle elle est (lecture seule)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Essai de %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Aucune radio n'a répondu. Vérifiez qu'elle est allumée, que le câble est "
+"bien enfoncé et que le volume est monté, puis réessayez."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Attente que la radio soit prête..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Ces modèles utilisent le même protocole et la même mémoire. Choisissez celui"
+" indiqué sur votre radio :"
+
+msgid "Radio detected"
+msgstr "Radio détectée"
+
+msgid "Detect"
+msgstr "Détecter"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Choisissez d'abord le port série du câble"
+
+msgid "Looking for a radio on %s"
+msgstr "Recherche d'une radio sur %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "La radio a répondu : %(ident)s, compatible avec %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Envoi terminé, relecture de la radio pour vérifier"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "Lecture de la radio pour la comparer avec %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Comparaison avec la radio : %(memories)i canaux et %(settings)i réglages "
+"diffèrent"
+
+msgid "Changes in the radio"
+msgstr "Modifications dans la radio"
+
+msgid "Verify"
+msgstr "Vérification"
+
+msgid "Compare with the radio before uploading"
+msgstr "Comparer avec la radio avant l'envoi"
+
+msgid "Read back and verify after uploading"
+msgstr "Relire et vérifier après l'envoi"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Vérification échouée : impossible de relire la radio (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "L'envoi est terminé, mais la relecture de la radio a échoué : %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Vérification ÉCHOUÉE : %i différences entre l'image et la radio"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"La radio ne contient pas ce qui a été envoyé (%i différences). Recommencez "
+"l'envoi."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Vérification OK : la radio contient l'image envoyée (%s)"
+
+msgid "byte by byte"
+msgstr "octet par octet"
+
+msgid "channel by channel"
+msgstr "canal par canal"
+
+msgid "added"
+msgstr "ajouté"
+
+msgid "removed"
+msgstr "supprimé"
+
+msgid "changed"
+msgstr "modifié"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "La radio contient déjà cette image : rien ne changerait."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr ""
+"%(memories)i canaux et %(settings)i réglages vont changer dans la radio."
+
+msgid "Change"
+msgstr "Modification"
+
+msgid "Where"
+msgstr "Où"
+
+msgid "In the radio now"
+msgstr "Actuellement dans la radio"
+
+msgid "After upload"
+msgstr "Après l'envoi"
+
+msgid "Memory %s"
+msgstr "Mémoire %s"
+
+msgid "image"
+msgstr "image"
+
+msgid "Program several radios..."
+msgstr "Programmer plusieurs radios..."
+
+msgid "Program several radios"
+msgstr "Programmer plusieurs radios"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"Seules les images téléchargées depuis une radio (mode clone) peuvent être "
+"écrites dans plusieurs radios."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"La même image est écrite dans chaque radio. Pour chaque radio : branchez le "
+"câble, allumez la radio, puis appuyez sur le bouton (ou Entrée). Attendez le"
+" résultat avant de déplacer le câble."
+
+msgid "Read back and verify each radio"
+msgstr "Relire et vérifier chaque radio"
+
+msgid "Writing radio %i..."
+msgstr "Écriture de la radio %i..."
+
+msgid "Batch: writing radio %i"
+msgstr "En série : écriture de la radio %i"
+
+msgid "written"
+msgstr "écrite"
+
+msgid "not checked"
+msgstr "non vérifiée"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "En série : radio %(n)i %(result)s, vérification %(verify)s"
+
+msgid "Program radio %i"
+msgstr "Programmer la radio %i"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Radios : %(done)i   ok : %(good)i   échecs : %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Attendez la fin de la radio en cours."
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Result"
+msgstr "Résultat"
+
+msgid "Time"
+msgstr "Durée"
+
+msgid "ERROR: %s"
+msgstr "ERREUR : %s"
+
+msgid "%i differences"
+msgstr "%i différences"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "Radio %i terminée : branchez la suivante et appuyez sur le bouton"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"La radio %i a échoué : vérifiez-la et appuyez sur le bouton pour continuer "
+"avec la suivante"
+
+msgid "Check frequencies..."
+msgstr "Vérifier les fréquences..."
+
+msgid "Memory map..."
+msgstr "Carte de la mémoire..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"La nouvelle apparence nécessite de redémarrer CHIRP. Redémarrer maintenant ?"
+" Il vous sera d'abord demandé d'enregistrer les fichiers ouverts."
+
+msgid "Restart now"
+msgstr "Redémarrer maintenant"
+
+msgid "Later"
+msgstr "Plus tard"
+
+msgid "Pocket channel card"
+msgstr "Carte de canaux de poche"
+
+msgid "Pocket channel card..."
+msgstr "Carte de canaux de poche..."
+
+msgid "Backups..."
+msgstr "Sauvegardes..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr ""
+"La vérification des fréquences fonctionne sur les images, pas sur les radios"
+" en direct."
+
+msgid "Frequency check"
+msgstr "Vérification des fréquences"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Vérification des fréquences : %(bad)i erreurs, %(warn)i avertissements, "
+"%(info)i notes"
+
+msgid "Pocket card for %s"
+msgstr "Carte de poche pour %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr ""
+"La carte de la mémoire est disponible pour les images téléchargées depuis "
+"une radio."
+
+msgid "Memory map"
+msgstr "Carte de la mémoire"
+
+msgid "Backups"
+msgstr "Sauvegardes"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"CHIRP enregistre une copie de la radio à chaque téléchargement et avant "
+"chaque envoi. Bleu : lue depuis la radio, orange : avant de l'écrire."
+
+msgid "Compare with open tab"
+msgstr "Comparer avec l'onglet ouvert"
+
+msgid "Open folder"
+msgstr "Ouvrir le dossier"
+
+msgid "Backup compared with the open tab"
+msgstr "Sauvegarde comparée avec l'onglet ouvert"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "download"
+msgstr "téléchargement"
+
+msgid "upload"
+msgstr "envoi"
+
+msgid "In the backup"
+msgstr "Dans la sauvegarde"
+
+msgid "In the open tab"
+msgstr "Dans l'onglet ouvert"
+
+msgid "open tab"
+msgstr "onglet-ouvert"
+
+msgid "errors"
+msgstr "erreurs"
+
+msgid "warnings"
+msgstr "avertissements"
+
+msgid "notes"
+msgstr "notes"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Règles pour l'Italie. C'est une aide, pas un avis juridique : vérifiez votre"
+" licence et l'homologation de la radio."
+
+msgid "Channel"
+msgstr "Canal"
+
+msgid "Level"
+msgstr "Niveau"
+
+msgid "Band"
+msgstr "Bande"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "No problems found."
+msgstr "Aucun problème trouvé."
+
+msgid "channels"
+msgstr "canaux"
+
+msgid "names"
+msgstr "noms"
+
+msgid "settings"
+msgstr "réglages"
+
+msgid "messages and ident"
+msgstr "messages et identification"
+
+msgid "service (squelch, limits): careful"
+msgstr "service (squelch, limites) : attention"
+
+msgid "unknown data (calibration?)"
+msgstr "données inconnues (étalonnage ?)"
+
+msgid "Start"
+msgstr "Début"
+
+msgid "End"
+msgstr "Fin"
+
+msgid "Bytes"
+msgstr "Octets"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i octets : %(known)i décrits par le pilote, %(unknown)i contenant des"
+" données que le pilote ne décrit pas"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "%(memories)i canaux et %(settings)i réglages sont différents."
+
+msgid "No differences."
+msgstr "Aucune différence."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "émet sur %(freq)s, hors des bandes connues"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "émet sur %(freq)s (%(band)s) : réception seule, mettez Duplex sur off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s : émettre nécessite une licence"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s autorise %(max)s W, ce canal utilise %(watts)s W"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s : %(note)s"
+
+msgid "FM broadcast"
+msgstr "radiodiffusion FM"
+
+msgid "airband"
+msgstr "bande aviation"
+
+msgid "amateur 2 m"
+msgstr "radioamateur 2 m"
+
+msgid "marine VHF"
+msgstr "VHF marine"
+
+msgid "amateur 70 cm"
+msgstr "radioamateur 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "satellites radioamateurs 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "nécessite une licence radio maritime"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "uniquement avec des radios PMR446 homologuées et une antenne fixe"
+
+msgid "Ch"
+msgstr "Can"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Décal."

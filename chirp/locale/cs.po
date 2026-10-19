@@ -3656,3 +3656,628 @@ msgstr ""
 #, python-brace-format
 msgid "{bank} is full"
 msgstr "Banka {bank} je plná"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Padělaný nebo nepodporovaný čip Prolific: aktuální ovladač Windows s ním "
+"odmítá pracovat. Nainstalujte starší ovladač Prolific nebo použijte kabel "
+"CH340/FTDI."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Sériový port Bluetooth, není to programovací kabel"
+
+msgid "Built-in serial port of the computer"
+msgstr "Vestavěný sériový port počítače"
+
+msgid "Programming cable detected"
+msgstr "Programovací kabel rozpoznán"
+
+msgid "USB serial device"
+msgstr "Sériové zařízení USB"
+
+msgid "Serial port"
+msgstr "Sériový port"
+
+msgid "Search radio"
+msgstr "Hledat vysílačku"
+
+msgid "Search again for connected cables"
+msgstr "Znovu hledat připojené kabely"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Najděte svou vysílačku zadáním části jejího názvu"
+
+msgid "Upload"
+msgstr "Nahrát"
+
+msgid "Find your radio"
+msgstr "Najděte svou vysílačku"
+
+msgid "Refresh"
+msgstr "Obnovit"
+
+msgid "Search..."
+msgstr "Hledat..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Připojte programovací kabel k vysílačce a k počítači a zapněte vysílačku. "
+"Port kabelu se rozpozná automaticky."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Nebyl nalezen žádný sériový port. Zkontrolujte kabel a jeho ovladač a "
+"stiskněte Obnovit."
+
+msgid "Manually entered port"
+msgstr "Ručně zadaný port"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr "Zadejte část výrobce nebo modelu (například \"UV-5R\" nebo \"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Nový kabel připojen na %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "Kabel na %s byl odpojen"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "Nalezeno kabelů: %i, vybrán %s: ověřte, že je to ten správný"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr "%s pravděpodobně není váš kabel, %s vypadá jako programovací kabel"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Nebyl rozpoznán žádný programovací kabel, vybrán %s"
+
+msgid "Show toolbar"
+msgstr "Zobrazit panel nástrojů"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Přečíst paměti a nastavení z vysílačky"
+
+msgid "Write this tab to the radio"
+msgstr "Zapsat tuto kartu do vysílačky"
+
+msgid "Cable: %s"
+msgstr "Kabel: %s"
+
+msgid "No programming cable connected"
+msgstr "Není připojen žádný programovací kabel"
+
+msgid "Cable on %s needs a different driver"
+msgstr "Kabel na %s potřebuje jiný ovladač"
+
+msgid "Serial port %s disconnected"
+msgstr "Sériový port %s odpojen"
+
+msgid "Programming cable connected on %s"
+msgstr "Programovací kabel připojen na %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Nejprve stáhněte z vysílačky nebo otevřete soubor."
+
+msgid "Searching for cables..."
+msgstr "Hledám kabely..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "PROGRAMÁTOR VYSÍLAČEK"
+
+msgid "Export to Excel"
+msgstr "Exportovat do Excelu"
+
+msgid "Import from Excel..."
+msgstr "Importovat z Excelu..."
+
+msgid "Export to Excel..."
+msgstr "Exportovat do Excelu..."
+
+msgid "Excel Files"
+msgstr "Soubory Excelu"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Export umí zapsat jen soubory CSV nebo Excel (.xlsx)"
+
+msgid "Export Excel"
+msgstr "Export do Excelu"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "upozornění"
+
+msgid "error"
+msgstr "chyba"
+
+msgid "info"
+msgstr "info"
+
+msgid "reads the radio"
+msgstr "čte vysílačku"
+
+msgid "writes the radio"
+msgstr "zapisuje vysílačku"
+
+msgid "file"
+msgstr "soubor"
+
+msgid "tones"
+msgstr "tóny"
+
+msgid "built-in"
+msgstr "vestavěný"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Zobrazit konzoli událostí"
+
+msgid "Look"
+msgstr "Vzhled"
+
+msgid "Terminal"
+msgstr "Terminál"
+
+msgid "Classic"
+msgstr "Klasický"
+
+msgid "Saved %s"
+msgstr "Uloženo %s"
+
+msgid "Downloaded %s %s"
+msgstr "Staženo %s %s"
+
+msgid "legend"
+msgstr "legenda"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s spuštěn, podporovaných modelů: %(count)i"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Otevřeno %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Exportováno %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Nahráno do %s %s"
+
+msgid "Programming cable"
+msgstr "Programovací kabel"
+
+msgid "Other ports"
+msgstr "Další porty"
+
+msgid "%i radio models supported"
+msgstr "Podporovaných modelů: %i"
+
+msgid "commands"
+msgstr "příkazy"
+
+msgid "Last radio"
+msgstr "Poslední vysílačka"
+
+msgid "Serial port %s connected"
+msgstr "Sériový port %s připojen"
+
+msgid "Detect radio and download..."
+msgstr "Rozpoznat vysílačku a stáhnout..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "Zeptat se připojené vysílačky, jaký je to model (jen čtení)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Zkouším %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Žádná vysílačka neodpověděla. Zkontrolujte, že je zapnutá, kabel je zasunutý"
+" až na doraz a hlasitost je zvýšená, a zkuste to znovu."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Čekám, až bude vysílačka připravena..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Tyto modely používají stejný protokol i rozložení paměti. Vyberte ten, který"
+" je napsán na vaší vysílačce:"
+
+msgid "Radio detected"
+msgstr "Vysílačka rozpoznána"
+
+msgid "Detect"
+msgstr "Rozpoznat"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Nejprve vyberte sériový port kabelu"
+
+msgid "Looking for a radio on %s"
+msgstr "Hledám vysílačku na %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "Vysílačka odpověděla: %(ident)s, kompatibilní s %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Nahrávání dokončeno, zpětné čtení pro ověření"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "Čtu vysílačku pro porovnání s %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Porovnání s vysílačkou: liší se kanálů %(memories)i a nastavení %(settings)i"
+
+msgid "Changes in the radio"
+msgstr "Změny ve vysílačce"
+
+msgid "Verify"
+msgstr "Ověření"
+
+msgid "Compare with the radio before uploading"
+msgstr "Před nahráním porovnat s vysílačkou"
+
+msgid "Read back and verify after uploading"
+msgstr "Po nahrání zpětně přečíst a ověřit"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Ověření selhalo: vysílačku nelze zpětně přečíst (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "Nahrávání skončilo, ale zpětné čtení vysílačky selhalo: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Ověření SELHALO: rozdílů mezi obrazem a vysílačkou: %i"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"Vysílačka neobsahuje to, co bylo nahráno (rozdílů: %i). Opakujte nahrání."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Ověření OK: vysílačka obsahuje nahraný obraz (%s)"
+
+msgid "byte by byte"
+msgstr "bajt po bajtu"
+
+msgid "channel by channel"
+msgstr "kanál po kanálu"
+
+msgid "added"
+msgstr "přidáno"
+
+msgid "removed"
+msgstr "odebráno"
+
+msgid "changed"
+msgstr "změněno"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "Vysílačka už tento obraz obsahuje: nic by se nezměnilo."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr "Ve vysílačce se změní kanálů %(memories)i a nastavení %(settings)i."
+
+msgid "Change"
+msgstr "Změna"
+
+msgid "Where"
+msgstr "Kde"
+
+msgid "In the radio now"
+msgstr "Nyní ve vysílačce"
+
+msgid "After upload"
+msgstr "Po nahrání"
+
+msgid "Memory %s"
+msgstr "Paměť %s"
+
+msgid "image"
+msgstr "obraz"
+
+msgid "Program several radios..."
+msgstr "Naprogramovat více vysílaček..."
+
+msgid "Program several radios"
+msgstr "Naprogramovat více vysílaček"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"Do více vysílaček lze zapsat jen obrazy stažené z vysílačky (režim "
+"klonování)."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"Do každé vysílačky se zapíše stejný obraz. U každé vysílačky: připojte "
+"kabel, zapněte vysílačku a stiskněte tlačítko (nebo Enter). Před přepojením "
+"kabelu počkejte na výsledek."
+
+msgid "Read back and verify each radio"
+msgstr "Každou vysílačku zpětně přečíst a ověřit"
+
+msgid "Writing radio %i..."
+msgstr "Zapisuji vysílačku %i..."
+
+msgid "Batch: writing radio %i"
+msgstr "Série: zapisuji vysílačku %i"
+
+msgid "written"
+msgstr "zapsáno"
+
+msgid "not checked"
+msgstr "neověřeno"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Série: vysílačka %(n)i %(result)s, ověření %(verify)s"
+
+msgid "Program radio %i"
+msgstr "Naprogramovat vysílačku %i"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Vysílačky: %(done)i   ok: %(good)i   selhalo: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Počkejte, až se dokončí aktuální vysílačka."
+
+msgid "Image"
+msgstr "Obraz"
+
+msgid "Result"
+msgstr "Výsledek"
+
+msgid "Time"
+msgstr "Čas"
+
+msgid "ERROR: %s"
+msgstr "CHYBA: %s"
+
+msgid "%i differences"
+msgstr "Rozdílů: %i"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "Vysílačka %i hotova: připojte další a stiskněte tlačítko"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"Vysílačka %i selhala: zkontrolujte ji a stiskněte tlačítko pro pokračování s"
+" další"
+
+msgid "Check frequencies..."
+msgstr "Zkontrolovat frekvence..."
+
+msgid "Memory map..."
+msgstr "Mapa paměti..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Nový vzhled vyžaduje restart CHIRP. Restartovat nyní? Nejprve budete vyzváni"
+" k uložení otevřených souborů."
+
+msgid "Restart now"
+msgstr "Restartovat nyní"
+
+msgid "Later"
+msgstr "Později"
+
+msgid "Pocket channel card"
+msgstr "Kapesní karta kanálů"
+
+msgid "Pocket channel card..."
+msgstr "Kapesní karta kanálů..."
+
+msgid "Backups..."
+msgstr "Zálohy..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr "Kontrola frekvencí funguje na obrazech, ne na živých vysílačkách."
+
+msgid "Frequency check"
+msgstr "Kontrola frekvencí"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Kontrola frekvencí: chyb %(bad)i, upozornění %(warn)i, poznámek %(info)i"
+
+msgid "Pocket card for %s"
+msgstr "Kapesní karta pro %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr "Mapa paměti je dostupná pro obrazy stažené z vysílačky."
+
+msgid "Memory map"
+msgstr "Mapa paměti"
+
+msgid "Backups"
+msgstr "Zálohy"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"CHIRP ukládá kopii vysílačky při každém stažení a před každým nahráním. "
+"Modrá: přečteno z vysílačky, oranžová: před zápisem."
+
+msgid "Compare with open tab"
+msgstr "Porovnat s otevřenou kartou"
+
+msgid "Open folder"
+msgstr "Otevřít složku"
+
+msgid "Backup compared with the open tab"
+msgstr "Záloha porovnaná s otevřenou kartou"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Size"
+msgstr "Velikost"
+
+msgid "download"
+msgstr "stažení"
+
+msgid "upload"
+msgstr "nahrání"
+
+msgid "In the backup"
+msgstr "V záloze"
+
+msgid "In the open tab"
+msgstr "V otevřené kartě"
+
+msgid "open tab"
+msgstr "otevřená-karta"
+
+msgid "errors"
+msgstr "chyby"
+
+msgid "warnings"
+msgstr "upozornění"
+
+msgid "notes"
+msgstr "poznámky"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Pravidla pro Itálii. Jde o pomoc, ne o právní stanovisko: ověřte si svou "
+"licenci a schválení vysílačky."
+
+msgid "Channel"
+msgstr "Kanál"
+
+msgid "Level"
+msgstr "Úroveň"
+
+msgid "Band"
+msgstr "Pásmo"
+
+msgid "Message"
+msgstr "Zpráva"
+
+msgid "No problems found."
+msgstr "Nebyly nalezeny žádné problémy."
+
+msgid "channels"
+msgstr "kanály"
+
+msgid "names"
+msgstr "názvy"
+
+msgid "settings"
+msgstr "nastavení"
+
+msgid "messages and ident"
+msgstr "zprávy a identifikace"
+
+msgid "service (squelch, limits): careful"
+msgstr "servis (squelch, limity): opatrně"
+
+msgid "unknown data (calibration?)"
+msgstr "neznámá data (kalibrace?)"
+
+msgid "Start"
+msgstr "Začátek"
+
+msgid "End"
+msgstr "Konec"
+
+msgid "Bytes"
+msgstr "Bajty"
+
+msgid "Name"
+msgstr "Název"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i bajtů: %(known)i popsaných ovladačem, %(unknown)i s daty, která "
+"ovladač nepopisuje"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "Liší se kanálů %(memories)i a nastavení %(settings)i."
+
+msgid "No differences."
+msgstr "Žádné rozdíly."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "vysílá na %(freq)s, mimo známá pásma"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "vysílá na %(freq)s (%(band)s): jen příjem, nastavte Duplex na off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: k vysílání je potřeba licence"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s povoluje %(max)s W, tento kanál používá %(watts)s W"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM rozhlas"
+
+msgid "airband"
+msgstr "letecké pásmo"
+
+msgid "amateur 2 m"
+msgstr "radioamatéři 2 m"
+
+msgid "marine VHF"
+msgstr "námořní VKV"
+
+msgid "amateur 70 cm"
+msgstr "radioamatéři 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "radioamatérské družice 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "vyžaduje licenci námořní radiostanice"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "jen se schválenými vysílačkami PMR446 a pevnou anténou"
+
+msgid "Ch"
+msgstr "Kan"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Posun"

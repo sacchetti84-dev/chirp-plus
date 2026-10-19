@@ -3410,9 +3410,6 @@ msgstr ""
 #~ msgid "My callsign"
 #~ msgstr "Az én hívójelem"
 
-#~ msgid "Name"
-#~ msgstr "Név"
-
 #~ msgid "No space to insert a row"
 #~ msgstr "Nincs hely a sor beszúrásához"
 
@@ -3492,9 +3489,6 @@ msgstr ""
 #, python-format
 #~ msgid "Setting name on %s"
 #~ msgstr "A %s név beállítása"
-
-#~ msgid "Shift"
-#~ msgstr "Eltolás"
 
 #~ msgid "Show Empty"
 #~ msgstr "Üreset is"
@@ -3634,3 +3628,634 @@ msgstr ""
 
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{vendor} {model} a {port} porton"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Hamisított vagy nem támogatott Prolific chip: a jelenlegi Windows-"
+"illesztőprogram nem hajlandó működni vele. Telepítsen régebbi Prolific "
+"illesztőprogramot, vagy használjon CH340/FTDI kábelt."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Bluetooth soros port, nem programozókábel"
+
+msgid "Built-in serial port of the computer"
+msgstr "A számítógép beépített soros portja"
+
+msgid "Programming cable detected"
+msgstr "Programozókábel észlelve"
+
+msgid "USB serial device"
+msgstr "USB soros eszköz"
+
+msgid "Serial port"
+msgstr "Soros port"
+
+msgid "Search radio"
+msgstr "Rádió keresése"
+
+msgid "Search again for connected cables"
+msgstr "Csatlakoztatott kábelek újrakeresése"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Keresse meg a rádióját a neve egy részének beírásával"
+
+msgid "Upload"
+msgstr "Feltöltés"
+
+msgid "Find your radio"
+msgstr "Rádió keresése"
+
+msgid "Refresh"
+msgstr "Frissítés"
+
+msgid "Search..."
+msgstr "Keresés..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Csatlakoztassa a programozókábelt a rádióhoz és a számítógéphez, majd "
+"kapcsolja be a rádiót. A kábel portját a program automatikusan felismeri."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Nem található soros port. Ellenőrizze a kábelt és az illesztőprogramját, "
+"majd nyomja meg a Frissítés gombot."
+
+msgid "Manually entered port"
+msgstr "Kézzel megadott port"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr ""
+"Írja be a gyártó vagy a modell nevének egy részét (például \"UV-5R\" vagy "
+"\"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Új kábel csatlakoztatva: %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "A(z) %s porton lévő kábelt leválasztották"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "%i kábel található, kiválasztva: %s – ellenőrizze, hogy a megfelelő-e"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr ""
+"A(z) %s valószínűleg nem az Ön kábele, a(z) %s programozókábelnek tűnik"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Nem található programozókábel, kiválasztva: %s"
+
+msgid "Show toolbar"
+msgstr "Eszköztár megjelenítése"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Memóriák és beállítások beolvasása a rádióból"
+
+msgid "Write this tab to the radio"
+msgstr "Ennek a lapnak a beírása a rádióba"
+
+msgid "Cable: %s"
+msgstr "Kábel: %s"
+
+msgid "No programming cable connected"
+msgstr "Nincs csatlakoztatott programozókábel"
+
+msgid "Cable on %s needs a different driver"
+msgstr "A(z) %s porton lévő kábelhez másik illesztőprogram kell"
+
+msgid "Serial port %s disconnected"
+msgstr "A(z) %s soros port leválasztva"
+
+msgid "Programming cable connected on %s"
+msgstr "Programozókábel csatlakoztatva: %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Előbb töltse le a rádióról, vagy nyisson meg egy fájlt."
+
+msgid "Searching for cables..."
+msgstr "Kábelek keresése..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "RÁDIÓPROGRAMOZÓ"
+
+msgid "Export to Excel"
+msgstr "Exportálás Excelbe"
+
+msgid "Import from Excel..."
+msgstr "Importálás Excelből..."
+
+msgid "Export to Excel..."
+msgstr "Exportálás Excelbe..."
+
+msgid "Excel Files"
+msgstr "Excel-fájlok"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Az exportálás csak CSV vagy Excel (.xlsx) fájlt tud írni"
+
+msgid "Export Excel"
+msgstr "Excel export"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "figyelmeztetés"
+
+msgid "error"
+msgstr "hiba"
+
+msgid "info"
+msgstr "info"
+
+msgid "reads the radio"
+msgstr "olvassa a rádiót"
+
+msgid "writes the radio"
+msgstr "írja a rádiót"
+
+msgid "file"
+msgstr "fájl"
+
+msgid "tones"
+msgstr "hangok"
+
+msgid "built-in"
+msgstr "beépített"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Eseménykonzol megjelenítése"
+
+msgid "Look"
+msgstr "Megjelenés"
+
+msgid "Terminal"
+msgstr "Terminál"
+
+msgid "Classic"
+msgstr "Klasszikus"
+
+msgid "Saved %s"
+msgstr "Mentve: %s"
+
+msgid "Downloaded %s %s"
+msgstr "Letöltve: %s %s"
+
+msgid "legend"
+msgstr "jelmagyarázat"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s elindult, támogatott rádiómodellek: %(count)i"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Megnyitva: %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Exportálva: %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Feltöltve ide: %s %s"
+
+msgid "Programming cable"
+msgstr "Programozókábel"
+
+msgid "Other ports"
+msgstr "Egyéb portok"
+
+msgid "%i radio models supported"
+msgstr "Támogatott rádiómodellek: %i"
+
+msgid "commands"
+msgstr "parancsok"
+
+msgid "Last radio"
+msgstr "Utolsó rádió"
+
+msgid "Serial port %s connected"
+msgstr "A(z) %s soros port csatlakoztatva"
+
+msgid "Detect radio and download..."
+msgstr "Rádió felismerése és letöltés..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "A csatlakoztatott rádió megkérdezése a típusáról (csak olvasás)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Próba: %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Egyik rádió sem válaszolt. Ellenőrizze, hogy be van-e kapcsolva, a kábel "
+"teljesen be van-e dugva és a hangerő fel van-e véve, majd próbálja újra."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Várakozás a rádió készenlétére..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Ezek a modellek ugyanazt a protokollt és memóriakiosztást használják. "
+"Válassza ki a rádióján feltüntetettet:"
+
+msgid "Radio detected"
+msgstr "Rádió felismerve"
+
+msgid "Detect"
+msgstr "Felismerés"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Előbb válassza ki a kábel soros portját"
+
+msgid "Looking for a radio on %s"
+msgstr "Rádió keresése itt: %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "A rádió válaszolt: %(ident)s, kompatibilis ezekkel: %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "A feltöltés kész, visszaolvasás ellenőrzéshez"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "A rádió beolvasása összehasonlításhoz ezzel: %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Összevetés a rádióval: %(memories)i csatorna és %(settings)i beállítás eltér"
+
+msgid "Changes in the radio"
+msgstr "Változások a rádióban"
+
+msgid "Verify"
+msgstr "Ellenőrzés"
+
+msgid "Compare with the radio before uploading"
+msgstr "Összevetés a rádióval feltöltés előtt"
+
+msgid "Read back and verify after uploading"
+msgstr "Visszaolvasás és ellenőrzés feltöltés után"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Sikertelen ellenőrzés: a rádió nem olvasható vissza (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "A feltöltés befejeződött, de a rádió visszaolvasása nem sikerült: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "SIKERTELEN ellenőrzés: %i eltérés a kép és a rádió között"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"A rádió nem azt tartalmazza, amit feltöltött (%i eltérés). Ismételje meg a "
+"feltöltést."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Ellenőrzés OK: a rádió a feltöltött képet tartalmazza (%s)"
+
+msgid "byte by byte"
+msgstr "bájtonként"
+
+msgid "channel by channel"
+msgstr "csatornánként"
+
+msgid "added"
+msgstr "hozzáadva"
+
+msgid "removed"
+msgstr "eltávolítva"
+
+msgid "changed"
+msgstr "módosítva"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "A rádió már ezt a képet tartalmazza: semmi sem változna."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr ""
+"A rádióban %(memories)i csatorna és %(settings)i beállítás fog változni."
+
+msgid "Change"
+msgstr "Változás"
+
+msgid "Where"
+msgstr "Hol"
+
+msgid "In the radio now"
+msgstr "Most a rádióban"
+
+msgid "After upload"
+msgstr "Feltöltés után"
+
+msgid "Memory %s"
+msgstr "Memória %s"
+
+msgid "image"
+msgstr "kép"
+
+msgid "Program several radios..."
+msgstr "Több rádió programozása..."
+
+msgid "Program several radios"
+msgstr "Több rádió programozása"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr "Csak rádióról letöltött képek (klónozó mód) írhatók több rádióba."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"Ugyanaz a kép kerül minden rádióba. Minden rádiónál: csatlakoztassa a "
+"kábelt, kapcsolja be a rádiót, majd nyomja meg a gombot (vagy az Entert). A "
+"kábel áthelyezése előtt várja meg az eredményt."
+
+msgid "Read back and verify each radio"
+msgstr "Minden rádió visszaolvasása és ellenőrzése"
+
+msgid "Writing radio %i..."
+msgstr "A(z) %i. rádió írása..."
+
+msgid "Batch: writing radio %i"
+msgstr "Sorozat: a(z) %i. rádió írása"
+
+msgid "written"
+msgstr "beírva"
+
+msgid "not checked"
+msgstr "nincs ellenőrizve"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Sorozat: %(n)i. rádió %(result)s, ellenőrzés: %(verify)s"
+
+msgid "Program radio %i"
+msgstr "A(z) %i. rádió programozása"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Rádiók: %(done)i   ok: %(good)i   sikertelen: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Várja meg, amíg az aktuális rádió elkészül."
+
+msgid "Image"
+msgstr "Kép"
+
+msgid "Result"
+msgstr "Eredmény"
+
+msgid "Time"
+msgstr "Idő"
+
+msgid "ERROR: %s"
+msgstr "HIBA: %s"
+
+msgid "%i differences"
+msgstr "%i eltérés"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr ""
+"A(z) %i. rádió kész: csatlakoztassa a következőt, és nyomja meg a gombot"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"A(z) %i. rádió sikertelen: ellenőrizze, majd a gombbal folytassa a "
+"következővel"
+
+msgid "Check frequencies..."
+msgstr "Frekvenciák ellenőrzése..."
+
+msgid "Memory map..."
+msgstr "Memóriatérkép..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Az új megjelenéshez a CHIRP újraindítása szükséges. Újraindítja most? Előtte"
+" a program felajánlja a nyitott fájlok mentését."
+
+msgid "Restart now"
+msgstr "Újraindítás most"
+
+msgid "Later"
+msgstr "Később"
+
+msgid "Pocket channel card"
+msgstr "Zsebkártya a csatornákkal"
+
+msgid "Pocket channel card..."
+msgstr "Zsebkártya a csatornákkal..."
+
+msgid "Backups..."
+msgstr "Biztonsági mentések..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr "A frekvenciaellenőrzés képeken működik, élő rádión nem."
+
+msgid "Frequency check"
+msgstr "Frekvenciaellenőrzés"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Frekvenciaellenőrzés: %(bad)i hiba, %(warn)i figyelmeztetés, %(info)i "
+"megjegyzés"
+
+msgid "Pocket card for %s"
+msgstr "Zsebkártya ehhez: %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr "A memóriatérkép rádióról letöltött képekhez érhető el."
+
+msgid "Memory map"
+msgstr "Memóriatérkép"
+
+msgid "Backups"
+msgstr "Biztonsági mentések"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"A CHIRP minden letöltéskor és minden feltöltés előtt másolatot ment a "
+"rádióról. Kék: a rádióból olvasva, narancs: írás előtt."
+
+msgid "Compare with open tab"
+msgstr "Összevetés a nyitott lappal"
+
+msgid "Open folder"
+msgstr "Mappa megnyitása"
+
+msgid "Backup compared with the open tab"
+msgstr "Biztonsági mentés összevetve a nyitott lappal"
+
+msgid "Date"
+msgstr "Dátum"
+
+msgid "Type"
+msgstr "Típus"
+
+msgid "Size"
+msgstr "Méret"
+
+msgid "download"
+msgstr "letöltés"
+
+msgid "upload"
+msgstr "feltöltés"
+
+msgid "In the backup"
+msgstr "A mentésben"
+
+msgid "In the open tab"
+msgstr "A nyitott lapon"
+
+msgid "open tab"
+msgstr "nyitott-lap"
+
+msgid "errors"
+msgstr "hiba"
+
+msgid "warnings"
+msgstr "figyelmeztetés"
+
+msgid "notes"
+msgstr "megjegyzés"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Olaszországi szabályok. Ez segítség, nem jogi vélemény: ellenőrizze az "
+"engedélyét és a rádió típusjóváhagyását."
+
+msgid "Channel"
+msgstr "Csatorna"
+
+msgid "Level"
+msgstr "Szint"
+
+msgid "Band"
+msgstr "Sáv"
+
+msgid "Message"
+msgstr "Üzenet"
+
+msgid "No problems found."
+msgstr "Nem található probléma."
+
+msgid "channels"
+msgstr "csatornák"
+
+msgid "names"
+msgstr "nevek"
+
+msgid "settings"
+msgstr "beállítások"
+
+msgid "messages and ident"
+msgstr "üzenetek és azonosító"
+
+msgid "service (squelch, limits): careful"
+msgstr "szerviz (zajzár, határok): óvatosan"
+
+msgid "unknown data (calibration?)"
+msgstr "ismeretlen adatok (kalibráció?)"
+
+msgid "Start"
+msgstr "Kezdet"
+
+msgid "End"
+msgstr "Vég"
+
+msgid "Bytes"
+msgstr "Bájt"
+
+msgid "Name"
+msgstr "Név"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i bájt: %(known)i az illesztőprogram által leírva, %(unknown)i olyan "
+"adattal, amelyet az illesztőprogram nem ír le"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "%(memories)i csatorna és %(settings)i beállítás eltér."
+
+msgid "No differences."
+msgstr "Nincs eltérés."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "ad ezen: %(freq)s, az ismert sávokon kívül"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr ""
+"ad ezen: %(freq)s (%(band)s): csak vétel, állítsa a Duplexet off értékre"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: az adáshoz engedély kell"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s: %(max)s W megengedett, ez a csatorna %(watts)s W-ot használ"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM műsorszórás"
+
+msgid "airband"
+msgstr "légi sáv"
+
+msgid "amateur 2 m"
+msgstr "rádióamatőr 2 m"
+
+msgid "marine VHF"
+msgstr "tengeri URH"
+
+msgid "amateur 70 cm"
+msgstr "rádióamatőr 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "rádióamatőr műholdak 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "tengeri rádióengedély szükséges"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "csak jóváhagyott PMR446 rádióval és fix antennával"
+
+msgid "Ch"
+msgstr "Csat"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Eltolás"

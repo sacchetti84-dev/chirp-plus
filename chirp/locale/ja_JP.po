@@ -3619,3 +3619,604 @@ msgstr "{bank} は一杯です"
 
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{vendor} {model} image file"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"偽造品または未対応の Prolific チップです: 現在の Windows ドライバはこのチップでは動作しません。古い Prolific "
+"ドライバをインストールするか、CH340/FTDI ケーブルを使ってください。"
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Bluetooth シリアルポート (プログラミングケーブルではありません)"
+
+msgid "Built-in serial port of the computer"
+msgstr "コンピュータ内蔵のシリアルポート"
+
+msgid "Programming cable detected"
+msgstr "プログラミングケーブルを検出しました"
+
+msgid "USB serial device"
+msgstr "USB シリアルデバイス"
+
+msgid "Serial port"
+msgstr "シリアルポート"
+
+msgid "Search radio"
+msgstr "無線機を検索"
+
+msgid "Search again for connected cables"
+msgstr "接続されたケーブルを再検索"
+
+msgid "Find your radio by typing part of its name"
+msgstr "名前の一部を入力して無線機を探します"
+
+msgid "Upload"
+msgstr "アップロード"
+
+msgid "Find your radio"
+msgstr "無線機を探す"
+
+msgid "Refresh"
+msgstr "更新"
+
+msgid "Search..."
+msgstr "検索..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr "プログラミングケーブルを無線機とコンピュータに接続し、無線機の電源を入れてください。ケーブルのポートは自動的に検出されます。"
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr "シリアルポートが見つかりません。ケーブルとドライバを確認してから「更新」を押してください。"
+
+msgid "Manually entered port"
+msgstr "手動で入力したポート"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr "メーカ名またはモデル名の一部を入力してください (例: \"UV-5R\"、\"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "%s に新しいケーブルが接続されました"
+
+msgid "The cable on %s was disconnected"
+msgstr "%s のケーブルが取り外されました"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "ケーブルが %i 本見つかり、%s を選択しました: 正しいケーブルか確認してください"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr "%s はおそらく目的のケーブルではありません。%s がプログラミングケーブルのようです"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "プログラミングケーブルを認識できず、%s を選択しました"
+
+msgid "Show toolbar"
+msgstr "ツールバーを表示"
+
+msgid "Read the memories and settings from the radio"
+msgstr "無線機からメモリと設定を読み込む"
+
+msgid "Write this tab to the radio"
+msgstr "このタブを無線機に書き込む"
+
+msgid "Cable: %s"
+msgstr "ケーブル: %s"
+
+msgid "No programming cable connected"
+msgstr "プログラミングケーブルが接続されていません"
+
+msgid "Cable on %s needs a different driver"
+msgstr "%s のケーブルには別のドライバが必要です"
+
+msgid "Serial port %s disconnected"
+msgstr "シリアルポート %s が切断されました"
+
+msgid "Programming cable connected on %s"
+msgstr "プログラミングケーブルが %s に接続されています"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "先に無線機からダウンロードするか、ファイルを開いてください。"
+
+msgid "Searching for cables..."
+msgstr "ケーブルを検索中..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "無線機プログラマ"
+
+msgid "Export to Excel"
+msgstr "Excel にエクスポート"
+
+msgid "Import from Excel..."
+msgstr "Excel からインポート..."
+
+msgid "Export to Excel..."
+msgstr "Excel にエクスポート..."
+
+msgid "Excel Files"
+msgstr "Excel ファイル"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "エクスポートできるのは CSV または Excel (.xlsx) ファイルのみです"
+
+msgid "Export Excel"
+msgstr "Excel エクスポート"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "警告"
+
+msgid "error"
+msgstr "エラー"
+
+msgid "info"
+msgstr "情報"
+
+msgid "reads the radio"
+msgstr "無線機を読む"
+
+msgid "writes the radio"
+msgstr "無線機に書く"
+
+msgid "file"
+msgstr "ファイル"
+
+msgid "tones"
+msgstr "トーン"
+
+msgid "built-in"
+msgstr "内蔵"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "イベントコンソールを表示"
+
+msgid "Look"
+msgstr "外観"
+
+msgid "Terminal"
+msgstr "ターミナル"
+
+msgid "Classic"
+msgstr "クラシック"
+
+msgid "Saved %s"
+msgstr "%s を保存しました"
+
+msgid "Downloaded %s %s"
+msgstr "%s %s からダウンロードしました"
+
+msgid "legend"
+msgstr "凡例"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s を起動しました。対応機種: %(count)i"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "%(file)s を開きました (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "%s をエクスポートしました"
+
+msgid "Uploaded to %s %s"
+msgstr "%s %s にアップロードしました"
+
+msgid "Programming cable"
+msgstr "プログラミングケーブル"
+
+msgid "Other ports"
+msgstr "その他のポート"
+
+msgid "%i radio models supported"
+msgstr "対応機種: %i"
+
+msgid "commands"
+msgstr "コマンド"
+
+msgid "Last radio"
+msgstr "前回の無線機"
+
+msgid "Serial port %s connected"
+msgstr "シリアルポート %s が接続されました"
+
+msgid "Detect radio and download..."
+msgstr "無線機を検出してダウンロード..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "接続された無線機に機種を問い合わせます (読み取りのみ)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "%(model)s を試行中 (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"どの無線機も応答しませんでした。電源が入っていること、ケーブルが奥まで差し込まれていること、音量が上がっていることを確認して再試行してください。"
+
+msgid "Waiting for the radio to be ready..."
+msgstr "無線機の準備を待っています..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr "これらの機種は同じプロトコルとメモリ配置を使います。お使いの無線機に書かれている機種を選んでください:"
+
+msgid "Radio detected"
+msgstr "無線機を検出しました"
+
+msgid "Detect"
+msgstr "検出"
+
+msgid "Choose the serial port of the cable first"
+msgstr "先にケーブルのシリアルポートを選んでください"
+
+msgid "Looking for a radio on %s"
+msgstr "%s で無線機を探しています"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "無線機が応答しました: %(ident)s、%(models)s と互換"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "アップロード完了、検証のため読み戻しています"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "%s と比較するため無線機を読み込んでいます"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr "無線機との比較: チャンネル %(memories)i 件、設定 %(settings)i 件が異なります"
+
+msgid "Changes in the radio"
+msgstr "無線機の変更点"
+
+msgid "Verify"
+msgstr "検証"
+
+msgid "Compare with the radio before uploading"
+msgstr "アップロード前に無線機と比較"
+
+msgid "Read back and verify after uploading"
+msgstr "アップロード後に読み戻して検証"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "検証失敗: 無線機を読み戻せませんでした (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "アップロードは完了しましたが、無線機の読み戻しに失敗しました: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "検証失敗: イメージと無線機の間に %i 件の差異"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr "無線機の内容がアップロードしたものと一致しません (差異 %i 件)。もう一度アップロードしてください。"
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "検証 OK: 無線機はアップロードしたイメージを保持しています (%s)"
+
+msgid "byte by byte"
+msgstr "バイト単位"
+
+msgid "channel by channel"
+msgstr "チャンネル単位"
+
+msgid "added"
+msgstr "追加"
+
+msgid "removed"
+msgstr "削除"
+
+msgid "changed"
+msgstr "変更"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "無線機はすでにこのイメージを保持しています: 何も変わりません。"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr "無線機のチャンネル %(memories)i 件と設定 %(settings)i 件が変更されます。"
+
+msgid "Change"
+msgstr "変更"
+
+msgid "Where"
+msgstr "場所"
+
+msgid "In the radio now"
+msgstr "現在の無線機"
+
+msgid "After upload"
+msgstr "アップロード後"
+
+msgid "Memory %s"
+msgstr "メモリ %s"
+
+msgid "image"
+msgstr "イメージ"
+
+msgid "Program several radios..."
+msgstr "複数の無線機を書き込み..."
+
+msgid "Program several radios"
+msgstr "複数の無線機を書き込み"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr "複数の無線機に書き込めるのは、無線機からダウンロードしたイメージ (クローンモード) だけです。"
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"各無線機に同じイメージを書き込みます。無線機ごとに: ケーブルを接続し、電源を入れてからボタン (または Enter) "
+"を押してください。ケーブルを付け替える前に結果を待ってください。"
+
+msgid "Read back and verify each radio"
+msgstr "各無線機を読み戻して検証"
+
+msgid "Writing radio %i..."
+msgstr "無線機 %i に書き込み中..."
+
+msgid "Batch: writing radio %i"
+msgstr "一括: 無線機 %i に書き込み中"
+
+msgid "written"
+msgstr "書き込み済み"
+
+msgid "not checked"
+msgstr "未検証"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "一括: 無線機 %(n)i %(result)s、検証 %(verify)s"
+
+msgid "Program radio %i"
+msgstr "無線機 %i を書き込み"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "無線機: %(done)i   ok: %(good)i   失敗: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "現在の無線機の完了を待ってください。"
+
+msgid "Image"
+msgstr "イメージ"
+
+msgid "Result"
+msgstr "結果"
+
+msgid "Time"
+msgstr "時刻"
+
+msgid "ERROR: %s"
+msgstr "エラー: %s"
+
+msgid "%i differences"
+msgstr "差異 %i 件"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "無線機 %i 完了: 次の無線機を接続してボタンを押してください"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr "無線機 %i 失敗: 確認してからボタンを押し、次の無線機で続けてください"
+
+msgid "Check frequencies..."
+msgstr "周波数をチェック..."
+
+msgid "Memory map..."
+msgstr "メモリマップ..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr "新しい外観を適用するには CHIRP の再起動が必要です。今すぐ再起動しますか? 先に開いているファイルの保存を確認します。"
+
+msgid "Restart now"
+msgstr "今すぐ再起動"
+
+msgid "Later"
+msgstr "後で"
+
+msgid "Pocket channel card"
+msgstr "ポケットチャンネルカード"
+
+msgid "Pocket channel card..."
+msgstr "ポケットチャンネルカード..."
+
+msgid "Backups..."
+msgstr "バックアップ..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr "周波数チェックはイメージに対して行います。ライブ接続の無線機には使えません。"
+
+msgid "Frequency check"
+msgstr "周波数チェック"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr "周波数チェック: エラー %(bad)i 件、警告 %(warn)i 件、注記 %(info)i 件"
+
+msgid "Pocket card for %s"
+msgstr "%s のポケットカード"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr "メモリマップは無線機からダウンロードしたイメージで使えます。"
+
+msgid "Memory map"
+msgstr "メモリマップ"
+
+msgid "Backups"
+msgstr "バックアップ"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr "CHIRP はダウンロードのたび、およびアップロードの前に無線機のコピーを保存します。青: 無線機から読み込み、オレンジ: 書き込み前。"
+
+msgid "Compare with open tab"
+msgstr "開いているタブと比較"
+
+msgid "Open folder"
+msgstr "フォルダを開く"
+
+msgid "Backup compared with the open tab"
+msgstr "開いているタブと比較したバックアップ"
+
+msgid "Date"
+msgstr "日付"
+
+msgid "Type"
+msgstr "種類"
+
+msgid "Size"
+msgstr "サイズ"
+
+msgid "download"
+msgstr "ダウンロード"
+
+msgid "upload"
+msgstr "アップロード"
+
+msgid "In the backup"
+msgstr "バックアップ内"
+
+msgid "In the open tab"
+msgstr "開いているタブ内"
+
+msgid "open tab"
+msgstr "開いているタブ"
+
+msgid "errors"
+msgstr "エラー"
+
+msgid "warnings"
+msgstr "警告"
+
+msgid "notes"
+msgstr "注記"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr "イタリアの規則です。これは助言であり法的見解ではありません: ご自身の免許と無線機の認証を確認してください。"
+
+msgid "Channel"
+msgstr "チャンネル"
+
+msgid "Level"
+msgstr "レベル"
+
+msgid "Band"
+msgstr "バンド"
+
+msgid "Message"
+msgstr "メッセージ"
+
+msgid "No problems found."
+msgstr "問題は見つかりませんでした。"
+
+msgid "channels"
+msgstr "チャンネル"
+
+msgid "names"
+msgstr "名前"
+
+msgid "settings"
+msgstr "設定"
+
+msgid "messages and ident"
+msgstr "メッセージと識別子"
+
+msgid "service (squelch, limits): careful"
+msgstr "サービス (スケルチ、範囲): 注意"
+
+msgid "unknown data (calibration?)"
+msgstr "不明なデータ (校正値?)"
+
+msgid "Start"
+msgstr "開始"
+
+msgid "End"
+msgstr "終了"
+
+msgid "Bytes"
+msgstr "バイト"
+
+msgid "Name"
+msgstr "名前"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr "%(size)i バイト: %(known)i はドライバが記述、%(unknown)i はドライバが記述しないデータを含む"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "チャンネル %(memories)i 件と設定 %(settings)i 件が異なります。"
+
+msgid "No differences."
+msgstr "差異はありません。"
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "%(freq)s で送信します (既知のバンド外)"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "%(freq)s (%(band)s) で送信します: 受信専用です。デュプレックスを off にしてください"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: 送信には免許が必要です"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s の上限は %(max)s W ですが、このチャンネルは %(watts)s W です"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM 放送"
+
+msgid "airband"
+msgstr "エアバンド"
+
+msgid "amateur 2 m"
+msgstr "アマチュア 2 m"
+
+msgid "marine VHF"
+msgstr "国際 VHF (船舶)"
+
+msgid "amateur 70 cm"
+msgstr "アマチュア 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "アマチュア衛星 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "海上無線の免許が必要です"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "認証済み PMR446 無線機と固定アンテナでのみ"
+
+msgid "Ch"
+msgstr "Ch"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "シフト"

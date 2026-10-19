@@ -73,6 +73,22 @@ funzioni dell'originale, più queste modifiche.
   colorato per funzione, con le zone che il driver non descrive (taratura).
 - **Import/export Excel** (`.xlsx` lettura/scrittura, `.xls` lettura).
 
+## Lingue
+Tutti i testi nuovi di CHIRP Plus (189 stringhe) sono tradotti nelle 17
+lingue di CHIRP più l'inglese di partenza, con la terminologia che ogni
+traduzione ufficiale già usa (per esempio "станция" in russo, "無線機" in
+giapponese). Le traduzioni stanno in `tools/translations/<lingua>.json`
+(`it.json` è l'elenco di riferimento delle chiavi):
+```
+.venv\Scripts\python tools\add_translations.py --check   # solo verifica
+.venv\Scripts\python tools\add_translations.py           # aggiunge ai .po
+.venv\Scripts\python tools\compile_locales.py            # .po -> .mo
+```
+Lo script si ferma se una lingua manca di una stringa o se i segnaposto
+(`%s`, `%(nome)s`…) non coincidono con l'originale. Le traduzioni ufficiali
+già presenti non vengono toccate. Una stringa nuova va aggiunta in tutti i
+file JSON.
+
 ## Uso
 Il programma compilato è in `%LOCALAPPDATA%\Programs\CHIRP-Plus\chirpwx.exe`;
 lo ZIP è in `dist\`. Usa le stesse impostazioni del CHIRP ufficiale

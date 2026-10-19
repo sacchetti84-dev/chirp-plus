@@ -3776,9 +3776,6 @@ msgstr "{bank} 已满"
 #~ msgid "My callsign"
 #~ msgstr "我的呼号"
 
-#~ msgid "Name"
-#~ msgstr "名称"
-
 #~ msgid "No space to insert a row"
 #~ msgstr "无剩余空间"
 
@@ -3922,9 +3919,6 @@ msgstr "{bank} 已满"
 #, python-format
 #~ msgid "Setting name on %s"
 #~ msgstr "关于 %s 的设置名称"
-
-#~ msgid "Shift"
-#~ msgstr "移动"
 
 #~ msgid "Show Empty"
 #~ msgstr "显示空项"
@@ -4101,3 +4095,601 @@ msgstr "{bank} 已满"
 #, python-brace-format
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{port} 上的 {vendor} {model}"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Prolific 芯片为仿冒或不受支持: 当前的 Windows 驱动拒绝使用它。请安装较旧的 Prolific 驱动, 或改用 CH340/FTDI "
+"写频线。"
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "蓝牙串口, 不是写频线"
+
+msgid "Built-in serial port of the computer"
+msgstr "电脑自带的串口"
+
+msgid "Programming cable detected"
+msgstr "已检测到写频线"
+
+msgid "USB serial device"
+msgstr "USB 串口设备"
+
+msgid "Serial port"
+msgstr "串口"
+
+msgid "Search radio"
+msgstr "搜索电台"
+
+msgid "Search again for connected cables"
+msgstr "重新搜索已连接的写频线"
+
+msgid "Find your radio by typing part of its name"
+msgstr "输入名称的一部分来查找您的电台"
+
+msgid "Upload"
+msgstr "上传"
+
+msgid "Find your radio"
+msgstr "查找您的电台"
+
+msgid "Refresh"
+msgstr "刷新"
+
+msgid "Search..."
+msgstr "搜索..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr "将写频线连接到电台和电脑, 然后打开电台。写频线的端口会自动检测。"
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr "未找到串口。请检查写频线及其驱动, 然后点击“刷新”。"
+
+msgid "Manually entered port"
+msgstr "手动输入的端口"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr "输入厂商或型号名称的一部分 (例如 \"UV-5R\" 或 \"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "%s 上连接了新的写频线"
+
+msgid "The cable on %s was disconnected"
+msgstr "%s 上的写频线已断开"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "找到 %i 条写频线, 已选择 %s: 请确认是否正确"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr "%s 可能不是您的写频线, %s 看起来是写频线"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "未识别到写频线, 已选择 %s"
+
+msgid "Show toolbar"
+msgstr "显示工具栏"
+
+msgid "Read the memories and settings from the radio"
+msgstr "从电台读取存储和设置"
+
+msgid "Write this tab to the radio"
+msgstr "将此标签页写入电台"
+
+msgid "Cable: %s"
+msgstr "写频线: %s"
+
+msgid "No programming cable connected"
+msgstr "未连接写频线"
+
+msgid "Cable on %s needs a different driver"
+msgstr "%s 上的写频线需要其他驱动"
+
+msgid "Serial port %s disconnected"
+msgstr "串口 %s 已断开"
+
+msgid "Programming cable connected on %s"
+msgstr "写频线已连接到 %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "请先从电台下载或打开一个文件。"
+
+msgid "Searching for cables..."
+msgstr "正在搜索写频线..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "电台写频器"
+
+msgid "Export to Excel"
+msgstr "导出到 Excel"
+
+msgid "Import from Excel..."
+msgstr "从 Excel 导入..."
+
+msgid "Export to Excel..."
+msgstr "导出到 Excel..."
+
+msgid "Excel Files"
+msgstr "Excel 文件"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "导出只能写入 CSV 或 Excel (.xlsx) 文件"
+
+msgid "Export Excel"
+msgstr "导出 Excel"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "警告"
+
+msgid "error"
+msgstr "错误"
+
+msgid "info"
+msgstr "信息"
+
+msgid "reads the radio"
+msgstr "读取电台"
+
+msgid "writes the radio"
+msgstr "写入电台"
+
+msgid "file"
+msgstr "文件"
+
+msgid "tones"
+msgstr "亚音"
+
+msgid "built-in"
+msgstr "内置"
+
+msgid "bluetooth"
+msgstr "蓝牙"
+
+msgid "Show event console"
+msgstr "显示事件控制台"
+
+msgid "Look"
+msgstr "外观"
+
+msgid "Terminal"
+msgstr "终端"
+
+msgid "Classic"
+msgstr "经典"
+
+msgid "Saved %s"
+msgstr "已保存 %s"
+
+msgid "Downloaded %s %s"
+msgstr "已从 %s %s 下载"
+
+msgid "legend"
+msgstr "图例"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s 已启动, 支持 %(count)i 种电台型号"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "已打开 %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "已导出 %s"
+
+msgid "Uploaded to %s %s"
+msgstr "已上传到 %s %s"
+
+msgid "Programming cable"
+msgstr "写频线"
+
+msgid "Other ports"
+msgstr "其他端口"
+
+msgid "%i radio models supported"
+msgstr "支持 %i 种电台型号"
+
+msgid "commands"
+msgstr "命令"
+
+msgid "Last radio"
+msgstr "上次的电台"
+
+msgid "Serial port %s connected"
+msgstr "串口 %s 已连接"
+
+msgid "Detect radio and download..."
+msgstr "检测电台并下载..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "询问写频线上的电台是什么型号 (只读)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "正在尝试 %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr "没有电台响应。请检查电台已开机、写频线已完全插入且音量已调高, 然后重试。"
+
+msgid "Waiting for the radio to be ready..."
+msgstr "正在等待电台就绪..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr "这些型号使用相同的协议和存储布局。请选择您电台上标注的型号:"
+
+msgid "Radio detected"
+msgstr "已检测到电台"
+
+msgid "Detect"
+msgstr "检测"
+
+msgid "Choose the serial port of the cable first"
+msgstr "请先选择写频线的串口"
+
+msgid "Looking for a radio on %s"
+msgstr "正在 %s 上查找电台"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "电台已响应: %(ident)s, 兼容 %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "上传完成, 正在回读以校验"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "正在读取电台以与 %s 比较"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr "与电台比较: %(memories)i 个信道和 %(settings)i 项设置不同"
+
+msgid "Changes in the radio"
+msgstr "电台中的变更"
+
+msgid "Verify"
+msgstr "校验"
+
+msgid "Compare with the radio before uploading"
+msgstr "上传前与电台比较"
+
+msgid "Read back and verify after uploading"
+msgstr "上传后回读并校验"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "校验失败: 无法回读电台 (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "上传已完成, 但回读电台失败: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "校验失败: 镜像与电台之间有 %i 处差异"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr "电台中的内容与上传的不一致 (%i 处差异)。请重新上传。"
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "校验通过: 电台中是上传的镜像 (%s)"
+
+msgid "byte by byte"
+msgstr "逐字节"
+
+msgid "channel by channel"
+msgstr "逐信道"
+
+msgid "added"
+msgstr "新增"
+
+msgid "removed"
+msgstr "删除"
+
+msgid "changed"
+msgstr "修改"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "电台中已是此镜像: 不会有任何变化。"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr "电台中将有 %(memories)i 个信道和 %(settings)i 项设置发生变化。"
+
+msgid "Change"
+msgstr "变更"
+
+msgid "Where"
+msgstr "位置"
+
+msgid "In the radio now"
+msgstr "电台当前"
+
+msgid "After upload"
+msgstr "上传后"
+
+msgid "Memory %s"
+msgstr "存储 %s"
+
+msgid "image"
+msgstr "镜像"
+
+msgid "Program several radios..."
+msgstr "批量写频..."
+
+msgid "Program several radios"
+msgstr "批量写频"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr "只有从电台下载的镜像 (克隆模式) 才能写入多台电台。"
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr "每台电台都写入同一个镜像。对每台电台: 连接写频线, 打开电台, 然后按下按钮 (或回车)。在移动写频线之前请等待结果。"
+
+msgid "Read back and verify each radio"
+msgstr "回读并校验每台电台"
+
+msgid "Writing radio %i..."
+msgstr "正在写入第 %i 台电台..."
+
+msgid "Batch: writing radio %i"
+msgstr "批量: 正在写入第 %i 台电台"
+
+msgid "written"
+msgstr "已写入"
+
+msgid "not checked"
+msgstr "未校验"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "批量: 第 %(n)i 台电台 %(result)s, 校验 %(verify)s"
+
+msgid "Program radio %i"
+msgstr "写入第 %i 台电台"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "电台: %(done)i   ok: %(good)i   失败: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "请等待当前电台完成。"
+
+msgid "Image"
+msgstr "镜像"
+
+msgid "Result"
+msgstr "结果"
+
+msgid "Time"
+msgstr "时间"
+
+msgid "ERROR: %s"
+msgstr "错误: %s"
+
+msgid "%i differences"
+msgstr "%i 处差异"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "第 %i 台电台完成: 请连接下一台并按下按钮"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr "第 %i 台电台失败: 请检查后按下按钮, 继续下一台"
+
+msgid "Check frequencies..."
+msgstr "检查频率..."
+
+msgid "Memory map..."
+msgstr "存储映射..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr "新外观需要重启 CHIRP。现在重启吗? 系统会先提示您保存已打开的文件。"
+
+msgid "Restart now"
+msgstr "立即重启"
+
+msgid "Later"
+msgstr "稍后"
+
+msgid "Pocket channel card"
+msgstr "口袋信道卡"
+
+msgid "Pocket channel card..."
+msgstr "口袋信道卡..."
+
+msgid "Backups..."
+msgstr "备份..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr "频率检查适用于镜像, 不适用于实时连接的电台。"
+
+msgid "Frequency check"
+msgstr "频率检查"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr "频率检查: %(bad)i 个错误, %(warn)i 个警告, %(info)i 条提示"
+
+msgid "Pocket card for %s"
+msgstr "%s 的口袋卡"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr "存储映射适用于从电台下载的镜像。"
+
+msgid "Memory map"
+msgstr "存储映射"
+
+msgid "Backups"
+msgstr "备份"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr "CHIRP 在每次下载时及每次上传前都会保存电台的副本。蓝色: 从电台读取, 橙色: 写入电台之前。"
+
+msgid "Compare with open tab"
+msgstr "与打开的标签页比较"
+
+msgid "Open folder"
+msgstr "打开文件夹"
+
+msgid "Backup compared with the open tab"
+msgstr "备份与打开的标签页比较"
+
+msgid "Date"
+msgstr "日期"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "download"
+msgstr "下载"
+
+msgid "upload"
+msgstr "上传"
+
+msgid "In the backup"
+msgstr "备份中"
+
+msgid "In the open tab"
+msgstr "打开的标签页中"
+
+msgid "open tab"
+msgstr "打开的标签页"
+
+msgid "errors"
+msgstr "错误"
+
+msgid "warnings"
+msgstr "警告"
+
+msgid "notes"
+msgstr "提示"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr "意大利的规则。这只是建议, 不是法律意见: 请核对您的执照和电台的认证。"
+
+msgid "Channel"
+msgstr "信道"
+
+msgid "Level"
+msgstr "级别"
+
+msgid "Band"
+msgstr "频段"
+
+msgid "Message"
+msgstr "消息"
+
+msgid "No problems found."
+msgstr "未发现问题。"
+
+msgid "channels"
+msgstr "信道"
+
+msgid "names"
+msgstr "名称"
+
+msgid "settings"
+msgstr "设置"
+
+msgid "messages and ident"
+msgstr "消息和标识"
+
+msgid "service (squelch, limits): careful"
+msgstr "维修 (静噪、频率范围): 请小心"
+
+msgid "unknown data (calibration?)"
+msgstr "未知数据 (校准?)"
+
+msgid "Start"
+msgstr "起始"
+
+msgid "End"
+msgstr "结束"
+
+msgid "Bytes"
+msgstr "字节"
+
+msgid "Name"
+msgstr "名称"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr "%(size)i 字节: %(known)i 由驱动描述, %(unknown)i 含有驱动未描述的数据"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "%(memories)i 个信道和 %(settings)i 项设置不同。"
+
+msgid "No differences."
+msgstr "没有差异。"
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "在 %(freq)s 发射, 超出已知频段"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "在 %(freq)s (%(band)s) 发射: 仅限接收, 请将双工设为 off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: 发射需要执照"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s 允许 %(max)s W, 此信道使用 %(watts)s W"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM 广播"
+
+msgid "airband"
+msgstr "航空频段"
+
+msgid "amateur 2 m"
+msgstr "业余 2 m"
+
+msgid "marine VHF"
+msgstr "海事 VHF"
+
+msgid "amateur 70 cm"
+msgstr "业余 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "业余卫星 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "需要海事电台执照"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "仅限经认证的 PMR446 电台和固定天线"
+
+msgid "Ch"
+msgstr "信道"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "频差"

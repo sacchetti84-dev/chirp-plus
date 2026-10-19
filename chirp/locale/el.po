@@ -3096,10 +3096,6 @@ msgstr ""
 msgid "{bank} is full"
 msgstr "H {bank} είναι γεμάτη"
 
-#, fuzzy
-#~ msgid "Band"
-#~ msgstr "Μπάντες"
-
 #~ msgid "Delete and shift all up"
 #~ msgstr "Διαγραφή και μετακίνηση όλων προς τα επάνω"
 
@@ -3118,5 +3114,646 @@ msgstr "H {bank} είναι γεμάτη"
 #~ msgid "Status"
 #~ msgstr "Πολιτεία"
 
-#~ msgid "Upload"
-#~ msgstr "Αποστολή"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Πλαστό ή μη υποστηριζόμενο τσιπ Prolific: ο τρέχων οδηγός των Windows "
+"αρνείται να λειτουργήσει μαζί του. Εγκαταστήστε παλαιότερο οδηγό Prolific ή "
+"χρησιμοποιήστε καλώδιο CH340/FTDI."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Σειριακή θύρα Bluetooth, όχι καλώδιο προγραμματισμού"
+
+msgid "Built-in serial port of the computer"
+msgstr "Ενσωματωμένη σειριακή θύρα του υπολογιστή"
+
+msgid "Programming cable detected"
+msgstr "Εντοπίστηκε καλώδιο προγραμματισμού"
+
+msgid "USB serial device"
+msgstr "Σειριακή συσκευή USB"
+
+msgid "Serial port"
+msgstr "Σειριακή θύρα"
+
+msgid "Search radio"
+msgstr "Αναζήτηση πομποδέκτη"
+
+msgid "Search again for connected cables"
+msgstr "Νέα αναζήτηση συνδεδεμένων καλωδίων"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Βρείτε τον πομποδέκτη σας πληκτρολογώντας μέρος του ονόματός του"
+
+msgid "Upload"
+msgstr "Αποστολή"
+
+msgid "Find your radio"
+msgstr "Βρείτε τον πομποδέκτη σας"
+
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+msgid "Search..."
+msgstr "Αναζήτηση..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Συνδέστε το καλώδιο προγραμματισμού στον πομποδέκτη και στον υπολογιστή και "
+"ανάψτε τον πομποδέκτη. Η θύρα του καλωδίου εντοπίζεται αυτόματα."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Δεν βρέθηκε σειριακή θύρα. Ελέγξτε το καλώδιο και τον οδηγό του και πατήστε "
+"Ανανέωση."
+
+msgid "Manually entered port"
+msgstr "Θύρα που εισήχθη χειροκίνητα"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr ""
+"Πληκτρολογήστε μέρος του ονόματος προμηθευτή ή μοντέλου (για παράδειγμα "
+"\"UV-5R\" ή \"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Νέο καλώδιο συνδέθηκε στη %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "Το καλώδιο στη %s αποσυνδέθηκε"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "Βρέθηκαν %i καλώδια, επιλέχθηκε η %s: ελέγξτε ότι είναι το σωστό"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr ""
+"Η %s μάλλον δεν είναι το καλώδιό σας, η %s μοιάζει με καλώδιο "
+"προγραμματισμού"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Δεν αναγνωρίστηκε καλώδιο προγραμματισμού, επιλέχθηκε η %s"
+
+msgid "Show toolbar"
+msgstr "Εμφάνιση γραμμής εργαλείων"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Ανάγνωση μνημών και ρυθμίσεων από τον πομποδέκτη"
+
+msgid "Write this tab to the radio"
+msgstr "Εγγραφή αυτής της καρτέλας στον πομποδέκτη"
+
+msgid "Cable: %s"
+msgstr "Καλώδιο: %s"
+
+msgid "No programming cable connected"
+msgstr "Δεν υπάρχει συνδεδεμένο καλώδιο προγραμματισμού"
+
+msgid "Cable on %s needs a different driver"
+msgstr "Το καλώδιο στη %s χρειάζεται άλλον οδηγό"
+
+msgid "Serial port %s disconnected"
+msgstr "Η σειριακή θύρα %s αποσυνδέθηκε"
+
+msgid "Programming cable connected on %s"
+msgstr "Καλώδιο προγραμματισμού συνδέθηκε στη %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Κάντε πρώτα λήψη από τον πομποδέκτη ή ανοίξτε ένα αρχείο."
+
+msgid "Searching for cables..."
+msgstr "Αναζήτηση καλωδίων..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "ΠΡΟΓΡΑΜΜΑΤΙΣΤΗΣ ΠΟΜΠΟΔΕΚΤΩΝ"
+
+msgid "Export to Excel"
+msgstr "Εξαγωγή σε Excel"
+
+msgid "Import from Excel..."
+msgstr "Εισαγωγή από Excel..."
+
+msgid "Export to Excel..."
+msgstr "Εξαγωγή σε Excel..."
+
+msgid "Excel Files"
+msgstr "Αρχεία Excel"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Η εξαγωγή μπορεί να γράψει μόνο αρχεία CSV ή Excel (.xlsx)"
+
+msgid "Export Excel"
+msgstr "Εξαγωγή Excel"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "προσοχή"
+
+msgid "error"
+msgstr "σφάλμα"
+
+msgid "info"
+msgstr "πληρ."
+
+msgid "reads the radio"
+msgstr "διαβάζει τον πομποδέκτη"
+
+msgid "writes the radio"
+msgstr "γράφει τον πομποδέκτη"
+
+msgid "file"
+msgstr "αρχείο"
+
+msgid "tones"
+msgstr "τόνοι"
+
+msgid "built-in"
+msgstr "ενσωματωμένη"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Εμφάνιση κονσόλας συμβάντων"
+
+msgid "Look"
+msgstr "Εμφάνιση"
+
+msgid "Terminal"
+msgstr "Τερματικό"
+
+msgid "Classic"
+msgstr "Κλασική"
+
+msgid "Saved %s"
+msgstr "Αποθηκεύτηκε το %s"
+
+msgid "Downloaded %s %s"
+msgstr "Λήψη από %s %s"
+
+msgid "legend"
+msgstr "υπόμνημα"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr ""
+"Το CHIRP %(version)s ξεκίνησε, υποστηρίζονται %(count)i μοντέλα πομποδεκτών"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Άνοιξε το %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Εξήχθη το %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Αποστολή σε %s %s"
+
+msgid "Programming cable"
+msgstr "Καλώδιο προγραμματισμού"
+
+msgid "Other ports"
+msgstr "Άλλες θύρες"
+
+msgid "%i radio models supported"
+msgstr "Υποστηρίζονται %i μοντέλα πομποδεκτών"
+
+msgid "commands"
+msgstr "εντολές"
+
+msgid "Last radio"
+msgstr "Τελευταίος πομποδέκτης"
+
+msgid "Serial port %s connected"
+msgstr "Η σειριακή θύρα %s συνδέθηκε"
+
+msgid "Detect radio and download..."
+msgstr "Αναγνώριση πομποδέκτη και λήψη..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr ""
+"Ερώτηση στον συνδεδεμένο πομποδέκτη για το μοντέλο του (μόνο ανάγνωση)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Δοκιμή %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Κανένας πομποδέκτης δεν απάντησε. Ελέγξτε ότι είναι αναμμένος, ότι το "
+"καλώδιο είναι πλήρως τοποθετημένο και η ένταση ανεβασμένη, και δοκιμάστε "
+"ξανά."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Αναμονή να είναι έτοιμος ο πομποδέκτης..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Αυτά τα μοντέλα χρησιμοποιούν το ίδιο πρωτόκολλο και την ίδια διάταξη "
+"μνήμης. Επιλέξτε αυτό που αναγράφεται στον πομποδέκτη σας:"
+
+msgid "Radio detected"
+msgstr "Ο πομποδέκτης αναγνωρίστηκε"
+
+msgid "Detect"
+msgstr "Αναγνώριση"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Επιλέξτε πρώτα τη σειριακή θύρα του καλωδίου"
+
+msgid "Looking for a radio on %s"
+msgstr "Αναζήτηση πομποδέκτη στη %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "Ο πομποδέκτης απάντησε: %(ident)s, συμβατός με %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Η αποστολή ολοκληρώθηκε, νέα ανάγνωση για επαλήθευση"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "Ανάγνωση του πομποδέκτη για σύγκριση με %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Σύγκριση με τον πομποδέκτη: διαφέρουν %(memories)i κανάλια και %(settings)i "
+"ρυθμίσεις"
+
+msgid "Changes in the radio"
+msgstr "Αλλαγές στον πομποδέκτη"
+
+msgid "Verify"
+msgstr "Επαλήθευση"
+
+msgid "Compare with the radio before uploading"
+msgstr "Σύγκριση με τον πομποδέκτη πριν την αποστολή"
+
+msgid "Read back and verify after uploading"
+msgstr "Νέα ανάγνωση και επαλήθευση μετά την αποστολή"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Η επαλήθευση απέτυχε: ο πομποδέκτης δεν διαβάστηκε (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr ""
+"Η αποστολή ολοκληρώθηκε, αλλά η νέα ανάγνωση του πομποδέκτη απέτυχε: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Η επαλήθευση ΑΠΕΤΥΧΕ: %i διαφορές μεταξύ εικόνας και πομποδέκτη"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"Ο πομποδέκτης δεν περιέχει ό,τι στάλθηκε (%i διαφορές). Επαναλάβετε την "
+"αποστολή."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Επαλήθευση OK: ο πομποδέκτης περιέχει την εικόνα που στάλθηκε (%s)"
+
+msgid "byte by byte"
+msgstr "byte προς byte"
+
+msgid "channel by channel"
+msgstr "κανάλι προς κανάλι"
+
+msgid "added"
+msgstr "προστέθηκε"
+
+msgid "removed"
+msgstr "αφαιρέθηκε"
+
+msgid "changed"
+msgstr "άλλαξε"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "Ο πομποδέκτης περιέχει ήδη αυτή την εικόνα: τίποτα δεν θα άλλαζε."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr ""
+"Θα αλλάξουν %(memories)i κανάλια και %(settings)i ρυθμίσεις στον πομποδέκτη."
+
+msgid "Change"
+msgstr "Αλλαγή"
+
+msgid "Where"
+msgstr "Πού"
+
+msgid "In the radio now"
+msgstr "Τώρα στον πομποδέκτη"
+
+msgid "After upload"
+msgstr "Μετά την αποστολή"
+
+msgid "Memory %s"
+msgstr "Μνήμη %s"
+
+msgid "image"
+msgstr "εικόνα"
+
+msgid "Program several radios..."
+msgstr "Προγραμματισμός πολλών πομποδεκτών..."
+
+msgid "Program several radios"
+msgstr "Προγραμματισμός πολλών πομποδεκτών"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"Μόνο εικόνες που λήφθηκαν από πομποδέκτη (λειτουργία κλωνοποίησης) μπορούν "
+"να γραφτούν σε πολλούς πομποδέκτες."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"Η ίδια εικόνα γράφεται σε κάθε πομποδέκτη. Για κάθε πομποδέκτη: συνδέστε το "
+"καλώδιο, ανάψτε τον πομποδέκτη και πατήστε το κουμπί (ή Enter). Περιμένετε "
+"το αποτέλεσμα πριν μετακινήσετε το καλώδιο."
+
+msgid "Read back and verify each radio"
+msgstr "Νέα ανάγνωση και επαλήθευση κάθε πομποδέκτη"
+
+msgid "Writing radio %i..."
+msgstr "Εγγραφή πομποδέκτη %i..."
+
+msgid "Batch: writing radio %i"
+msgstr "Σειρά: εγγραφή πομποδέκτη %i"
+
+msgid "written"
+msgstr "γράφτηκε"
+
+msgid "not checked"
+msgstr "δεν ελέγχθηκε"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Σειρά: πομποδέκτης %(n)i %(result)s, επαλήθευση %(verify)s"
+
+msgid "Program radio %i"
+msgstr "Προγραμματισμός πομποδέκτη %i"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Πομποδέκτες: %(done)i   ok: %(good)i   απέτυχαν: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Περιμένετε να ολοκληρωθεί ο τρέχων πομποδέκτης."
+
+msgid "Image"
+msgstr "Εικόνα"
+
+msgid "Result"
+msgstr "Αποτέλεσμα"
+
+msgid "Time"
+msgstr "Ώρα"
+
+msgid "ERROR: %s"
+msgstr "ΣΦΑΛΜΑ: %s"
+
+msgid "%i differences"
+msgstr "%i διαφορές"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr ""
+"Ο πομποδέκτης %i ολοκληρώθηκε: συνδέστε τον επόμενο και πατήστε το κουμπί"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"Ο πομποδέκτης %i απέτυχε: ελέγξτε τον και πατήστε το κουμπί για να "
+"συνεχίσετε με τον επόμενο"
+
+msgid "Check frequencies..."
+msgstr "Έλεγχος συχνοτήτων..."
+
+msgid "Memory map..."
+msgstr "Χάρτης μνήμης..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Η νέα εμφάνιση απαιτεί επανεκκίνηση του CHIRP. Επανεκκίνηση τώρα; Θα σας "
+"ζητηθεί πρώτα να αποθηκεύσετε τα ανοιχτά αρχεία."
+
+msgid "Restart now"
+msgstr "Επανεκκίνηση τώρα"
+
+msgid "Later"
+msgstr "Αργότερα"
+
+msgid "Pocket channel card"
+msgstr "Κάρτα τσέπης καναλιών"
+
+msgid "Pocket channel card..."
+msgstr "Κάρτα τσέπης καναλιών..."
+
+msgid "Backups..."
+msgstr "Αντίγραφα ασφαλείας..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr ""
+"Ο έλεγχος συχνοτήτων λειτουργεί σε εικόνες, όχι σε πομποδέκτες σε πραγματικό"
+" χρόνο."
+
+msgid "Frequency check"
+msgstr "Έλεγχος συχνοτήτων"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Έλεγχος συχνοτήτων: %(bad)i σφάλματα, %(warn)i προειδοποιήσεις, %(info)i "
+"σημειώσεις"
+
+msgid "Pocket card for %s"
+msgstr "Κάρτα τσέπης για %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr ""
+"Ο χάρτης μνήμης είναι διαθέσιμος για εικόνες που λήφθηκαν από πομποδέκτη."
+
+msgid "Memory map"
+msgstr "Χάρτης μνήμης"
+
+msgid "Backups"
+msgstr "Αντίγραφα ασφαλείας"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"Το CHIRP αποθηκεύει ένα αντίγραφο του πομποδέκτη σε κάθε λήψη και πριν από "
+"κάθε αποστολή. Μπλε: ανάγνωση από τον πομποδέκτη, πορτοκαλί: πριν την "
+"εγγραφή."
+
+msgid "Compare with open tab"
+msgstr "Σύγκριση με την ανοιχτή καρτέλα"
+
+msgid "Open folder"
+msgstr "Άνοιγμα φακέλου"
+
+msgid "Backup compared with the open tab"
+msgstr "Αντίγραφο σε σύγκριση με την ανοιχτή καρτέλα"
+
+msgid "Date"
+msgstr "Ημερομηνία"
+
+msgid "Type"
+msgstr "Τύπος"
+
+msgid "Size"
+msgstr "Μέγεθος"
+
+msgid "download"
+msgstr "λήψη"
+
+msgid "upload"
+msgstr "αποστολή"
+
+msgid "In the backup"
+msgstr "Στο αντίγραφο"
+
+msgid "In the open tab"
+msgstr "Στην ανοιχτή καρτέλα"
+
+msgid "open tab"
+msgstr "ανοιχτή-καρτέλα"
+
+msgid "errors"
+msgstr "σφάλματα"
+
+msgid "warnings"
+msgstr "προειδοποιήσεις"
+
+msgid "notes"
+msgstr "σημειώσεις"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Κανόνες για την Ιταλία. Πρόκειται για συμβουλή, όχι νομική γνωμάτευση: "
+"ελέγξτε την άδειά σας και την έγκριση του πομποδέκτη."
+
+msgid "Channel"
+msgstr "Κανάλι"
+
+msgid "Level"
+msgstr "Επίπεδο"
+
+msgid "Band"
+msgstr "Ζώνη"
+
+msgid "Message"
+msgstr "Μήνυμα"
+
+msgid "No problems found."
+msgstr "Δεν βρέθηκαν προβλήματα."
+
+msgid "channels"
+msgstr "κανάλια"
+
+msgid "names"
+msgstr "ονόματα"
+
+msgid "settings"
+msgstr "ρυθμίσεις"
+
+msgid "messages and ident"
+msgstr "μηνύματα και αναγνωριστικό"
+
+msgid "service (squelch, limits): careful"
+msgstr "σέρβις (squelch, όρια): προσοχή"
+
+msgid "unknown data (calibration?)"
+msgstr "άγνωστα δεδομένα (βαθμονόμηση;)"
+
+msgid "Start"
+msgstr "Αρχή"
+
+msgid "End"
+msgstr "Τέλος"
+
+msgid "Bytes"
+msgstr "Bytes"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i bytes: %(known)i περιγράφονται από τον οδηγό, %(unknown)i με "
+"δεδομένα που ο οδηγός δεν περιγράφει"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "Διαφέρουν %(memories)i κανάλια και %(settings)i ρυθμίσεις."
+
+msgid "No differences."
+msgstr "Καμία διαφορά."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "εκπέμπει στα %(freq)s, εκτός των γνωστών ζωνών"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "εκπέμπει στα %(freq)s (%(band)s): μόνο λήψη, ορίστε το Duplex σε off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: η εκπομπή απαιτεί άδεια"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr ""
+"Η %(band)s επιτρέπει %(max)s W, αυτό το κανάλι χρησιμοποιεί %(watts)s W"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "ραδιοφωνία FM"
+
+msgid "airband"
+msgstr "αεροναυτική ζώνη"
+
+msgid "amateur 2 m"
+msgstr "ραδιοερασιτέχνες 2 m"
+
+msgid "marine VHF"
+msgstr "ναυτικά VHF"
+
+msgid "amateur 70 cm"
+msgstr "ραδιοερασιτέχνες 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "ερασιτεχνικοί δορυφόροι 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "απαιτεί άδεια ναυτικού ραδιοσταθμού"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "μόνο με εγκεκριμένους πομποδέκτες PMR446 και σταθερή κεραία"
+
+msgid "Ch"
+msgstr "Καν"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Μετατόπιση"

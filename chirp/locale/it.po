@@ -3642,12 +3642,6 @@ msgstr "Leggi memorie e impostazioni dalla radio"
 msgid "Write this tab to the radio"
 msgstr "Scrivi questa scheda nella radio"
 
-msgid "Connect the cable and read your radio"
-msgstr "Collega il cavo e leggi la tua radio"
-
-msgid "Open a saved radio image or CSV file"
-msgstr "Apri un'immagine radio salvata o un file CSV"
-
 msgid "Cable: %s"
 msgstr "Cavo: %s"
 
@@ -3672,35 +3666,8 @@ msgstr "Prima scarica dalla radio o apri un file."
 msgid "Searching for cables..."
 msgstr "Ricerca cavi in corso..."
 
-msgid "PROCEDURE"
-msgstr "PROCEDURA"
-
-msgid "Night vision look"
-msgstr "Aspetto visore notturno"
-
-msgid "The new look is applied the next time CHIRP starts."
-msgstr "Il nuovo aspetto verrà applicato al prossimo avvio di CHIRP."
-
 msgid "RADIO PROGRAMMER"
 msgstr "PROGRAMMATORE RADIO"
-
-msgid "Connect the cable to the radio and the PC"
-msgstr "Collega il cavo alla radio e al PC"
-
-msgid "Turn the radio on"
-msgstr "Accendi la radio"
-
-msgid "Press DOWNLOAD FROM RADIO"
-msgstr "Premi SCARICA DALLA RADIO"
-
-msgid "READY"
-msgstr "PRONTO"
-
-msgid "STANDBY"
-msgstr "IN ATTESA"
-
-msgid "NO SIGNAL"
-msgstr "NESSUN SEGNALE"
 
 msgid "Export to Excel"
 msgstr "Esporta in Excel"

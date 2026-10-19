@@ -3336,9 +3336,6 @@ msgstr ""
 #~ msgid "My callsign"
 #~ msgstr "Mijn roepletters"
 
-#~ msgid "Name"
-#~ msgstr "Naam"
-
 #~ msgid "None"
 #~ msgstr "Geen"
 
@@ -3387,9 +3384,6 @@ msgstr ""
 
 #~ msgid "Setting memory {number}"
 #~ msgstr "Kanaal {number} instellen"
-
-#~ msgid "Shift"
-#~ msgstr "Shift"
 
 #~ msgid "Show Empty"
 #~ msgstr "Lege tonen"
@@ -3501,3 +3495,634 @@ msgstr ""
 
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{vendor} {model} op {port}"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Nagemaakte of niet ondersteunde Prolific-chip: het huidige Windows-"
+"stuurprogramma weigert ermee te werken. Installeer een ouder Prolific-"
+"stuurprogramma of gebruik een CH340/FTDI-kabel."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Seriële Bluetooth-poort, geen programmeerkabel"
+
+msgid "Built-in serial port of the computer"
+msgstr "Ingebouwde seriële poort van de computer"
+
+msgid "Programming cable detected"
+msgstr "Programmeerkabel gevonden"
+
+msgid "USB serial device"
+msgstr "Serieel USB-apparaat"
+
+msgid "Serial port"
+msgstr "Seriële poort"
+
+msgid "Search radio"
+msgstr "Radio zoeken"
+
+msgid "Search again for connected cables"
+msgstr "Opnieuw zoeken naar aangesloten kabels"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Vind uw radio door een deel van de naam te typen"
+
+msgid "Upload"
+msgstr "Uploaden"
+
+msgid "Find your radio"
+msgstr "Vind uw radio"
+
+msgid "Refresh"
+msgstr "Vernieuwen"
+
+msgid "Search..."
+msgstr "Zoeken..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Sluit de programmeerkabel aan op de radio en de computer en zet de radio "
+"aan. De poort van de kabel wordt automatisch gevonden."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Geen seriële poort gevonden. Controleer de kabel en het stuurprogramma en "
+"klik op Vernieuwen."
+
+msgid "Manually entered port"
+msgstr "Handmatig ingevoerde poort"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr "Typ een deel van het merk of model (bijvoorbeeld \"UV-5R\" of \"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Nieuwe kabel aangesloten op %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "De kabel op %s is losgekoppeld"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "%i kabels gevonden, %s gekozen: controleer of het de juiste is"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr "%s is waarschijnlijk niet uw kabel, %s lijkt op een programmeerkabel"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Geen programmeerkabel herkend, %s gekozen"
+
+msgid "Show toolbar"
+msgstr "Werkbalk tonen"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Kanalen en instellingen uit de radio lezen"
+
+msgid "Write this tab to the radio"
+msgstr "Dit tabblad naar de radio schrijven"
+
+msgid "Cable: %s"
+msgstr "Kabel: %s"
+
+msgid "No programming cable connected"
+msgstr "Geen programmeerkabel aangesloten"
+
+msgid "Cable on %s needs a different driver"
+msgstr "De kabel op %s heeft een ander stuurprogramma nodig"
+
+msgid "Serial port %s disconnected"
+msgstr "Seriële poort %s losgekoppeld"
+
+msgid "Programming cable connected on %s"
+msgstr "Programmeerkabel aangesloten op %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Download eerst van de radio of open een bestand."
+
+msgid "Searching for cables..."
+msgstr "Kabels zoeken..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "RADIO-PROGRAMMEUR"
+
+msgid "Export to Excel"
+msgstr "Exporteren naar Excel"
+
+msgid "Import from Excel..."
+msgstr "Importeren uit Excel..."
+
+msgid "Export to Excel..."
+msgstr "Exporteren naar Excel..."
+
+msgid "Excel Files"
+msgstr "Excel-bestanden"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Exporteren kan alleen CSV- of Excel-bestanden (.xlsx) schrijven"
+
+msgid "Export Excel"
+msgstr "Excel exporteren"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "waarschuwing"
+
+msgid "error"
+msgstr "fout"
+
+msgid "info"
+msgstr "info"
+
+msgid "reads the radio"
+msgstr "leest de radio"
+
+msgid "writes the radio"
+msgstr "schrijft de radio"
+
+msgid "file"
+msgstr "bestand"
+
+msgid "tones"
+msgstr "tonen"
+
+msgid "built-in"
+msgstr "ingebouwd"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Gebeurtenissenconsole tonen"
+
+msgid "Look"
+msgstr "Uiterlijk"
+
+msgid "Terminal"
+msgstr "Terminal"
+
+msgid "Classic"
+msgstr "Klassiek"
+
+msgid "Saved %s"
+msgstr "Opgeslagen %s"
+
+msgid "Downloaded %s %s"
+msgstr "Gedownload %s %s"
+
+msgid "legend"
+msgstr "legenda"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s gestart, %(count)i radiomodellen ondersteund"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Geopend %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Geëxporteerd %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Geüpload naar %s %s"
+
+msgid "Programming cable"
+msgstr "Programmeerkabel"
+
+msgid "Other ports"
+msgstr "Andere poorten"
+
+msgid "%i radio models supported"
+msgstr "%i radiomodellen ondersteund"
+
+msgid "commands"
+msgstr "opdrachten"
+
+msgid "Last radio"
+msgstr "Laatste radio"
+
+msgid "Serial port %s connected"
+msgstr "Seriële poort %s aangesloten"
+
+msgid "Detect radio and download..."
+msgstr "Radio herkennen en downloaden..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "De aangesloten radio vragen welk model het is (alleen lezen)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Proberen %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Geen radio heeft geantwoord. Controleer of hij aan staat, de kabel er "
+"helemaal in zit en het volume open staat, en probeer opnieuw."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Wachten tot de radio klaar is..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Deze modellen gebruiken hetzelfde protocol en dezelfde geheugenindeling. "
+"Kies het model dat op uw radio staat:"
+
+msgid "Radio detected"
+msgstr "Radio herkend"
+
+msgid "Detect"
+msgstr "Herkennen"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Kies eerst de seriële poort van de kabel"
+
+msgid "Looking for a radio on %s"
+msgstr "Radio zoeken op %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "De radio antwoordde: %(ident)s, compatibel met %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Uploaden klaar, radio wordt teruggelezen om te controleren"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "Radio lezen om te vergelijken met %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Vergeleken met de radio: %(memories)i kanalen en %(settings)i instellingen "
+"verschillen"
+
+msgid "Changes in the radio"
+msgstr "Wijzigingen in de radio"
+
+msgid "Verify"
+msgstr "Controle"
+
+msgid "Compare with the radio before uploading"
+msgstr "Vergelijken met de radio voor het uploaden"
+
+msgid "Read back and verify after uploading"
+msgstr "Na het uploaden teruglezen en controleren"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Controle mislukt: radio kon niet teruggelezen worden (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr ""
+"Het uploaden is klaar, maar het teruglezen van de radio is mislukt: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Controle MISLUKT: %i verschillen tussen image en radio"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"De radio bevat niet wat er geüpload is (%i verschillen). Upload opnieuw."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Controle OK: de radio bevat de geüploade image (%s)"
+
+msgid "byte by byte"
+msgstr "byte voor byte"
+
+msgid "channel by channel"
+msgstr "kanaal voor kanaal"
+
+msgid "added"
+msgstr "toegevoegd"
+
+msgid "removed"
+msgstr "verwijderd"
+
+msgid "changed"
+msgstr "gewijzigd"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "De radio bevat deze image al: er zou niets veranderen."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr ""
+"In de radio veranderen %(memories)i kanalen en %(settings)i instellingen."
+
+msgid "Change"
+msgstr "Wijziging"
+
+msgid "Where"
+msgstr "Waar"
+
+msgid "In the radio now"
+msgstr "Nu in de radio"
+
+msgid "After upload"
+msgstr "Na het uploaden"
+
+msgid "Memory %s"
+msgstr "Kanaal %s"
+
+msgid "image"
+msgstr "image"
+
+msgid "Program several radios..."
+msgstr "Meerdere radio's programmeren..."
+
+msgid "Program several radios"
+msgstr "Meerdere radio's programmeren"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"Alleen images die van een radio gedownload zijn (kloonmodus) kunnen in "
+"meerdere radio's geschreven worden."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"Dezelfde image wordt in elke radio geschreven. Voor elke radio: sluit de "
+"kabel aan, zet de radio aan en druk op de knop (of Enter). Wacht op het "
+"resultaat voordat u de kabel verplaatst."
+
+msgid "Read back and verify each radio"
+msgstr "Elke radio teruglezen en controleren"
+
+msgid "Writing radio %i..."
+msgstr "Radio %i schrijven..."
+
+msgid "Batch: writing radio %i"
+msgstr "Serie: radio %i schrijven"
+
+msgid "written"
+msgstr "geschreven"
+
+msgid "not checked"
+msgstr "niet gecontroleerd"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Serie: radio %(n)i %(result)s, controle %(verify)s"
+
+msgid "Program radio %i"
+msgstr "Radio %i programmeren"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Radio's: %(done)i   ok: %(good)i   mislukt: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Wacht tot de huidige radio klaar is."
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Result"
+msgstr "Resultaat"
+
+msgid "Time"
+msgstr "Tijd"
+
+msgid "ERROR: %s"
+msgstr "FOUT: %s"
+
+msgid "%i differences"
+msgstr "%i verschillen"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "Radio %i klaar: sluit de volgende aan en druk op de knop"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"Radio %i mislukt: controleer hem en druk op de knop om met de volgende "
+"verder te gaan"
+
+msgid "Check frequencies..."
+msgstr "Frequenties controleren..."
+
+msgid "Memory map..."
+msgstr "Geheugenkaart..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Het nieuwe uiterlijk vraagt om een herstart van CHIRP. Nu herstarten? Eerst "
+"wordt gevraagd open bestanden op te slaan."
+
+msgid "Restart now"
+msgstr "Nu herstarten"
+
+msgid "Later"
+msgstr "Later"
+
+msgid "Pocket channel card"
+msgstr "Kanaalkaart voor in de zak"
+
+msgid "Pocket channel card..."
+msgstr "Kanaalkaart voor in de zak..."
+
+msgid "Backups..."
+msgstr "Back-ups..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr "De frequentiecontrole werkt op images, niet op live radio's."
+
+msgid "Frequency check"
+msgstr "Frequentiecontrole"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Frequentiecontrole: %(bad)i fouten, %(warn)i waarschuwingen, %(info)i "
+"opmerkingen"
+
+msgid "Pocket card for %s"
+msgstr "Kanaalkaart voor %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr ""
+"De geheugenkaart is beschikbaar voor images die van een radio gedownload "
+"zijn."
+
+msgid "Memory map"
+msgstr "Geheugenkaart"
+
+msgid "Backups"
+msgstr "Back-ups"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"CHIRP bewaart bij elke download en voor elke upload een kopie van de radio. "
+"Blauw: gelezen uit de radio, oranje: voor het schrijven."
+
+msgid "Compare with open tab"
+msgstr "Vergelijken met open tabblad"
+
+msgid "Open folder"
+msgstr "Map openen"
+
+msgid "Backup compared with the open tab"
+msgstr "Back-up vergeleken met het open tabblad"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Type"
+msgstr "Soort"
+
+msgid "Size"
+msgstr "Grootte"
+
+msgid "download"
+msgstr "download"
+
+msgid "upload"
+msgstr "upload"
+
+msgid "In the backup"
+msgstr "In de back-up"
+
+msgid "In the open tab"
+msgstr "In het open tabblad"
+
+msgid "open tab"
+msgstr "open-tabblad"
+
+msgid "errors"
+msgstr "fouten"
+
+msgid "warnings"
+msgstr "waarschuwingen"
+
+msgid "notes"
+msgstr "opmerkingen"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Regels voor Italië. Dit is een hulpmiddel, geen juridisch advies: controleer"
+" uw machtiging en de goedkeuring van de radio."
+
+msgid "Channel"
+msgstr "Kanaal"
+
+msgid "Level"
+msgstr "Niveau"
+
+msgid "Band"
+msgstr "Band"
+
+msgid "Message"
+msgstr "Melding"
+
+msgid "No problems found."
+msgstr "Geen problemen gevonden."
+
+msgid "channels"
+msgstr "kanalen"
+
+msgid "names"
+msgstr "namen"
+
+msgid "settings"
+msgstr "instellingen"
+
+msgid "messages and ident"
+msgstr "meldingen en identificatie"
+
+msgid "service (squelch, limits): careful"
+msgstr "service (squelch, limieten): voorzichtig"
+
+msgid "unknown data (calibration?)"
+msgstr "onbekende gegevens (kalibratie?)"
+
+msgid "Start"
+msgstr "Begin"
+
+msgid "End"
+msgstr "Einde"
+
+msgid "Bytes"
+msgstr "Bytes"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i bytes: %(known)i beschreven door het stuurprogramma, %(unknown)i "
+"met gegevens die het stuurprogramma niet beschrijft"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "%(memories)i kanalen en %(settings)i instellingen zijn verschillend."
+
+msgid "No differences."
+msgstr "Geen verschillen."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "zendt op %(freq)s, buiten de bekende banden"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "zendt op %(freq)s (%(band)s): alleen ontvangen, zet Duplex op off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: voor zenden is een machtiging nodig"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s staat %(max)s W toe, dit kanaal gebruikt %(watts)s W"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM-omroep"
+
+msgid "airband"
+msgstr "luchtvaartband"
+
+msgid "amateur 2 m"
+msgstr "zendamateurs 2 m"
+
+msgid "marine VHF"
+msgstr "marifoon VHF"
+
+msgid "amateur 70 cm"
+msgstr "zendamateurs 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "amateursatellieten 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "vereist een maritiem radiocertificaat"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "alleen met goedgekeurde PMR446-radio's en vaste antenne"
+
+msgid "Ch"
+msgstr "Kan"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Shift"

@@ -3686,3 +3686,633 @@ msgstr "{bank} este plin"
 
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "Fișier imagine pentru {vendor} {model}"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Cip Prolific contrafăcut sau neacceptat: driverul Windows actual refuză să "
+"lucreze cu el. Instalați un driver Prolific mai vechi sau folosiți un cablu "
+"CH340/FTDI."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Port serial Bluetooth, nu este un cablu de programare"
+
+msgid "Built-in serial port of the computer"
+msgstr "Port serial integrat al calculatorului"
+
+msgid "Programming cable detected"
+msgstr "Cablu de programare detectat"
+
+msgid "USB serial device"
+msgstr "Dispozitiv serial USB"
+
+msgid "Serial port"
+msgstr "Port serial"
+
+msgid "Search radio"
+msgstr "Caută stația"
+
+msgid "Search again for connected cables"
+msgstr "Caută din nou cablurile conectate"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Găsiți stația scriind o parte din nume"
+
+msgid "Upload"
+msgstr "Încarcă"
+
+msgid "Find your radio"
+msgstr "Găsiți stația"
+
+msgid "Refresh"
+msgstr "Reîmprospătează"
+
+msgid "Search..."
+msgstr "Caută..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Conectați cablul de programare la stație și la calculator, apoi porniți "
+"stația. Portul cablului este detectat automat."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Nu s-a găsit niciun port serial. Verificați cablul și driverul, apoi apăsați"
+" Reîmprospătează."
+
+msgid "Manually entered port"
+msgstr "Port introdus manual"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr ""
+"Scrieți o parte din producător sau model (de exemplu \"UV-5R\" sau "
+"\"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "Cablu nou conectat pe %s"
+
+msgid "The cable on %s was disconnected"
+msgstr "Cablul de pe %s a fost deconectat"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "%i cabluri găsite, selectat %s: verificați că este cel corect"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr "%s probabil nu este cablul dvs., %s pare un cablu de programare"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Niciun cablu de programare recunoscut, selectat %s"
+
+msgid "Show toolbar"
+msgstr "Arată bara de instrumente"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Citește memoriile și setările din stație"
+
+msgid "Write this tab to the radio"
+msgstr "Scrie această filă în stație"
+
+msgid "Cable: %s"
+msgstr "Cablu: %s"
+
+msgid "No programming cable connected"
+msgstr "Niciun cablu de programare conectat"
+
+msgid "Cable on %s needs a different driver"
+msgstr "Cablul de pe %s are nevoie de alt driver"
+
+msgid "Serial port %s disconnected"
+msgstr "Portul serial %s deconectat"
+
+msgid "Programming cable connected on %s"
+msgstr "Cablu de programare conectat pe %s"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Mai întâi descărcați din stație sau deschideți un fișier."
+
+msgid "Searching for cables..."
+msgstr "Caut cabluri..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "PROGRAMATOR DE STAȚII"
+
+msgid "Export to Excel"
+msgstr "Exportă în Excel"
+
+msgid "Import from Excel..."
+msgstr "Importă din Excel..."
+
+msgid "Export to Excel..."
+msgstr "Exportă în Excel..."
+
+msgid "Excel Files"
+msgstr "Fișiere Excel"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Exportul poate scrie doar fișiere CSV sau Excel (.xlsx)"
+
+msgid "Export Excel"
+msgstr "Export Excel"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "warning"
+msgstr "atenție"
+
+msgid "error"
+msgstr "eroare"
+
+msgid "info"
+msgstr "info"
+
+msgid "reads the radio"
+msgstr "citește stația"
+
+msgid "writes the radio"
+msgstr "scrie stația"
+
+msgid "file"
+msgstr "fișier"
+
+msgid "tones"
+msgstr "tonuri"
+
+msgid "built-in"
+msgstr "integrat"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Arată consola de evenimente"
+
+msgid "Look"
+msgstr "Aspect"
+
+msgid "Terminal"
+msgstr "Terminal"
+
+msgid "Classic"
+msgstr "Clasic"
+
+msgid "Saved %s"
+msgstr "Salvat %s"
+
+msgid "Downloaded %s %s"
+msgstr "Descărcat %s %s"
+
+msgid "legend"
+msgstr "legendă"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s pornit, %(count)i modele de stații acceptate"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "Deschis %(file)s (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "Exportat %s"
+
+msgid "Uploaded to %s %s"
+msgstr "Încărcat în %s %s"
+
+msgid "Programming cable"
+msgstr "Cablu de programare"
+
+msgid "Other ports"
+msgstr "Alte porturi"
+
+msgid "%i radio models supported"
+msgstr "%i modele de stații acceptate"
+
+msgid "commands"
+msgstr "comenzi"
+
+msgid "Last radio"
+msgstr "Ultima stație"
+
+msgid "Serial port %s connected"
+msgstr "Portul serial %s conectat"
+
+msgid "Detect radio and download..."
+msgstr "Detectează stația și descarcă..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "Întreabă stația conectată ce model este (doar citire)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "Încerc %(model)s (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Nicio stație nu a răspuns. Verificați că este pornită, cablul este introdus "
+"complet și volumul este dat, apoi reîncercați."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Aștept ca stația să fie pregătită..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Aceste modele folosesc același protocol și aceeași organizare a memoriei. "
+"Alegeți modelul scris pe stația dvs.:"
+
+msgid "Radio detected"
+msgstr "Stație detectată"
+
+msgid "Detect"
+msgstr "Detectează"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Mai întâi alegeți portul serial al cablului"
+
+msgid "Looking for a radio on %s"
+msgstr "Caut o stație pe %s"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "Stația a răspuns: %(ident)s, compatibilă cu %(models)s"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Încărcare terminată, recitesc stația pentru verificare"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "Citesc stația pentru a o compara cu %s"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Comparație cu stația: diferă %(memories)i canale și %(settings)i setări"
+
+msgid "Changes in the radio"
+msgstr "Modificări în stație"
+
+msgid "Verify"
+msgstr "Verificare"
+
+msgid "Compare with the radio before uploading"
+msgstr "Compară cu stația înainte de încărcare"
+
+msgid "Read back and verify after uploading"
+msgstr "Recitește și verifică după încărcare"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Verificare eșuată: stația nu a putut fi recitită (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "Încărcarea s-a terminat, dar recitirea stației a eșuat: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Verificare EȘUATĂ: %i diferențe între imagine și stație"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"Stația nu conține ce a fost încărcat (%i diferențe). Repetați încărcarea."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Verificare OK: stația conține imaginea încărcată (%s)"
+
+msgid "byte by byte"
+msgstr "octet cu octet"
+
+msgid "channel by channel"
+msgstr "canal cu canal"
+
+msgid "added"
+msgstr "adăugat"
+
+msgid "removed"
+msgstr "eliminat"
+
+msgid "changed"
+msgstr "modificat"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "Stația conține deja această imagine: nu s-ar schimba nimic."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr "În stație se vor schimba %(memories)i canale și %(settings)i setări."
+
+msgid "Change"
+msgstr "Modificare"
+
+msgid "Where"
+msgstr "Unde"
+
+msgid "In the radio now"
+msgstr "Acum în stație"
+
+msgid "After upload"
+msgstr "După încărcare"
+
+msgid "Memory %s"
+msgstr "Memoria %s"
+
+msgid "image"
+msgstr "imagine"
+
+msgid "Program several radios..."
+msgstr "Programează mai multe stații..."
+
+msgid "Program several radios"
+msgstr "Programează mai multe stații"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"Doar imaginile descărcate dintr-o stație (mod clonare) pot fi scrise în mai "
+"multe stații."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"Aceeași imagine este scrisă în fiecare stație. Pentru fiecare stație: "
+"conectați cablul, porniți stația, apoi apăsați butonul (sau Enter). "
+"Așteptați rezultatul înainte de a muta cablul."
+
+msgid "Read back and verify each radio"
+msgstr "Recitește și verifică fiecare stație"
+
+msgid "Writing radio %i..."
+msgstr "Scriu stația %i..."
+
+msgid "Batch: writing radio %i"
+msgstr "Serie: scriu stația %i"
+
+msgid "written"
+msgstr "scrisă"
+
+msgid "not checked"
+msgstr "neverificată"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Serie: stația %(n)i %(result)s, verificare %(verify)s"
+
+msgid "Program radio %i"
+msgstr "Programează stația %i"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Stații: %(done)i   ok: %(good)i   eșuate: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Așteptați să termine stația curentă."
+
+msgid "Image"
+msgstr "Imagine"
+
+msgid "Result"
+msgstr "Rezultat"
+
+msgid "Time"
+msgstr "Timp"
+
+msgid "ERROR: %s"
+msgstr "EROARE: %s"
+
+msgid "%i differences"
+msgstr "%i diferențe"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "Stația %i gata: conectați următoarea și apăsați butonul"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"Stația %i a eșuat: verificați-o și apăsați butonul pentru a continua cu "
+"următoarea"
+
+msgid "Check frequencies..."
+msgstr "Verifică frecvențele..."
+
+msgid "Memory map..."
+msgstr "Harta memoriei..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Noul aspect necesită repornirea CHIRP. Reporniți acum? Mai întâi vi se va "
+"cere să salvați fișierele deschise."
+
+msgid "Restart now"
+msgstr "Repornește acum"
+
+msgid "Later"
+msgstr "Mai târziu"
+
+msgid "Pocket channel card"
+msgstr "Card de buzunar cu canale"
+
+msgid "Pocket channel card..."
+msgstr "Card de buzunar cu canale..."
+
+msgid "Backups..."
+msgstr "Copii de rezervă..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr ""
+"Verificarea frecvențelor funcționează pe imagini, nu pe stații în direct."
+
+msgid "Frequency check"
+msgstr "Verificarea frecvențelor"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr ""
+"Verificarea frecvențelor: %(bad)i erori, %(warn)i avertismente, %(info)i "
+"note"
+
+msgid "Pocket card for %s"
+msgstr "Card de buzunar pentru %s"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr ""
+"Harta memoriei este disponibilă pentru imaginile descărcate dintr-o stație."
+
+msgid "Memory map"
+msgstr "Harta memoriei"
+
+msgid "Backups"
+msgstr "Copii de rezervă"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"CHIRP salvează o copie a stației la fiecare descărcare și înainte de fiecare"
+" încărcare. Albastru: citită din stație, portocaliu: înainte de scriere."
+
+msgid "Compare with open tab"
+msgstr "Compară cu fila deschisă"
+
+msgid "Open folder"
+msgstr "Deschide dosarul"
+
+msgid "Backup compared with the open tab"
+msgstr "Copie comparată cu fila deschisă"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Type"
+msgstr "Tip"
+
+msgid "Size"
+msgstr "Mărime"
+
+msgid "download"
+msgstr "descărcare"
+
+msgid "upload"
+msgstr "încărcare"
+
+msgid "In the backup"
+msgstr "În copie"
+
+msgid "In the open tab"
+msgstr "În fila deschisă"
+
+msgid "open tab"
+msgstr "fila-deschisă"
+
+msgid "errors"
+msgstr "erori"
+
+msgid "warnings"
+msgstr "avertismente"
+
+msgid "notes"
+msgstr "note"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"Reguli pentru Italia. Este un ajutor, nu o opinie juridică: verificați "
+"licența și omologarea stației."
+
+msgid "Channel"
+msgstr "Canal"
+
+msgid "Level"
+msgstr "Nivel"
+
+msgid "Band"
+msgstr "Bandă"
+
+msgid "Message"
+msgstr "Mesaj"
+
+msgid "No problems found."
+msgstr "Nu s-au găsit probleme."
+
+msgid "channels"
+msgstr "canale"
+
+msgid "names"
+msgstr "nume"
+
+msgid "settings"
+msgstr "setări"
+
+msgid "messages and ident"
+msgstr "mesaje și identificare"
+
+msgid "service (squelch, limits): careful"
+msgstr "service (squelch, limite): atenție"
+
+msgid "unknown data (calibration?)"
+msgstr "date necunoscute (calibrare?)"
+
+msgid "Start"
+msgstr "Început"
+
+msgid "End"
+msgstr "Sfârșit"
+
+msgid "Bytes"
+msgstr "Octeți"
+
+msgid "Name"
+msgstr "Nume"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i octeți: %(known)i descriși de driver, %(unknown)i cu date pe care "
+"driverul nu le descrie"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "%(memories)i canale și %(settings)i setări sunt diferite."
+
+msgid "No differences."
+msgstr "Nicio diferență."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "emite pe %(freq)s, în afara benzilor cunoscute"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr "emite pe %(freq)s (%(band)s): doar recepție, setați Duplex pe off"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: pentru emisie este nevoie de licență"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr "%(band)s permite %(max)s W, acest canal folosește %(watts)s W"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "radiodifuziune FM"
+
+msgid "airband"
+msgstr "bandă aeronautică"
+
+msgid "amateur 2 m"
+msgstr "radioamatori 2 m"
+
+msgid "marine VHF"
+msgstr "VHF maritim"
+
+msgid "amateur 70 cm"
+msgstr "radioamatori 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "sateliți de radioamatori 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "necesită licență radio maritimă"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "doar cu stații PMR446 omologate și antenă fixă"
+
+msgid "Ch"
+msgstr "Can"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Decalaj"

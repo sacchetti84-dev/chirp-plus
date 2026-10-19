@@ -3560,9 +3560,6 @@ msgstr "{bank} dolu"
 #~ msgid "Backlight Timeout"
 #~ msgstr "Arka Aydınlatma Süresi"
 
-#~ msgid "Band"
-#~ msgstr "Bant"
-
 #~ msgid "Basic"
 #~ msgstr "Temel"
 
@@ -3895,9 +3892,6 @@ msgstr "{bank} dolu"
 #~ msgid "Untitled"
 #~ msgstr "Başlıksız"
 
-#~ msgid "Upload"
-#~ msgstr "Yükle"
-
 #~ msgid "VFO A Power"
 #~ msgstr "VFO A Güç"
 
@@ -3966,3 +3960,633 @@ msgstr "{bank} dolu"
 
 #~ msgid "{vendor} {model} on {port}"
 #~ msgstr "{port} üzerinde {vendor} {model}"
+
+msgid ""
+"Prolific counterfeit or unsupported chip: the current Windows driver refuses"
+" to work with it. Install an older Prolific driver or use a CH340/FTDI "
+"cable."
+msgstr ""
+"Sahte veya desteklenmeyen Prolific yongası: mevcut Windows sürücüsü onunla "
+"çalışmayı reddediyor. Daha eski bir Prolific sürücüsü kurun veya CH340/FTDI "
+"kablo kullanın."
+
+msgid "Bluetooth serial port, not a programming cable"
+msgstr "Bluetooth seri portu, programlama kablosu değil"
+
+msgid "Built-in serial port of the computer"
+msgstr "Bilgisayarın dahili seri portu"
+
+msgid "Programming cable detected"
+msgstr "Programlama kablosu algılandı"
+
+msgid "USB serial device"
+msgstr "USB seri aygıtı"
+
+msgid "Serial port"
+msgstr "Seri port"
+
+msgid "Search radio"
+msgstr "Telsiz ara"
+
+msgid "Search again for connected cables"
+msgstr "Bağlı kabloları yeniden ara"
+
+msgid "Find your radio by typing part of its name"
+msgstr "Adının bir kısmını yazarak telsizinizi bulun"
+
+msgid "Upload"
+msgstr "Yükle"
+
+msgid "Find your radio"
+msgstr "Telsizinizi bulun"
+
+msgid "Refresh"
+msgstr "Yenile"
+
+msgid "Search..."
+msgstr "Ara..."
+
+msgid ""
+"Connect the programming cable to the radio and to the computer, then turn "
+"the radio on. The cable port is detected automatically."
+msgstr ""
+"Programlama kablosunu telsize ve bilgisayara bağlayın, ardından telsizi "
+"açın. Kablonun portu otomatik olarak algılanır."
+
+msgid ""
+"No serial port found. Check the cable and its driver, then press Refresh."
+msgstr ""
+"Seri port bulunamadı. Kabloyu ve sürücüsünü kontrol edin, ardından Yenile'ye"
+" basın."
+
+msgid "Manually entered port"
+msgstr "Elle girilen port"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
+msgstr ""
+"Tedarikçi veya model adının bir kısmını yazın (örneğin \"UV-5R\" veya "
+"\"Baofeng\")"
+
+msgid "New cable connected on %s"
+msgstr "%s üzerinde yeni kablo bağlandı"
+
+msgid "The cable on %s was disconnected"
+msgstr "%s üzerindeki kablo çıkarıldı"
+
+msgid "%i cables found, %s selected: check that it is the right one"
+msgstr "%i kablo bulundu, %s seçildi: doğru kablo olduğunu kontrol edin"
+
+msgid "%s is probably not your cable, %s looks like a programming cable"
+msgstr ""
+"%s muhtemelen sizin kablonuz değil, %s bir programlama kablosuna benziyor"
+
+msgid "No programming cable recognized, %s selected"
+msgstr "Programlama kablosu tanınmadı, %s seçildi"
+
+msgid "Show toolbar"
+msgstr "Araç çubuğunu göster"
+
+msgid "Read the memories and settings from the radio"
+msgstr "Kayıtları ve ayarları telsizden oku"
+
+msgid "Write this tab to the radio"
+msgstr "Bu sekmeyi telsize yaz"
+
+msgid "Cable: %s"
+msgstr "Kablo: %s"
+
+msgid "No programming cable connected"
+msgstr "Bağlı programlama kablosu yok"
+
+msgid "Cable on %s needs a different driver"
+msgstr "%s üzerindeki kablo farklı bir sürücü gerektiriyor"
+
+msgid "Serial port %s disconnected"
+msgstr "%s seri portu çıkarıldı"
+
+msgid "Programming cable connected on %s"
+msgstr "Programlama kablosu %s üzerinde bağlı"
+
+msgid "USB"
+msgstr "USB"
+
+msgid "Download from the radio or open a file first."
+msgstr "Önce telsizden indirin veya bir dosya açın."
+
+msgid "Searching for cables..."
+msgstr "Kablolar aranıyor..."
+
+msgid "RADIO PROGRAMMER"
+msgstr "TELSİZ PROGRAMLAYICI"
+
+msgid "Export to Excel"
+msgstr "Excel'e aktar"
+
+msgid "Import from Excel..."
+msgstr "Excel'den içe aktar..."
+
+msgid "Export to Excel..."
+msgstr "Excel'e aktar..."
+
+msgid "Excel Files"
+msgstr "Excel Dosyaları"
+
+msgid "Export can only write CSV or Excel (.xlsx) files"
+msgstr "Dışa aktarma yalnızca CSV veya Excel (.xlsx) dosyası yazabilir"
+
+msgid "Export Excel"
+msgstr "Excel'e Aktar"
+
+msgid "ok"
+msgstr "tamam"
+
+msgid "warning"
+msgstr "uyarı"
+
+msgid "error"
+msgstr "hata"
+
+msgid "info"
+msgstr "bilgi"
+
+msgid "reads the radio"
+msgstr "telsizi okur"
+
+msgid "writes the radio"
+msgstr "telsize yazar"
+
+msgid "file"
+msgstr "dosya"
+
+msgid "tones"
+msgstr "tonlar"
+
+msgid "built-in"
+msgstr "dahili"
+
+msgid "bluetooth"
+msgstr "bluetooth"
+
+msgid "Show event console"
+msgstr "Olay konsolunu göster"
+
+msgid "Look"
+msgstr "Görünüm"
+
+msgid "Terminal"
+msgstr "Terminal"
+
+msgid "Classic"
+msgstr "Klasik"
+
+msgid "Saved %s"
+msgstr "%s kaydedildi"
+
+msgid "Downloaded %s %s"
+msgstr "%s %s cihazından indirildi"
+
+msgid "legend"
+msgstr "açıklama"
+
+msgid "CHIRP %(version)s started, %(count)i radio models supported"
+msgstr "CHIRP %(version)s başlatıldı, %(count)i telsiz modeli destekleniyor"
+
+msgid "Opened %(file)s (%(radio)s)"
+msgstr "%(file)s açıldı (%(radio)s)"
+
+msgid "Exported %s"
+msgstr "%s dışa aktarıldı"
+
+msgid "Uploaded to %s %s"
+msgstr "%s %s cihazına yüklendi"
+
+msgid "Programming cable"
+msgstr "Programlama kablosu"
+
+msgid "Other ports"
+msgstr "Diğer portlar"
+
+msgid "%i radio models supported"
+msgstr "%i telsiz modeli destekleniyor"
+
+msgid "commands"
+msgstr "komutlar"
+
+msgid "Last radio"
+msgstr "Son telsiz"
+
+msgid "Serial port %s connected"
+msgstr "%s seri portu bağlandı"
+
+msgid "Detect radio and download..."
+msgstr "Telsizi algıla ve indir..."
+
+msgid "Ask the radio on the cable which model it is (read only)"
+msgstr "Kablodaki telsize hangi model olduğunu sor (salt okunur)"
+
+msgid "Trying %(model)s (%(i)i/%(n)i)"
+msgstr "%(model)s deneniyor (%(i)i/%(n)i)"
+
+msgid ""
+"No radio answered. Check that it is on, the cable is fully inserted and the "
+"volume is up, then retry."
+msgstr ""
+"Hiçbir telsiz yanıt vermedi. Açık olduğunu, kablonun tam takılı ve sesin "
+"açık olduğunu kontrol edip yeniden deneyin."
+
+msgid "Waiting for the radio to be ready..."
+msgstr "Telsizin hazır olması bekleniyor..."
+
+msgid ""
+"These models use the same protocol and memory layout. Choose the one written"
+" on your radio:"
+msgstr ""
+"Bu modeller aynı protokolü ve bellek düzenini kullanır. Telsizinizin "
+"üzerinde yazanı seçin:"
+
+msgid "Radio detected"
+msgstr "Telsiz algılandı"
+
+msgid "Detect"
+msgstr "Algıla"
+
+msgid "Choose the serial port of the cable first"
+msgstr "Önce kablonun seri portunu seçin"
+
+msgid "Looking for a radio on %s"
+msgstr "%s üzerinde telsiz aranıyor"
+
+msgid "Radio answered: %(ident)s, compatible with %(models)s"
+msgstr "Telsiz yanıt verdi: %(ident)s, %(models)s ile uyumlu"
+
+msgid "Upload finished, reading it back to verify"
+msgstr "Yükleme bitti, doğrulamak için geri okunuyor"
+
+msgid "Reading the radio to compare it with %s"
+msgstr "%s ile karşılaştırmak için telsiz okunuyor"
+
+msgid ""
+"Compared with the radio: %(memories)i channels and %(settings)i settings "
+"differ"
+msgstr ""
+"Telsizle karşılaştırma: %(memories)i kanal ve %(settings)i ayar farklı"
+
+msgid "Changes in the radio"
+msgstr "Telsizdeki değişiklikler"
+
+msgid "Verify"
+msgstr "Doğrula"
+
+msgid "Compare with the radio before uploading"
+msgstr "Yüklemeden önce telsizle karşılaştır"
+
+msgid "Read back and verify after uploading"
+msgstr "Yüklemeden sonra geri oku ve doğrula"
+
+msgid "Verify failed: could not read the radio back (%s)"
+msgstr "Doğrulama başarısız: telsiz geri okunamadı (%s)"
+
+msgid "The upload finished, but reading the radio back failed: %s"
+msgstr "Yükleme bitti, ancak telsizin geri okunması başarısız oldu: %s"
+
+msgid "Verify FAILED: %i differences between the image and the radio"
+msgstr "Doğrulama BAŞARISIZ: imaj ile telsiz arasında %i fark"
+
+msgid ""
+"The radio does not hold what was uploaded (%i differences). Try the upload "
+"again."
+msgstr ""
+"Telsiz yüklenen veriyi içermiyor (%i fark). Yüklemeyi yeniden deneyin."
+
+msgid "Verify OK: the radio holds the uploaded image (%s)"
+msgstr "Doğrulama tamam: telsiz yüklenen imajı içeriyor (%s)"
+
+msgid "byte by byte"
+msgstr "bayt bayt"
+
+msgid "channel by channel"
+msgstr "kanal kanal"
+
+msgid "added"
+msgstr "eklendi"
+
+msgid "removed"
+msgstr "kaldırıldı"
+
+msgid "changed"
+msgstr "değişti"
+
+msgid "The radio already holds this image: nothing would change."
+msgstr "Telsiz bu imajı zaten içeriyor: hiçbir şey değişmez."
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the radio."
+msgstr "Telsizde %(memories)i kanal ve %(settings)i ayar değişecek."
+
+msgid "Change"
+msgstr "Değişiklik"
+
+msgid "Where"
+msgstr "Nerede"
+
+msgid "In the radio now"
+msgstr "Şu an telsizde"
+
+msgid "After upload"
+msgstr "Yüklemeden sonra"
+
+msgid "Memory %s"
+msgstr "Kayıt %s"
+
+msgid "image"
+msgstr "imaj"
+
+msgid "Program several radios..."
+msgstr "Birden çok telsizi programla..."
+
+msgid "Program several radios"
+msgstr "Birden çok telsizi programla"
+
+msgid ""
+"Only images downloaded from a radio (clone mode) can be written into several"
+" radios."
+msgstr ""
+"Birden çok telsize yalnızca bir telsizden indirilen imajlar (klon modu) "
+"yazılabilir."
+
+msgid ""
+"The same image is written into each radio. For every radio: connect the "
+"cable, turn the radio on, then press the button (or Enter). Wait for the "
+"result before moving the cable."
+msgstr ""
+"Her telsize aynı imaj yazılır. Her telsiz için: kabloyu bağlayın, telsizi "
+"açın, ardından düğmeye (veya Enter'a) basın. Kabloyu çıkarmadan önce sonucu "
+"bekleyin."
+
+msgid "Read back and verify each radio"
+msgstr "Her telsizi geri oku ve doğrula"
+
+msgid "Writing radio %i..."
+msgstr "%i. telsiz yazılıyor..."
+
+msgid "Batch: writing radio %i"
+msgstr "Toplu: %i. telsiz yazılıyor"
+
+msgid "written"
+msgstr "yazıldı"
+
+msgid "not checked"
+msgstr "kontrol edilmedi"
+
+msgid "OK"
+msgstr "Tamam"
+
+msgid "Batch: radio %(n)i %(result)s, verify %(verify)s"
+msgstr "Toplu: telsiz %(n)i %(result)s, doğrulama %(verify)s"
+
+msgid "Program radio %i"
+msgstr "%i. telsizi programla"
+
+msgid "Radios: %(done)i   ok: %(good)i   failed: %(failed)i"
+msgstr "Telsiz: %(done)i   tamam: %(good)i   başarısız: %(failed)i"
+
+msgid "Wait for the current radio to finish."
+msgstr "Mevcut telsizin bitmesini bekleyin."
+
+msgid "Image"
+msgstr "İmaj"
+
+msgid "Result"
+msgstr "Sonuç"
+
+msgid "Time"
+msgstr "Saat"
+
+msgid "ERROR: %s"
+msgstr "HATA: %s"
+
+msgid "%i differences"
+msgstr "%i fark"
+
+msgid "Radio %i done: connect the next one and press the button"
+msgstr "%i. telsiz tamam: sonrakini bağlayın ve düğmeye basın"
+
+msgid ""
+"Radio %i failed: check it and press the button to retry with the next one"
+msgstr ""
+"%i. telsiz başarısız: kontrol edin ve sonrakiyle devam etmek için düğmeye "
+"basın"
+
+msgid "Check frequencies..."
+msgstr "Frekansları kontrol et..."
+
+msgid "Memory map..."
+msgstr "Bellek haritası..."
+
+msgid ""
+"The new look needs a restart of CHIRP. Restart now? You will be asked to "
+"save open files first."
+msgstr ""
+"Yeni görünüm için CHIRP'in yeniden başlatılması gerekiyor. Şimdi yeniden "
+"başlatılsın mı? Önce açık dosyaları kaydetmeniz istenecek."
+
+msgid "Restart now"
+msgstr "Şimdi yeniden başlat"
+
+msgid "Later"
+msgstr "Daha sonra"
+
+msgid "Pocket channel card"
+msgstr "Cep kanal kartı"
+
+msgid "Pocket channel card..."
+msgstr "Cep kanal kartı..."
+
+msgid "Backups..."
+msgstr "Yedekler..."
+
+msgid "The frequency check works on images, not on live radios."
+msgstr "Frekans kontrolü canlı telsizlerde değil, imajlarda çalışır."
+
+msgid "Frequency check"
+msgstr "Frekans kontrolü"
+
+msgid "Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes"
+msgstr "Frekans kontrolü: %(bad)i hata, %(warn)i uyarı, %(info)i not"
+
+msgid "Pocket card for %s"
+msgstr "%s için cep kartı"
+
+msgid "The memory map is available for images downloaded from a radio."
+msgstr "Bellek haritası, bir telsizden indirilen imajlar için kullanılabilir."
+
+msgid "Memory map"
+msgstr "Bellek haritası"
+
+msgid "Backups"
+msgstr "Yedekler"
+
+msgid ""
+"CHIRP saves a copy of the radio on every download and before every upload. "
+"Blue: read from the radio, orange: before writing to it."
+msgstr ""
+"CHIRP her indirmede ve her yüklemeden önce telsizin bir kopyasını kaydeder. "
+"Mavi: telsizden okunan, turuncu: telsize yazmadan önce."
+
+msgid "Compare with open tab"
+msgstr "Açık sekmeyle karşılaştır"
+
+msgid "Open folder"
+msgstr "Klasörü aç"
+
+msgid "Backup compared with the open tab"
+msgstr "Açık sekmeyle karşılaştırılan yedek"
+
+msgid "Date"
+msgstr "Tarih"
+
+msgid "Type"
+msgstr "Tür"
+
+msgid "Size"
+msgstr "Boyut"
+
+msgid "download"
+msgstr "indirme"
+
+msgid "upload"
+msgstr "yükleme"
+
+msgid "In the backup"
+msgstr "Yedekte"
+
+msgid "In the open tab"
+msgstr "Açık sekmede"
+
+msgid "open tab"
+msgstr "açık-sekme"
+
+msgid "errors"
+msgstr "hatalar"
+
+msgid "warnings"
+msgstr "uyarılar"
+
+msgid "notes"
+msgstr "notlar"
+
+msgid ""
+"Rules for Italy. This is advice, not a legal opinion: check your license and"
+" the radio approval."
+msgstr ""
+"İtalya kuralları. Bu bir tavsiyedir, hukuki görüş değildir: lisansınızı ve "
+"telsizin onayını kontrol edin."
+
+msgid "Channel"
+msgstr "Kanal"
+
+msgid "Level"
+msgstr "Seviye"
+
+msgid "Band"
+msgstr "Bant"
+
+msgid "Message"
+msgstr "Mesaj"
+
+msgid "No problems found."
+msgstr "Sorun bulunamadı."
+
+msgid "channels"
+msgstr "kanallar"
+
+msgid "names"
+msgstr "adlar"
+
+msgid "settings"
+msgstr "ayarlar"
+
+msgid "messages and ident"
+msgstr "mesajlar ve kimlik"
+
+msgid "service (squelch, limits): careful"
+msgstr "servis (squelch, sınırlar): dikkat"
+
+msgid "unknown data (calibration?)"
+msgstr "bilinmeyen veri (kalibrasyon?)"
+
+msgid "Start"
+msgstr "Başlangıç"
+
+msgid "End"
+msgstr "Bitiş"
+
+msgid "Bytes"
+msgstr "Bayt"
+
+msgid "Name"
+msgstr "Ad"
+
+msgid ""
+"%(size)i bytes: %(known)i described by the driver, %(unknown)i with data the"
+" driver does not describe"
+msgstr ""
+"%(size)i bayt: %(known)i sürücü tarafından tanımlı, %(unknown)i sürücünün "
+"tanımlamadığı veri içeriyor"
+
+msgid "%(memories)i channels and %(settings)i settings are different."
+msgstr "%(memories)i kanal ve %(settings)i ayar farklı."
+
+msgid "No differences."
+msgstr "Fark yok."
+
+msgid "transmits on %(freq)s, outside the known bands"
+msgstr "%(freq)s üzerinde, bilinen bantların dışında yayın yapıyor"
+
+msgid "transmits on %(freq)s (%(band)s): receive only, set Duplex to off"
+msgstr ""
+"%(freq)s (%(band)s) üzerinde yayın yapıyor: yalnızca alım, Duplex'i off "
+"yapın"
+
+msgid "%(band)s: transmitting needs a license"
+msgstr "%(band)s: yayın için lisans gerekir"
+
+msgid "%(band)s allows %(max)s W, this channel uses %(watts)s W"
+msgstr ""
+"%(band)s en fazla %(max)s W'a izin verir, bu kanal %(watts)s W kullanıyor"
+
+msgid "%(band)s: %(note)s"
+msgstr "%(band)s: %(note)s"
+
+msgid "FM broadcast"
+msgstr "FM yayını"
+
+msgid "airband"
+msgstr "hava bandı"
+
+msgid "amateur 2 m"
+msgstr "amatör 2 m"
+
+msgid "marine VHF"
+msgstr "denizcilik VHF"
+
+msgid "amateur 70 cm"
+msgstr "amatör 70 cm"
+
+msgid "amateur satellite 70 cm"
+msgstr "amatör uydu 70 cm"
+
+msgid "needs a maritime radio licence"
+msgstr "denizcilik telsiz lisansı gerekir"
+
+msgid "only with approved PMR446 radios and fixed antenna"
+msgstr "yalnızca onaylı PMR446 telsizler ve sabit anten ile"
+
+msgid "Ch"
+msgstr "Kn"
+
+msgid "MHz"
+msgstr "MHz"
+
+msgid "Shift"
+msgstr "Kaydırma"
