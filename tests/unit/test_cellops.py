@@ -88,7 +88,7 @@ def test_rejected_cell_is_reported_others_applied():
     ])
     assert result.problems == [('1 name', 'bad value'),
                                ('2 name', 'bad value')]
-    assert [m.number for m in result.changed] == [1, 2]
+    assert [m.number for m in result.changed] == [1]
     assert result.changed[0].comment == 'note'
     assert result.changed[0].name == ''
 
@@ -215,3 +215,14 @@ def test_extd_number_labels_the_problem():
     editor.memories[1].extd_number = 'VFO-A'
     result = cellops.apply_edits(editor, [cellops.CellEdit(1, 0, 'BAD')])
     assert result.problems == [('VFO-A name', 'bad value')]
+
+
+def test_row_with_only_rejected_edits_is_left_alone():
+    editor = FakeEditor()
+    editor.memories[2].freq = 0     # already invalid before the edit
+    result = cellops.apply_edits(editor, [
+        cellops.CellEdit(2, 0, 'BAD'),
+        cellops.CellEdit(2, 2, None),
+    ])
+    assert result.changed == []
+    assert [p[0] for p in result.problems] == ['2 freq', '2 name']
