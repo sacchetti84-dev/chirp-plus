@@ -221,7 +221,9 @@ class AutoNamedPowerLevel(PowerLevel):
     """A power level that is simply named by its value in watts"""
 
     def __init__(self, watts):
-        fmt = ('%iW' if watts >= 10 else '%.1fW')
+        # CHIRP Plus: below 0.1 W keep the milliwatts (LPD is 10 mW), which
+        # "%.1fW" turned into "0.0W", read back as no power at all
+        fmt = ('%iW' if watts >= 10 else '%.1fW' if watts >= 0.1 else '%.3gW')
         super().__init__(fmt % watts, watts=watts)
 
 
