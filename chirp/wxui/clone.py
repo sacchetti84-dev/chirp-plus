@@ -350,7 +350,7 @@ class ChirpModelSearchDialog(wx.Dialog):
         self.SetSizer(vbox)
         hint = wx.StaticText(
             self, label=_('Type part of the vendor or model name '
-                          '(for example "UV-5R" or "Baofeng")'))
+                          '(for example "UV-5R")'))
         vbox.Add(hint, border=10, flag=wx.ALL)
         self._search = wx.SearchCtrl(self, style=wx.TE_PROCESS_ENTER)
         self._search.ShowCancelButton(True)

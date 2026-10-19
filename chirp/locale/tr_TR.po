@@ -4022,11 +4022,6 @@ msgstr ""
 msgid "Manually entered port"
 msgstr "Elle girilen port"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr ""
-"Tedarikçi veya model adının bir kısmını yazın (örneğin \"UV-5R\" veya "
-"\"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "%s üzerinde yeni kablo bağlandı"
 
@@ -4590,3 +4585,6 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "Kaydırma"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr "Tedarikçi veya model adının bir kısmını yazın (örneğin \"UV-5R\")"

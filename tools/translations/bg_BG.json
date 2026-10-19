@@ -15,7 +15,7 @@
  "Connect the programming cable to the radio and to the computer, then turn the radio on. The cable port is detected automatically.": "Свържете кабела за програмиране към станцията и компютъра, след това включете станцията. Портът на кабела се открива автоматично.",
  "No serial port found. Check the cable and its driver, then press Refresh.": "Не е открит сериен порт. Проверете кабела и драйвера му, след това натиснете „Обновяване“.",
  "Manually entered port": "Ръчно въведен порт",
- "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")": "Въведете част от производителя или модела (например \"UV-5R\" или \"Baofeng\")",
+ "Type part of the vendor or model name (for example \"UV-5R\")": "Въведете част от производителя или модела (например \"UV-5R\")",
  "New cable connected on %s": "Нов кабел свързан към %s",
  "The cable on %s was disconnected": "Кабелът на %s беше откачен",
  "%i cables found, %s selected: check that it is the right one": "Открити кабели: %i, избран %s: проверете дали е правилният",

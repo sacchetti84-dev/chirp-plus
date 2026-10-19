@@ -1,7 +1,7 @@
 # CHIRP Plus
 
 Versione modificata di CHIRP basata sulla build ufficiale `next-20261016`
-(commit upstream `832d349e`, ramo `baofeng-plus`). Ha tutti i driver e le
+(commit upstream `832d349e`, ramo `plus`). Ha tutti i driver e le
 funzioni dell'originale, più queste modifiche.
 
 ## Stile terminale (`chirp/wxui/theme.py`, `console.py`)
@@ -42,7 +42,7 @@ funzioni dell'originale, più queste modifiche.
 
 ## Rileva radio (`chirp/radio_detect.py`)
 - Radio > Rileva radio e scarica (Alt+R) o pulsante "Rileva": prova le
-  strette di mano dei driver Baofeng (solo identificazione, nessuna lettura
+  strette di mano dei driver con protocollo UV-5R (solo identificazione, nessuna lettura
   o scrittura di memoria) e trova il modello.
 - Se il modello già scelto è compatibile, scarica subito nella stessa
   sessione (la radio resta in modalità programmazione solo 2-3 secondi);
@@ -76,10 +76,10 @@ funzioni dell'originale, più queste modifiche.
     ISS, AO-123, PO-101, AO-91, in split con CTCSS e tre passi di Doppler
     (A inizio, C centro, F fine passaggio);
   - "IT Radioamatori tutto in uno": tutte le liste insieme, 72 canali che
-    stanno nelle 128 memorie di una Baofeng;
+    stanno nelle 128 memorie di una UV-9R;
   - "IT LPD e PMR446": i 69 canali LPD e i 16 PMR446 alla potenza di legge
     (10 mW e 0,5 W). Sono bande senza licenza ma solo per apparati
-    omologati: la Baofeng non lo è e scende al massimo a 1 W, perciò il
+    omologati: la UV-9R non lo è e scende al minimo a 1 W, perciò il
     controllo frequenze li segnala. Non sta nel "tutto in uno" (non ci
     starebbe nelle 128 memorie).
 

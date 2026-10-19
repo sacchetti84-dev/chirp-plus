@@ -15,7 +15,7 @@
  "Connect the programming cable to the radio and to the computer, then turn the radio on. The cable port is detected automatically.": "Συνδέστε το καλώδιο προγραμματισμού στον πομποδέκτη και στον υπολογιστή και ανάψτε τον πομποδέκτη. Η θύρα του καλωδίου εντοπίζεται αυτόματα.",
  "No serial port found. Check the cable and its driver, then press Refresh.": "Δεν βρέθηκε σειριακή θύρα. Ελέγξτε το καλώδιο και τον οδηγό του και πατήστε Ανανέωση.",
  "Manually entered port": "Θύρα που εισήχθη χειροκίνητα",
- "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")": "Πληκτρολογήστε μέρος του ονόματος προμηθευτή ή μοντέλου (για παράδειγμα \"UV-5R\" ή \"Baofeng\")",
+ "Type part of the vendor or model name (for example \"UV-5R\")": "Πληκτρολογήστε μέρος του ονόματος προμηθευτή ή μοντέλου (για παράδειγμα \"UV-5R\")",
  "New cable connected on %s": "Νέο καλώδιο συνδέθηκε στη %s",
  "The cable on %s was disconnected": "Το καλώδιο στη %s αποσυνδέθηκε",
  "%i cables found, %s selected: check that it is the right one": "Βρέθηκαν %i καλώδια, επιλέχθηκε η %s: ελέγξτε ότι είναι το σωστό",

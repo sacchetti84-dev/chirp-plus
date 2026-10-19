@@ -3134,11 +3134,6 @@ msgstr ""
 msgid "Manually entered port"
 msgstr "Manuell eingegebene Schnittstelle"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr ""
-"Geben Sie einen Teil des Herstellers oder Modells ein (zum Beispiel "
-"\"UV-5R\" oder \"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "Neues Kabel an %s angeschlossen"
 
@@ -3715,3 +3710,8 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "Ablage"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr ""
+"Geben Sie einen Teil des Herstellers oder Modells ein (zum Beispiel "
+"\"UV-5R\")"

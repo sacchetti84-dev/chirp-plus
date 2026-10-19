@@ -15,7 +15,7 @@
  "Connect the programming cable to the radio and to the computer, then turn the radio on. The cable port is detected automatically.": "Conecte o cabo de programação ao rádio e ao computador e ligue o rádio. A porta do cabo é detectada automaticamente.",
  "No serial port found. Check the cable and its driver, then press Refresh.": "Nenhuma porta serial encontrada. Verifique o cabo e o driver e clique em Atualizar.",
  "Manually entered port": "Porta digitada manualmente",
- "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")": "Digite parte do fabricante ou do modelo (por exemplo \"UV-5R\" ou \"Baofeng\")",
+ "Type part of the vendor or model name (for example \"UV-5R\")": "Digite parte do fabricante ou do modelo (por exemplo \"UV-5R\")",
  "New cable connected on %s": "Novo cabo conectado em %s",
  "The cable on %s was disconnected": "O cabo em %s foi desconectado",
  "%i cables found, %s selected: check that it is the right one": "%i cabos encontrados, %s selecionado: verifique se é o correto",

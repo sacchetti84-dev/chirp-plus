@@ -3718,9 +3718,6 @@ msgstr ""
 msgid "Manually entered port"
 msgstr "Ručně zadaný port"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr "Zadejte část výrobce nebo modelu (například \"UV-5R\" nebo \"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "Nový kabel připojen na %s"
 
@@ -4281,3 +4278,6 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "Posun"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr "Zadejte část výrobce nebo modelu (například \"UV-5R\")"

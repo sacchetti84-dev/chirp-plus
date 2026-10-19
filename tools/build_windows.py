@@ -49,8 +49,8 @@ VERSION_INFO = """VSVersionInfo(
 README = """CHIRP Plus %(version)s
 =========================
 
-Programma per leggere e scrivere le memorie delle radio (Baofeng e molte
-altre), basato su CHIRP (https://chirpmyradio.com).
+Programma per leggere e scrivere le memorie delle radio, basato su CHIRP
+(https://chirpmyradio.com).
 
 AVVIO
 - Doppio clic su CHIRP-Plus.exe. Non serve installarlo.

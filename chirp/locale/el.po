@@ -3176,11 +3176,6 @@ msgstr ""
 msgid "Manually entered port"
 msgstr "Θύρα που εισήχθη χειροκίνητα"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr ""
-"Πληκτρολογήστε μέρος του ονόματος προμηθευτή ή μοντέλου (για παράδειγμα "
-"\"UV-5R\" ή \"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "Νέο καλώδιο συνδέθηκε στη %s"
 
@@ -3757,3 +3752,8 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "Μετατόπιση"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr ""
+"Πληκτρολογήστε μέρος του ονόματος προμηθευτή ή μοντέλου (για παράδειγμα "
+"\"UV-5R\")"

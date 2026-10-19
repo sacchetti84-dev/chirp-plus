@@ -15,7 +15,7 @@
  "Connect the programming cable to the radio and to the computer, then turn the radio on. The cable port is detected automatically.": "Programlama kablosunu telsize ve bilgisayara bağlayın, ardından telsizi açın. Kablonun portu otomatik olarak algılanır.",
  "No serial port found. Check the cable and its driver, then press Refresh.": "Seri port bulunamadı. Kabloyu ve sürücüsünü kontrol edin, ardından Yenile'ye basın.",
  "Manually entered port": "Elle girilen port",
- "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")": "Tedarikçi veya model adının bir kısmını yazın (örneğin \"UV-5R\" veya \"Baofeng\")",
+ "Type part of the vendor or model name (for example \"UV-5R\")": "Tedarikçi veya model adının bir kısmını yazın (örneğin \"UV-5R\")",
  "New cable connected on %s": "%s üzerinde yeni kablo bağlandı",
  "The cable on %s was disconnected": "%s üzerindeki kablo çıkarıldı",
  "%i cables found, %s selected: check that it is the right one": "%i kablo bulundu, %s seçildi: doğru kablo olduğunu kontrol edin",

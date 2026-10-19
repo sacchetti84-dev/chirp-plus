@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>CHIRP with a cable it finds by itself, verified uploads and a terminal look.</b><br>
-  A radio programmer for Baofeng and the other 561 models CHIRP supports, tested on a Baofeng UV-9R.
+  A radio programmer for the 561 models CHIRP supports, tested on a UV-9R.
 </p>
 
 <p align="center">
@@ -163,7 +163,7 @@ official translation already used. The app follows the Windows language.
 ## Getting started
 
 1. Download `CHIRP-Plus.exe` from the
-   [Releases](https://github.com/sacchetti84-dev/chirp-baofeng-plus/releases)
+   [Releases](https://github.com/sacchetti84-dev/chirp-plus/releases)
    page (no installation needed) and run it. Windows SmartScreen may warn
    that the file is not signed: choose *More info > Run anyway*.
 2. Connect the cable to the radio and to the computer, then turn the radio
@@ -190,12 +190,12 @@ and the channel comments are in Italian.
 | IT Ponti ripetitori 2 m | 16 | R0–R7 and the "alfa" channels (RV48–RV63), −600 kHz shift |
 | IT Ponti ripetitori 70 cm | 16 | RU0–RU15, output 431.600–431.975, −1.6 MHz shift |
 | IT Satelliti FM radioamatori | 16 | SO-50 (with the timer arming channel), ISS, AO-123, PO-101, AO-91: split with CTCSS and three Doppler steps |
-| IT Radioamatori tutto in uno | 72 | all of the above together, fits the 128 memories of a Baofeng |
+| IT Radioamatori tutto in uno | 72 | all of the above together, fits the 128 memories of a UV-9R |
 | IT LPD e PMR446 | 85 | 69 LPD and 16 PMR446 channels at their legal power |
 
 > [!NOTE]
 > Transmitting on 2 m and 70 cm needs an amateur radio license. LPD and
-> PMR446 need no license, but only with approved radios: a Baofeng is not
+> PMR446 need no license, but only with approved radios: the UV-9R is not
 > one, and its lowest power is 1 W. The access tone of a repeater (1750 Hz
 > or CTCSS) differs from one repeater to the next, so add it yourself.
 > Satellites can go silent: check the
@@ -203,7 +203,7 @@ and the channel comments are in Italian.
 
 ## Tested on real hardware
 
-On a real **Baofeng UV-9R** with a CH340 cable on COM5:
+On a real **UV-9R** with a CH340 cable on COM5:
 
 - model detection and download in the same session, with the same result
   as a normal download;

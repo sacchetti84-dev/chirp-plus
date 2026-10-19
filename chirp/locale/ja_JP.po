@@ -3676,9 +3676,6 @@ msgstr "シリアルポートが見つかりません。ケーブルとドライ
 msgid "Manually entered port"
 msgstr "手動で入力したポート"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr "メーカ名またはモデル名の一部を入力してください (例: \"UV-5R\"、\"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "%s に新しいケーブルが接続されました"
 
@@ -4220,3 +4217,6 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "シフト"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr "メーカ名またはモデル名の一部を入力してください (例: \"UV-5R\")"

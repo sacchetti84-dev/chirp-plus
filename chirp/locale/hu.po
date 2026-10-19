@@ -3690,11 +3690,6 @@ msgstr ""
 msgid "Manually entered port"
 msgstr "Kézzel megadott port"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr ""
-"Írja be a gyártó vagy a modell nevének egy részét (például \"UV-5R\" vagy "
-"\"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "Új kábel csatlakoztatva: %s"
 
@@ -4259,3 +4254,6 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "Eltolás"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr "Írja be a gyártó vagy a modell nevének egy részét (például \"UV-5R\")"

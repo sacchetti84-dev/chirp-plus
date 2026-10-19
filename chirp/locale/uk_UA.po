@@ -3530,11 +3530,6 @@ msgstr ""
 msgid "Manually entered port"
 msgstr "Порт, введений вручну"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr ""
-"Введіть частину назви виробника або моделі (наприклад \"UV-5R\" або "
-"\"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "Новий кабель під'єднано до %s"
 
@@ -4099,3 +4094,6 @@ msgstr "МГц"
 
 msgid "Shift"
 msgstr "Зсув"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr "Введіть частину назви виробника або моделі (наприклад \"UV-5R\")"

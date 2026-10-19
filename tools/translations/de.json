@@ -15,7 +15,7 @@
  "Connect the programming cable to the radio and to the computer, then turn the radio on. The cable port is detected automatically.": "Schließen Sie das Programmierkabel an Funkgerät und Computer an und schalten Sie das Funkgerät ein. Die Schnittstelle des Kabels wird automatisch erkannt.",
  "No serial port found. Check the cable and its driver, then press Refresh.": "Keine serielle Schnittstelle gefunden. Prüfen Sie das Kabel und seinen Treiber und klicken Sie dann auf Aktualisieren.",
  "Manually entered port": "Manuell eingegebene Schnittstelle",
- "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")": "Geben Sie einen Teil des Herstellers oder Modells ein (zum Beispiel \"UV-5R\" oder \"Baofeng\")",
+ "Type part of the vendor or model name (for example \"UV-5R\")": "Geben Sie einen Teil des Herstellers oder Modells ein (zum Beispiel \"UV-5R\")",
  "New cable connected on %s": "Neues Kabel an %s angeschlossen",
  "The cable on %s was disconnected": "Das Kabel an %s wurde getrennt",
  "%i cables found, %s selected: check that it is the right one": "%i Kabel gefunden, %s ausgewählt: Prüfen Sie, ob es das richtige ist",

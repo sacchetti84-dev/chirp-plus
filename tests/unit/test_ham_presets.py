@@ -35,8 +35,8 @@ class TestHamPresets(unittest.TestCase):
                 self.assertEqual(text, f.read(),
                                  '%s is stale: run make_ham_presets.py' % name)
 
-    def test_all_in_one_fits_a_baofeng(self):
-        # UV-5R and UV-9R family: 128 memories, 7 character names
+    def test_all_in_one_fits_128_memories(self):
+        # UV-5R and UV-9R: 128 memories, 7 character names
         mems = self.memories('IT Radioamatori tutto in uno.csv')
         self.assertLessEqual(len(mems), 128)
         for m in mems:

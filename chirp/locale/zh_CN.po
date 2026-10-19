@@ -4152,9 +4152,6 @@ msgstr "未找到串口。请检查写频线及其驱动, 然后点击“刷新�
 msgid "Manually entered port"
 msgstr "手动输入的端口"
 
-msgid "Type part of the vendor or model name (for example \"UV-5R\" or \"Baofeng\")"
-msgstr "输入厂商或型号名称的一部分 (例如 \"UV-5R\" 或 \"Baofeng\")"
-
 msgid "New cable connected on %s"
 msgstr "%s 上连接了新的写频线"
 
@@ -4693,3 +4690,6 @@ msgstr "MHz"
 
 msgid "Shift"
 msgstr "频差"
+
+msgid "Type part of the vendor or model name (for example \"UV-5R\")"
+msgstr "输入厂商或型号名称的一部分 (例如 \"UV-5R\")"

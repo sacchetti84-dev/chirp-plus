@@ -117,7 +117,7 @@ def satellites():
 
 def lpd_pmr():
     # LPD: 433.075-434.775 MHz every 25 kHz, 10 mW. PMR446: 446.00625-
-    # 446.19375 MHz every 12.5 kHz, 0.5 W. A Baofeng cannot go that low
+    # 446.19375 MHz every 12.5 kHz, 0.5 W. A UV-9R cannot go that low
     # and is not an approved radio for either band: the comment says so.
     rows = []
     for i in range(69):
@@ -125,7 +125,7 @@ def lpd_pmr():
         rows.append(row(
             'LPD %02i' % (i + 1), freq,
             '[LPD] Canale %i, %.3f MHz: senza licenza ma solo con apparati '
-            'LPD omologati, max 10 mW (la Baofeng scende a 1 W)' % (
+            'LPD omologati, max 10 mW (la UV-9R scende al minimo a 1 W)' % (
                 i + 1, freq),
             mode='FM', step=25.0, power='0.01W'))
     for i in range(16):
