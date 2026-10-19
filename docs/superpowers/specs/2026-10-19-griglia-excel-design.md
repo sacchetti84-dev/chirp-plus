@@ -157,6 +157,9 @@ Funzioni pure (nessun import di wx), collaudate da test unitari:
     complete" (`common.mems_from_clipboard`) resta per le righe intere
     selezionate dal numero di riga o quando la prima riga incollata è
     un'intestazione CHIRP completa (con colonna `Location`).
+  - Una cella vuota nella tabella incollata lascia il valore che c'era.
+  - Nelle colonne numeriche (frequenza, offset, toni, potenza in watt) la
+    virgola decimale di Excel in italiano è accettata (`145,6` = 145.6).
   - Prima di sovrascrivere celle non vuote in canali esistenti chiede
     conferma una volta sola, come l'incolla di oggi.
 - **Svuota (Canc)**: per ogni cella selezionata
