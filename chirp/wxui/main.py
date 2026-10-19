@@ -425,7 +425,7 @@ class ChirpWelcomePanel(theme.TermPanel):
 
         if theme.enabled():
             self.Bind(wx.EVT_CHAR, self._key)
-            wx.CallAfter(self.SetFocus)
+            wx.CallAfter(self._take_focus)
             return
 
         vbox = wx.BoxSizer(wx.VERTICAL)
@@ -467,6 +467,17 @@ class ChirpWelcomePanel(theme.TermPanel):
         portdetect.KIND_BLUETOOTH: _('bluetooth'),
         portdetect.KIND_OTHER: '',
     }
+
+    def _take_focus(self):
+        """Focus for the number keys, once no modal dialog is up (on the
+        first start the license dialog is; SetFocus would fail)"""
+        if not self:
+            return
+        if any(isinstance(w, wx.Dialog) and w.IsModal()
+               for w in wx.GetTopLevelWindows()):
+            wx.CallLater(500, self._take_focus)
+            return
+        self.SetFocus()
 
     def _key(self, event):
         key = chr(event.GetKeyCode()) if 32 <= event.GetKeyCode() < 127 \
