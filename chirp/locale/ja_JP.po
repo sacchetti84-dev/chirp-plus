@@ -4220,3 +4220,9 @@ msgstr "シフト"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "メーカ名またはモデル名の一部を入力してください (例: \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "CHIRP の非公式改変版 (ベース: %s)"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "CHIRP Plus のページとソースコード"

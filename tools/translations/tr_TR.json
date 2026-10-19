@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "yalnızca onaylı PMR446 telsizler ve sabit anten ile",
  "Ch": "Kn",
  "MHz": "MHz",
- "Shift": "Kaydırma"
+ "Shift": "Kaydırma",
+ "Unofficial modified version of CHIRP, based on %s": "CHIRP'in resmi olmayan değiştirilmiş sürümü, temeli: %s",
+ "CHIRP Plus home page and source code": "CHIRP Plus sayfası ve kaynak kodu"
 }

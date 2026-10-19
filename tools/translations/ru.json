@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "только с сертифицированными станциями PMR446 и несъёмной антенной",
  "Ch": "Кан",
  "MHz": "МГц",
- "Shift": "Сдвиг"
+ "Shift": "Сдвиг",
+ "Unofficial modified version of CHIRP, based on %s": "Неофициальная изменённая версия CHIRP на основе %s",
+ "CHIRP Plus home page and source code": "Страница и исходный код CHIRP Plus"
 }

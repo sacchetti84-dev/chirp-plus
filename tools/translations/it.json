@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "solo con radio omologate PMR446 e antenna fissa",
  "Ch": "Can",
  "MHz": "MHz",
- "Shift": "Passo"
+ "Shift": "Passo",
+ "Unofficial modified version of CHIRP, based on %s": "Versione modificata non ufficiale di CHIRP, basata su %s",
+ "CHIRP Plus home page and source code": "Pagina e codice sorgente di CHIRP Plus"
 }

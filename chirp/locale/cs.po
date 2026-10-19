@@ -4281,3 +4281,9 @@ msgstr "Posun"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Zadejte část výrobce nebo modelu (například \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Neoficiální upravená verze CHIRP, založená na %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Stránka a zdrojový kód CHIRP Plus"

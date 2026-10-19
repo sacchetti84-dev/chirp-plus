@@ -3757,3 +3757,9 @@ msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr ""
 "Πληκτρολογήστε μέρος του ονόματος προμηθευτή ή μοντέλου (για παράδειγμα "
 "\"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Ανεπίσημη τροποποιημένη έκδοση του CHIRP, βασισμένη στο %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Σελίδα και πηγαίος κώδικας του CHIRP Plus"

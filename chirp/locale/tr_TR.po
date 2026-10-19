@@ -4588,3 +4588,9 @@ msgstr "Kaydırma"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Tedarikçi veya model adının bir kısmını yazın (örneğin \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "CHIRP'in resmi olmayan değiştirilmiş sürümü, temeli: %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "CHIRP Plus sayfası ve kaynak kodu"

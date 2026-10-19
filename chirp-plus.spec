@@ -3,6 +3,7 @@
 # CHIRP installer (chirpwx.exe + chirp/{share,stock_configs,locale}).
 # Build with:  python tools/build_windows.py
 import os
+import sys
 
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
@@ -42,6 +43,20 @@ a = Analysis(
     excludes=['chirp.cli', 'tests', 'tkinter', 'numpy'],
     noarchive=False,
 )
+
+# The licenses of everything bundled travel inside the program, with the
+# GPL of CHIRP itself; tools/build_windows.py also puts them, and the
+# source of the LGPL/MPL libraries, next to it
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+import third_party  # noqa: E402
+bundled = list(a.pure) + list(a.binaries)
+notices = third_party.notices(
+    bundled, os.path.join(workpath, 'THIRD-PARTY-NOTICES.txt'))
+third_party.sources(
+    bundled, os.path.join(workpath, 'CHIRP-Plus-librerie-sorgente.zip'))
+a.datas += [('THIRD-PARTY-NOTICES.txt', notices, 'DATA'),
+            ('COPYING', os.path.join(ROOT, 'COPYING'), 'DATA')]
+
 pyz = PYZ(a.pure)
 icon = os.path.join(ROOT, 'chirp', 'share', 'chirp.ico')
 console = bool(os.environ.get('CHIRP_CONSOLE'))

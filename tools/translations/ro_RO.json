@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "doar cu stații PMR446 omologate și antenă fixă",
  "Ch": "Can",
  "MHz": "MHz",
- "Shift": "Decalaj"
+ "Shift": "Decalaj",
+ "Unofficial modified version of CHIRP, based on %s": "Versiune modificată neoficială a CHIRP, bazată pe %s",
+ "CHIRP Plus home page and source code": "Pagina și codul sursă CHIRP Plus"
 }

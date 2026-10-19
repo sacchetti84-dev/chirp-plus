@@ -4644,3 +4644,9 @@ msgstr "Décal."
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Tapez une partie du fabricant ou du modèle (par exemple \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Version modifiée non officielle de CHIRP, basée sur %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Page et code source de CHIRP Plus"

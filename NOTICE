@@ -1,0 +1,32 @@
+CHIRP Plus
+==========
+
+CHIRP Plus is an unofficial, modified version of CHIRP
+(https://chirpmyradio.com, https://github.com/kk7ds/chirp).
+
+- Based on: CHIRP next-20261016, upstream commit 832d349e.
+- Modified: since 18 October 2026. The full list of changes, with dates,
+  is the git history of https://github.com/sacchetti84-dev/chirp-plus
+  (every commit after 832d349e); README-PLUS.md describes them.
+- Not made, reviewed or endorsed by the CHIRP project. "CHIRP" is the name
+  of the original project and is used here only to say what this version
+  is based on. Report problems with CHIRP Plus to CHIRP Plus, not to the
+  CHIRP project.
+
+Copyright
+- CHIRP: Copyright Dan Smith KK7DS and the CHIRP contributors; every
+  original copyright and license notice is kept unchanged in its file.
+- Changes and new files of CHIRP Plus: Copyright 2026 CHIRP Plus
+  contributors.
+
+License
+CHIRP and CHIRP Plus are free software under the GNU General Public
+License version 3 or later (see COPYING), WITHOUT ANY WARRANTY.
+
+Third-party software
+The Windows builds bundle Python, wxPython and other libraries, each
+under its own license. The build writes their notices to
+THIRD-PARTY-NOTICES.txt (inside the program and next to it) and the
+source of the LGPL and MPL ones to CHIRP-Plus-librerie-sorgente.zip; see
+tools/third_party.py. The icons in chirp/share/icons are Tabler Icons,
+MIT license (chirp/share/icons/LICENSE).

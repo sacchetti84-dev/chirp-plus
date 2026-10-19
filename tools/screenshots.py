@@ -160,6 +160,7 @@ class Shooter:
             os._exit(0)
 
         grab(main, 'welcome')
+        self.menu('about', main._menu_about, None)
         main.open_file(self.demo)
         settle(2)
         # Show repeaters and satellites, where duplex and tones are set

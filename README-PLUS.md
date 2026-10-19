@@ -94,7 +94,7 @@ funzioni dell'originale, più queste modifiche.
 - **Import/export Excel** (`.xlsx` lettura/scrittura, `.xls` lettura).
 
 ## Lingue
-Tutti i testi nuovi di CHIRP Plus (189 stringhe) sono tradotti nelle 17
+Tutti i testi nuovi di CHIRP Plus (191 stringhe) sono tradotti nelle 17
 lingue di CHIRP più l'inglese di partenza, con la terminologia che ogni
 traduzione ufficiale già usa (per esempio "станция" in russo, "無線機" in
 giapponese). Le traduzioni stanno in `tools/translations/<lingua>.json`
@@ -108,6 +108,26 @@ Lo script si ferma se una lingua manca di una stringa o se i segnaposto
 (`%s`, `%(nome)s`…) non coincidono con l'originale. Le traduzioni ufficiali
 già presenti non vengono toccate. Una stringa nuova va aggiunta in tutti i
 file JSON.
+
+## Diritti e licenze
+CHIRP Plus è una versione modificata e non ufficiale di CHIRP (vedi
+`NOTICE`), sotto la stessa GPLv3. Gli avvisi di copyright e licenza dei
+file originali sono invariati; i file nuovi sono "Copyright 2026 CHIRP
+Plus contributors". La finestra Informazioni (anche al primo avvio) dice
+che è una versione modificata e su cosa si basa.
+
+La build (`chirp-plus.spec` con `tools/third_party.py`) raccoglie le
+licenze di tutto ciò che PyInstaller mette nell'exe e le scrive in
+`THIRD-PARTY-NOTICES.txt`, dentro il programma e accanto; il sorgente
+delle librerie LGPL/MPL (suds, yattag, certifi) va in
+`CHIRP-Plus-librerie-sorgente.zip`. Se una libreria nuova finisce nell'exe
+senza un testo di licenza, la build si ferma: il testo va aggiunto in
+`tools/third_party_licenses/<nome>.txt`.
+
+Verso i servizi del progetto CHIRP: niente statistiche d'uso
+(`report.report_model` non invia nulla) e "Segnala un bug" apre le issue
+di questa repo; resta il controllo, in sola lettura, di nuove versioni
+ufficiali.
 
 ## Uso
 Il programma compilato è in `%LOCALAPPDATA%\Programs\CHIRP-Plus\chirpwx.exe`;

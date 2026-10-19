@@ -4314,3 +4314,9 @@ msgstr "Decalaj"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Scrieți o parte din producător sau model (de exemplu \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Versiune modificată neoficială a CHIRP, bazată pe %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Pagina și codul sursă CHIRP Plus"

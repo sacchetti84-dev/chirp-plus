@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "csak jóváhagyott PMR446 rádióval és fix antennával",
  "Ch": "Csat",
  "MHz": "MHz",
- "Shift": "Eltolás"
+ "Shift": "Eltolás",
+ "Unofficial modified version of CHIRP, based on %s": "A CHIRP nem hivatalos, módosított változata, alapja: %s",
+ "CHIRP Plus home page and source code": "A CHIRP Plus oldala és forráskódja"
 }

@@ -4577,3 +4577,9 @@ msgstr "Desvio"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Digite parte do fabricante ou do modelo (por exemplo \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Versão modificada não oficial do CHIRP, baseada em %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Página e código-fonte do CHIRP Plus"

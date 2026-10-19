@@ -4097,3 +4097,9 @@ msgstr "Зсув"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Введіть частину назви виробника або моделі (наприклад \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Неофіційна змінена версія CHIRP на основі %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Сторінка та вихідний код CHIRP Plus"

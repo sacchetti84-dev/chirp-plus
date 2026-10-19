@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "μόνο με εγκεκριμένους πομποδέκτες PMR446 και σταθερή κεραία",
  "Ch": "Καν",
  "MHz": "MHz",
- "Shift": "Μετατόπιση"
+ "Shift": "Μετατόπιση",
+ "Unofficial modified version of CHIRP, based on %s": "Ανεπίσημη τροποποιημένη έκδοση του CHIRP, βασισμένη στο %s",
+ "CHIRP Plus home page and source code": "Σελίδα και πηγαίος κώδικας του CHIRP Plus"
 }

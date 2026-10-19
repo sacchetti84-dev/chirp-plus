@@ -4693,3 +4693,9 @@ msgstr "频差"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "输入厂商或型号名称的一部分 (例如 \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "CHIRP 的非官方修改版, 基于 %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "CHIRP Plus 主页和源代码"

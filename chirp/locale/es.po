@@ -4865,3 +4865,9 @@ msgstr "Desplaz."
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Escriba parte del fabricante o del modelo (por ejemplo \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "Versión modificada no oficial de CHIRP, basada en %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "Página y código fuente de CHIRP Plus"

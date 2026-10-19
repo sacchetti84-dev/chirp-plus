@@ -14,3 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 CHIRP_VERSION = "py3dev"
+
+# CHIRP Plus is an unofficial modified version of CHIRP (GPLv3 section 5a
+# wants the changes marked): the official build it starts from, and where
+# its source, changes and bug reports live
+CHIRP_PLUS_BASE = "CHIRP next-20261016 (832d349e)"
+CHIRP_PLUS_URL = "https://github.com/sacchetti84-dev/chirp-plus"

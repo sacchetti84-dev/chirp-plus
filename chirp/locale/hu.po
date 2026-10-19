@@ -4257,3 +4257,9 @@ msgstr "Eltolás"
 
 msgid "Type part of the vendor or model name (for example \"UV-5R\")"
 msgstr "Írja be a gyártó vagy a modell nevének egy részét (például \"UV-5R\")"
+
+msgid "Unofficial modified version of CHIRP, based on %s"
+msgstr "A CHIRP nem hivatalos, módosított változata, alapja: %s"
+
+msgid "CHIRP Plus home page and source code"
+msgstr "A CHIRP Plus oldala és forráskódja"

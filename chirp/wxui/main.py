@@ -47,7 +47,6 @@ from chirp.wxui import config
 from chirp.wxui import backups
 from chirp.wxui import bankedit
 from chirp.wxui import batch
-from chirp.wxui import bugreport
 from chirp.wxui import common
 from chirp.wxui import clone
 from chirp.wxui import console
@@ -65,6 +64,7 @@ from chirp.wxui import serialtrace
 from chirp.wxui import settingsedit
 from chirp.wxui import theme
 from chirp import CHIRP_VERSION
+from chirp import CHIRP_PLUS_BASE, CHIRP_PLUS_URL
 
 EditorSetChanged, EVT_EDITORSET_CHANGED = wx.lib.newevent.NewCommandEvent()
 CONF = config.get()
@@ -1297,8 +1297,10 @@ class ChirpMain(wx.Frame):
         self.bug_report_item = wx.MenuItem(
             help_menu, wx.NewId(),
             _('Report or update a bug...'))
+        # Reports about this modified version belong to CHIRP Plus, not to
+        # the official tracker the original wizard posts to
         self.Bind(wx.EVT_MENU,
-                  functools.partial(bugreport.do_bugreport, self),
+                  lambda e: webbrowser.open(CHIRP_PLUS_URL + '/issues'),
                   self.bug_report_item)
         help_menu.Append(self.bug_report_item)
         self.bug_report_item.Enable(False)
@@ -2483,7 +2485,7 @@ class ChirpMain(wx.Frame):
     def _menu_about(self, event):
         pyver = sys.version_info
         d = wx.Dialog(self, title=_('About CHIRP'))
-        d.SetSize((500, 400))
+        d.SetSize((560, 520))
         vbox = wx.BoxSizer(wx.VERTICAL)
         d.SetSizer(vbox)
 
@@ -2492,6 +2494,19 @@ class ChirpMain(wx.Frame):
         vbox.Add(label, 0,
                  border=10,
                  flag=wx.ALIGN_CENTER | wx.ALL)
+
+        # GPLv3 section 5: a modified version says so, and keeps the
+        # copyright of the original next to its own
+        for text in (_('Unofficial modified version of CHIRP, based on %s')
+                     % CHIRP_PLUS_BASE,
+                     'Copyright Dan Smith KK7DS and the CHIRP contributors',
+                     'Changes: Copyright 2026 CHIRP Plus contributors'):
+            label = wx.StaticText(d, label=text)
+            vbox.Add(label, 0, border=2, flag=wx.ALIGN_CENTER | wx.ALL)
+        plus_link = wx.adv.HyperlinkCtrl(
+            d, label=_('CHIRP Plus home page and source code'),
+            url=CHIRP_PLUS_URL)
+        vbox.Add(plus_link, border=5, flag=wx.ALL | wx.ALIGN_CENTER)
 
         details = ('Python %s.%s.%s' % (pyver.major, pyver.minor, pyver.micro),
                    'wxPython %s' % wx.version())

@@ -187,5 +187,7 @@
  "only with approved PMR446 radios and fixed antenna": "仅限经认证的 PMR446 电台和固定天线",
  "Ch": "信道",
  "MHz": "MHz",
- "Shift": "频差"
+ "Shift": "频差",
+ "Unofficial modified version of CHIRP, based on %s": "CHIRP 的非官方修改版, 基于 %s",
+ "CHIRP Plus home page and source code": "CHIRP Plus 主页和源代码"
 }

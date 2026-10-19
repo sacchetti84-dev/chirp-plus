@@ -6,8 +6,10 @@ Usage:
       in dist/ (to install on this PC).
   .venv\\Scripts\\python tools\\build_windows.py --onefile [version]
       One CHIRP-Plus.exe to share, in dist/condivisione/ together with
-      LEGGIMI.txt and the source code (CHIRP is GPLv3: whoever receives
-      the program must be able to get its source).
+      LEGGIMI.txt, the source code, COPYING and the third-party licenses
+      (CHIRP is GPLv3: whoever receives the program must be able to get
+      its source; the bundled libraries want their notices, and the
+      LGPL/MPL ones their source, to travel with it).
 
 Builds happen outside the source tree: OneDrive locks files mid-build. The
 version defaults to next-20261016-plus (the upstream build this fork is
@@ -38,7 +40,9 @@ VERSION_INFO = """VSVersionInfo(
       StringStruct('FileDescription', 'CHIRP Plus - programmazione radio'),
       StringStruct('FileVersion', '%(version)s'),
       StringStruct('InternalName', 'CHIRP-Plus'),
-      StringStruct('LegalCopyright', 'GPLv3 - CHIRP contributors'),
+      StringStruct('LegalCopyright',
+                   'GPLv3 - CHIRP: Dan Smith KK7DS and contributors; '
+                   'changes: CHIRP Plus contributors'),
       StringStruct('OriginalFilename', 'CHIRP-Plus.exe'),
       StringStruct('ProductName', 'CHIRP Plus'),
       StringStruct('ProductVersion', '%(version)s')])]),
@@ -51,6 +55,12 @@ README = """CHIRP Plus %(version)s
 
 Programma per leggere e scrivere le memorie delle radio, basato su CHIRP
 (https://chirpmyradio.com).
+
+CHIRP Plus e' una versione modificata e non ufficiale di CHIRP: parte da
+CHIRP next-20261016 (commit 832d349e) ed e' modificata dal 18/10/2026.
+Non e' fatta ne' approvata dal progetto CHIRP: i problemi di questa
+versione vanno segnalati su https://github.com/sacchetti84-dev/chirp-plus
+e non al progetto originale.
 
 AVVIO
 - Doppio clic su CHIRP-Plus.exe. Non serve installarlo.
@@ -81,8 +91,18 @@ PRUDENZA
   segnala licenze e limiti di potenza (regole italiane).
 
 LICENZA
-Software libero GPLv3, senza garanzia. Il codice sorgente di questa
-versione e' in CHIRP-Plus-sorgente.zip, accanto a questo file.
+Software libero sotto la GNU GPL versione 3 o successiva, SENZA ALCUNA
+GARANZIA (testo completo in COPYING). CHIRP e' (C) Dan Smith KK7DS e i
+contributori di CHIRP; le modifiche sono dei contributori di CHIRP Plus.
+Accanto a questo file:
+- CHIRP-Plus-sorgente.zip: il codice sorgente completo di questa
+  versione, con gli script per compilarla;
+- THIRD-PARTY-NOTICES.txt: le licenze dei componenti inclusi nel
+  programma (Python, wxPython, requests e gli altri);
+- CHIRP-Plus-librerie-sorgente.zip: il sorgente dei componenti con
+  licenza LGPL e MPL.
+Chi passa il programma ad altri deve passare anche questi file: il modo
+piu' semplice e' condividere lo ZIP intero.
 """
 
 
@@ -139,16 +159,28 @@ def build(version, onefile):
             f.write(original)
         with open(DRIVERS_INIT, 'wb') as f:
             f.write(original_drivers)
-    return distpath
+    return distpath, workpath
 
 
-def share_package(distpath, version):
+# Written by chirp-plus.spec (tools/third_party.py) into the workpath
+LEGAL = ('THIRD-PARTY-NOTICES.txt', 'CHIRP-Plus-librerie-sorgente.zip')
+
+
+def copy_legal(workpath, target):
+    """Put the license files next to the program"""
+    for name in LEGAL:
+        shutil.copy2(os.path.join(workpath, name), target)
+    shutil.copy2(os.path.join(ROOT, 'COPYING'), target)
+
+
+def share_package(distpath, workpath, version):
     os.makedirs(SHARE_DIR, exist_ok=True)
     exe = os.path.join(SHARE_DIR, 'CHIRP-Plus.exe')
     shutil.copy2(os.path.join(distpath, 'CHIRP-Plus.exe'), exe)
     with open(os.path.join(SHARE_DIR, 'LEGGIMI.txt'), 'w',
               encoding='utf-8', newline='\r\n') as f:
         f.write(README % {'version': version})
+    copy_legal(workpath, SHARE_DIR)
     source = os.path.join(SHARE_DIR, 'CHIRP-Plus-sorgente.zip')
     subprocess.check_call(['git', 'archive', '--format=zip',
                            '--prefix=chirp-plus/', '-o', source, 'HEAD'],
@@ -165,10 +197,13 @@ def main():
     parser.add_argument('--onefile', action='store_true',
                         help='one shareable CHIRP-Plus.exe')
     args = parser.parse_args()
-    distpath = build(args.version, args.onefile)
+    distpath, workpath = build(args.version, args.onefile)
     if args.onefile:
-        share_package(distpath, args.version)
+        share_package(distpath, workpath, args.version)
         return
+    # The notices are already inside (chirp-plus.spec); add the library
+    # sources and the GPL next to chirpwx.exe as well
+    copy_legal(workpath, os.path.join(DISTPATH, 'CHIRP-Plus'))
     os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
     archive = shutil.make_archive(
         os.path.join(ROOT, 'dist', 'CHIRP-Plus-%s' % args.version), 'zip',
