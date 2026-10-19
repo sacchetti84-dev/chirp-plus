@@ -352,9 +352,10 @@ class CSVRadio(chirp_common.FileBackedRadio):
             # Accept any power level because we are CSV, but convert it to
             # the class that will str() into our desired format.
             # CHIRP Plus: not with dBm_to_watts(), which rounds to 0.1 W and
-            # turned 10 mW (LPD) into 0 W, saved and reloaded as 50 W
+            # turned 10 mW (LPD) into 0 W, saved and reloaded as 50 W. Four
+            # decimals keep milliwatts and give 50 W back, not 49.999...
             newmem.power = chirp_common.AutoNamedPowerLevel(
-                math.pow(10, float(newmem.power) / 10) / 1000)
+                round(math.pow(10, float(newmem.power) / 10) / 1000, 4))
         self._grow(newmem.number)
         self.memories[newmem.number] = newmem
 
