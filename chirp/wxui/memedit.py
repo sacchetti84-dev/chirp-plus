@@ -14,10 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import contextlib
+import csv
 import functools
 import itertools
 import logging
 import pickle
+import re
 import secrets
 import sys
 
@@ -33,6 +35,7 @@ from chirp import bandplan
 from chirp.drivers import generic_csv
 from chirp.drivers import generic_xlsx
 from chirp import errors
+from chirp import grid_fill
 from chirp import import_logic
 from chirp import settings
 from chirp.wxui import accessibility
@@ -51,6 +54,15 @@ WX_GTK = 'gtk' in wx.version().lower()
 TX_WORKFLOW_ID = wx.NewId()
 # Grid.GetSelectedBlocks() only exists from wxPython 4.1
 HAS_SELECTED_BLOCKS = hasattr(wx.grid.Grid, 'GetSelectedBlocks')
+# A memory as 'Copy portable' writes it: [146.520000/+0.600/100.0]
+PORTABLE_MEMORY = re.compile(r'^\[\d{1,4}\.\d{2,6}[^\t]*\]$')
+
+
+def tsv_cell(text):
+    """Quote a cell for the clipboard as a spreadsheet does."""
+    if any(c in text for c in '\t\r\n"'):
+        return '"%s"' % text.replace('"', '""')
+    return text
 
 
 class ChirpGridTable(wx.grid.GridStringTable):
@@ -2570,6 +2582,13 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._update_menu()
 
     def cb_copy_getdata(self, cut=False, portable=False):
+        if not portable and self._cells_only():
+            # Cells, not channels: only their text, as a spreadsheet has it
+            data = wx.TextDataObject(self.copy_cells_text())
+            if cut:
+                self.clear_cells()
+            return data
+
         rows = self.get_selected_rows_safe()
         mems = []
         for row in rows:
@@ -2775,9 +2794,35 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
         return True
 
-    @undoable(_('Paste memories'))
     def cb_paste(self):
         data = super().cb_paste()
+        formats = data.GetAllFormats()
+        if (common.CHIRP_DATA_MEMORY not in formats and
+                wx.DF_UNICODETEXT in formats and
+                not self._paste_is_memories(data.GetText())):
+            # Its own undo step, named after the cells
+            self.paste_table(data.GetText())
+        else:
+            self._cb_paste_rows(data)
+
+    def _paste_is_memories(self, text):
+        """True if pasted text goes to whole channels, not to cells.
+
+        That is with whole rows selected, after a CHIRP header (with its
+        Location column) or for memories as 'Copy portable' writes them.
+        """
+        if self.selected_rows():
+            return True
+        lines = text.splitlines()
+        if lines and 'location' in [cell.strip().casefold()
+                                    for cell in lines[0].split('\t')]:
+            return True
+        lines = [line.strip() for line in lines if line.strip()]
+        return bool(lines) and all(PORTABLE_MEMORY.match(line)
+                                   for line in lines)
+
+    @undoable(_('Paste memories'))
+    def _cb_paste_rows(self, data):
         if common.CHIRP_DATA_MEMORY in data.GetAllFormats():
             payload = pickle.loads(data.GetData().tobytes())
             LOG.debug('CHIRP-native paste: %r' % payload)
@@ -2812,6 +2857,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 data.GetFormat().Type))
 
     def cb_delete(self):
+        if self._cells_only():
+            self.clear_cells()
+            return
         selected_rows = self.get_selected_rows_safe()
         self._delete_memories_at(selected_rows, None)
 
@@ -2891,17 +2939,19 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                     cells.update((row, col) for col in cols)
         return sorted(cells)
 
-    def bulk_edit(self, name, edits):
+    def bulk_edit(self, name, edits, problems=()):
         """Apply cell edits as one undo step named `name`.
 
         Edits in hidden rows are dropped. Each changed memory is stored
         (with a progress dialog on a live radio for big edits) and one
-        summary lists the cells that were not changed.
+        summary lists the cells that were not changed, after the
+        (label, reason) `problems` the caller already found.
         """
         if not self.editable:
             return cellops.BulkResult([], [])
         edits = [e for e in edits if self._grid.IsRowShown(e.row)]
         result = cellops.apply_edits(self, edits)
+        result.problems[:0] = problems
         if result.changed:
             with self.undo_context(name):
                 self._store_bulk(result.changed,
@@ -2948,7 +2998,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             wx.MilliSleep(20)
 
     def _show_bulk_problems(self, problems):
-        lines = ['[%s]: %s' % problem for problem in problems[:19]]
+        # A problem without a label is about the whole operation
+        lines = ['[%s]: %s' % (label, reason) if label else reason
+                 for label, reason in problems[:19]]
         if len(problems) > 19:
             lines.append(_('...and %i more') % (len(problems) - 19))
         d = wx.MessageDialog(self, _('Some cells were not changed'),
@@ -2977,6 +3029,116 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 edits.append(cellops.CellEdit(row, col, text))
         if edits:
             self.bulk_edit(_('Fill %i cells') % len(edits), edits)
+
+    def _cells_only(self):
+        """True if some cells are selected but no whole row."""
+        return not self.selected_rows() and bool(self.selected_cells())
+
+    def copy_cells_text(self):
+        """The text shown in the selected cells, tab-separated.
+
+        One line per row, as spreadsheets copy and paste them.
+        """
+        rows = {}
+        for row, col in self.selected_cells():
+            rows.setdefault(row, []).append(col)
+        return ''.join(
+            '\t'.join(tsv_cell(self._grid.GetCellValue(row, col))
+                      for col in cols) + '\n'
+            for row, cols in sorted(rows.items()))
+
+    def clear_cells(self):
+        """Empty the selected cells of the memories that are not empty."""
+        edits = []
+        for row, col in self.selected_cells():
+            mem = self._memory_cache.get(row)
+            if mem is not None and not mem.empty:
+                edits.append(cellops.CellEdit(row, col, None))
+        if not edits:
+            return cellops.BulkResult([], [])
+        return self.bulk_edit(_('Clear %i cells') % len(edits), edits)
+
+    def paste_table(self, text):
+        """Paste a table of text, as copied from a spreadsheet, in cells.
+
+        The table starts at the cursor cell and goes on in the visible
+        rows and columns; a header row is skipped. A single value goes to
+        every selected cell. Returns the BulkResult, or None if there is
+        nothing to paste or the user does not want to overwrite cells.
+        """
+        if not self.editable:
+            return None
+        try:
+            matrix = grid_fill.parse_table(text)
+        except csv.Error as e:
+            LOG.warning('Pasted text is not a clean table (%s), '
+                        'splitting it at tabs', e)
+            matrix = [line.split('\t') for line in text.splitlines()]
+        if self._is_header(matrix):
+            matrix = matrix[1:]
+
+        cells = self.selected_cells()
+        dropped = 0
+        if len(matrix) == 1 and len(matrix[0]) == 1 and len(cells) > 1:
+            value = matrix[0][0]
+            targets = grid_fill.spread(value, cells) if value else []
+        else:
+            targets, dropped = self._table_targets(matrix)
+        if not targets and not dropped:
+            return None
+        if not self._confirm_overwrite(targets):
+            return None
+
+        problems = []
+        if dropped:
+            problems.append(('', _('%i values did not fit') % dropped))
+        edits = [cellops.CellEdit(row, col, value)
+                 for row, col, value in targets]
+        return self.bulk_edit(_('Paste %i cells') % len(edits), edits,
+                              problems)
+
+    def _is_header(self, matrix):
+        """True if the first row of a pasted table holds column titles.
+
+        A table of one row is data, and so is a row with a single title:
+        'Tone' and 'DTCS' are also tone modes.
+        """
+        if len(matrix) < 2 or len([c for c in matrix[0] if c.strip()]) < 2:
+            return False
+        labels = set(chirp_common.Memory.CSV_FORMAT)
+        for col_def in self._col_defs:
+            labels.update((col_def.name, col_def.label,
+                           col_def.label.replace('\n', ' ')))
+        return grid_fill.is_header_row(matrix[0], labels)
+
+    def _table_targets(self, matrix):
+        """Cells for a pasted table from the cursor on, and how many
+        values do not fit. Hidden columns are skipped, as copies do."""
+        shown = self._shown_cols()
+        first = [i for i, col in enumerate(shown)
+                 if col >= self._grid.GetGridCursorCol()]
+        if not first:
+            return [], sum(1 for values in matrix for v in values if v)
+        cells, dropped = grid_fill.target_cells(
+            self._grid.GetGridCursorRow(), first[0], matrix,
+            self.visible_rows(), len(shown))
+        return [(row, shown[i], value) for row, i, value in cells], dropped
+
+    def _confirm_overwrite(self, targets):
+        """Ask once before pasting over cells of memories in use."""
+        for row, col, value in targets:
+            mem = self._memory_cache.get(row)
+            if (mem is not None and not mem.empty and
+                    self._grid.GetCellValue(row, col)):
+                break
+        else:
+            return True
+        d = wx.MessageDialog(
+            self, _('Pasted values will overwrite cells that are not empty'),
+            _('Overwrite cells?'), wx.YES | wx.NO | wx.YES_DEFAULT)
+        resp = d.ShowModal()
+        d.Destroy()
+        return resp != wx.ID_NO
 
     def cb_move(self, direction):
         if self.is_sorted:

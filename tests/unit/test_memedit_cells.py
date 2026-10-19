@@ -345,8 +345,9 @@ def _tones(memedit, numbers):
 class Dialogs:
     """Stands in for wx.MessageDialog and records what it was told."""
 
-    def __init__(self):
+    def __init__(self, answer=wx.ID_OK):
         self.shown = []
+        self.answer = answer
 
     def __call__(self, parent, message, caption='', style=0, **k):
         dialogs = self
@@ -358,7 +359,7 @@ class Dialogs:
             def ShowModal(self):
                 dialogs.shown.append((caption, message,
                                       getattr(self, 'extended', '')))
-                return wx.ID_OK
+                return dialogs.answer
 
             def Destroy(self):
                 pass
@@ -749,3 +750,249 @@ def test_small_live_bulk_edit_has_no_progress(live_memedit):
     live_memedit.fill_down()
     _pump(lambda: not live_memedit._jobs)
     assert _tones(live_memedit, range(1, 6)) == [('Tone', 100.0)] * 5
+
+
+# Copy, paste, cut and clear cells
+
+def _clipboard_out(memedit, monkeypatch):
+    """Record what cb_copy() puts on the clipboard."""
+    copied = []
+    monkeypatch.setattr(memedit, 'cb_copy_data', copied.append)
+    return copied
+
+
+def _clipboard_in(monkeypatch, data):
+    """Make cb_paste() find `data` on the clipboard."""
+    monkeypatch.setattr(common.ChirpEditor, 'cb_paste', lambda self: data)
+
+
+def _cursor(memedit, row, name):
+    memedit._grid.ClearSelection()
+    memedit._grid.SetGridCursor(row, _col_index(memedit, name))
+
+
+def _names(memedit, numbers):
+    return [memedit._radio.get_memory(n).name for n in numbers]
+
+
+def _formats(data):
+    return [f.GetType() for f in data.GetAllFormats()]
+
+
+def test_copy_cells_is_tsv_of_shown_text(memedit, monkeypatch):
+    _seeded(memedit, {1: 'A', 2: 'C'})
+    grid = memedit._grid
+    grid.ClearSelection()
+    grid.SelectBlock(1, _col_index(memedit, 'freq'),
+                     2, _col_index(memedit, 'name'))
+    assert memedit.copy_cells_text() == '145.525000\tA\n145.550000\tC\n'
+
+    # Text only: no CHIRP memories that would paste as whole channels
+    copied = _clipboard_out(memedit, monkeypatch)
+    memedit.cb_copy()
+    data, = copied
+    assert _formats(data) == [wx.DF_UNICODETEXT]
+    assert data.GetText() == '145.525000\tA\n145.550000\tC\n'
+    assert not memedit._undo_queue
+
+
+def test_copy_cells_quotes_tabs_and_quotes(memedit, monkeypatch):
+    monkeypatch.setattr(memedit._grid, 'GetCellValue',
+                        lambda row, col: {0: 'a\tb', 1: 'say "hi"'}[row])
+    monkeypatch.setattr(memedit, 'selected_cells', lambda: [(0, 1), (1, 1)])
+    text = memedit.copy_cells_text()
+    assert text == '"a\tb"\n"say ""hi"""\n'
+    from chirp import grid_fill
+    assert grid_fill.parse_table(text) == [['a\tb'], ['say "hi"']]
+
+
+def test_paste_table_from_excel(memedit, monkeypatch):
+    # Memories 2-4 of the image are empty; Excel ends lines with \r\n
+    _cursor(memedit, 2, 'freq')
+    _clipboard_in(monkeypatch,
+                  wx.TextDataObject('145.600000\tRPT1\r\n145,625\tRPT2\r\n'))
+    memedit.cb_paste()
+    mem2, mem3 = (memedit._radio.get_memory(n) for n in (2, 3))
+    assert (mem2.freq, mem2.name) == (145600000, 'RPT1')
+    assert (mem3.freq, mem3.name) == (145625000, 'RPT2')
+    assert memedit._radio.get_memory(4).empty
+    assert len(memedit._undo_queue) == 1
+    assert memedit._undo_queue[0].name == 'Paste 4 cells'
+    memedit._undo(None)
+    assert memedit._radio.get_memory(2).empty
+    assert memedit._radio.get_memory(3).empty
+
+
+def test_paste_explicit_offset_wins_over_band(memedit):
+    # IARU R1: the band plan alone would give 145.600 a -600 kHz shift
+    _cursor(memedit, 2, 'freq')
+    row = ['145.600000', 'RPT'] + [''] * 6 + ['-', '7.600000']
+    memedit.paste_table('\t'.join(row) + '\n')
+    mem = memedit._radio.get_memory(2)
+    assert (mem.freq, mem.duplex, mem.offset) == (145600000, '-', 7600000)
+
+
+def test_paste_header_row_skipped(memedit):
+    _cursor(memedit, 2, 'freq')
+    memedit.paste_table('Frequency\tName\n145.600000\tHDR\n')
+    mem = memedit._radio.get_memory(2)
+    assert (mem.freq, mem.name) == (145600000, 'HDR')
+    assert memedit._radio.get_memory(3).empty
+
+
+def test_paste_single_label_is_a_value(memedit, monkeypatch):
+    # One value alone is never a header: 'Mode' is a fine name
+    _seeded(memedit, {1: 'A'})
+    monkeypatch.setattr(wx, 'MessageDialog', Dialogs())
+    _cursor(memedit, 1, 'name')
+    memedit.paste_table('Mode')
+    assert _names(memedit, [1]) == [memedit._radio.filter_name('Mode')]
+
+
+def test_paste_overflow_reported(memedit, monkeypatch):
+    dialogs = Dialogs()
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    last = memedit._grid.GetNumberRows() - 1
+    comment = _col_index(memedit, 'comment')
+    assert comment == max(c for c in range(memedit._grid.GetNumberCols())
+                          if memedit._grid.IsColShown(c))
+    assert memedit._grid.GetCellValue(last, comment) == ''
+    _cursor(memedit, last, 'comment')
+    # 'y' is past the last column, the second row past the last memory
+    result = memedit.paste_table('x\ty\nz\tw\n')
+    assert ('', '3 values did not fit') in result.problems
+    assert len(dialogs.shown) == 1
+    caption, message, extended = dialogs.shown[0]
+    assert caption == 'Some cells were not changed'
+    assert '3 values did not fit' in extended.split('\n')
+
+
+def test_paste_skips_hidden_columns(memedit, monkeypatch):
+    # Copies leave hidden columns out, so pastes do too
+    monkeypatch.setattr(wx, 'MessageDialog', Dialogs())
+    grid = memedit._grid
+    step = _col_index(memedit, 'tuning_step')
+    assert not grid.IsColShown(step)
+    _seeded(memedit, {1: 'A'})
+    _cursor(memedit, 1, 'mode')
+    memedit.paste_table('NFM\tS\n')
+    mem = memedit._radio.get_memory(1)
+    assert (mem.mode, mem.skip) == ('NFM', 'S')
+
+
+def test_paste_one_value_into_selection(memedit, monkeypatch):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 5)})
+    dialogs = Dialogs(answer=wx.ID_NO)
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    _select(memedit, 1, 4, 'name')
+    assert memedit.paste_table('X\n') is None
+    assert _names(memedit, range(1, 5)) == ['M1', 'M2', 'M3', 'M4']
+    assert [d[0] for d in dialogs.shown] == ['Overwrite cells?']
+    assert not memedit._undo_queue
+
+    dialogs.answer = wx.ID_YES
+    result = memedit.paste_table('X\n')
+    assert [m.number for m in result.changed] == [1, 2, 3, 4]
+    assert _names(memedit, range(1, 5)) == ['X'] * 4
+    assert memedit._undo_queue[0].name == 'Paste 4 cells'
+    assert [d[0] for d in dialogs.shown] == ['Overwrite cells?'] * 2
+
+
+def test_paste_into_empty_cells_does_not_ask(memedit):
+    # Seeded memories have no comment; no_dialogs fails on any dialog
+    _seeded(memedit, {1: 'A', 2: 'B'})
+    _cursor(memedit, 1, 'comment')
+    memedit.paste_table('c1\nc2\n')
+    assert ([memedit._radio.get_memory(n).name for n in (1, 2)] ==
+            ['A', 'B'])
+
+
+def test_paste_malformed_table_does_not_crash(memedit, monkeypatch):
+    from chirp import grid_fill
+
+    def broken(text):
+        raise grid_fill.csv.Error('field larger than field limit')
+    monkeypatch.setattr(grid_fill, 'parse_table', broken)
+    _cursor(memedit, 2, 'freq')
+    memedit.paste_table('145.600000\t"RPT\n')
+    mem = memedit._radio.get_memory(2)
+    assert (mem.freq, mem.name) == (145600000, '"RPT')
+
+
+def test_clear_cells(memedit, monkeypatch):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 4)})
+    # Memory 4 is empty: its cells are left alone
+    assert memedit._radio.get_memory(4).empty
+    _select(memedit, 1, 4, 'name')
+    memedit.cb_delete()
+    assert _names(memedit, range(1, 4)) == ['', '', '']
+    assert memedit._radio.get_memory(4).empty
+    assert memedit._undo_queue[0].name == 'Clear 3 cells'
+
+    dialogs = Dialogs()
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    _select(memedit, 1, 2, 'freq')
+    result = memedit.clear_cells()
+    assert not result.changed
+    assert [p[1] for p in result.problems] == ['freq has no empty value'] * 2
+    assert memedit._radio.get_memory(1).freq == 145525000
+    assert len(dialogs.shown) == 1
+    memedit._undo(None)
+    assert _names(memedit, range(1, 4)) == ['M1', 'M2', 'M3']
+
+
+def test_cut_cells_is_copy_and_clear(memedit, monkeypatch):
+    _seeded(memedit, {1: 'A', 2: 'B'})
+    copied = _clipboard_out(memedit, monkeypatch)
+    _select(memedit, 1, 2, 'name')
+    memedit.cb_copy(cut=True)
+    data, = copied
+    assert data.GetText() == 'A\nB\n'
+    assert _names(memedit, [1, 2]) == ['', '']
+    assert not memedit._radio.get_memory(1).empty
+    assert memedit._undo_queue[0].name == 'Clear 2 cells'
+
+
+def test_row_copy_paste_unchanged(memedit, monkeypatch):
+    copied = _clipboard_out(memedit, monkeypatch)
+    memedit._grid.SelectRow(59)
+    memedit.cb_copy()
+    data, = copied
+    native = data.GetObject(wx.DataFormat(common.CHIRP_DATA_MEMORY))
+    assert isinstance(native, wx.CustomDataObject)
+    text = data.GetObject(wx.DataFormat(wx.DF_UNICODETEXT)).GetText()
+    assert text.startswith('Location\t')
+
+    # CHIRP memories go to the selected row
+    _clipboard_in(monkeypatch, native)
+    memedit._grid.SelectRow(2)
+    memedit.cb_paste()
+    assert _names(memedit, [2]) == ['TMOOK1']
+    assert memedit._undo_queue[0].name == 'Paste memories'
+
+    # The TSV of whole rows too, with whole rows selected...
+    _clipboard_in(monkeypatch, wx.TextDataObject(text))
+    memedit._grid.SelectRow(3)
+    memedit.cb_paste()
+    assert _names(memedit, [3]) == ['TMOOK1']
+    # ...or a CHIRP header with Location, from just the cursor
+    _cursor(memedit, 4, 'name')
+    memedit.cb_paste()
+    assert _names(memedit, [4]) == ['TMOOK1']
+    assert memedit._undo_queue[0].name == 'Paste memories'
+
+
+def test_portable_text_paste_unchanged(memedit, monkeypatch):
+    _clipboard_in(monkeypatch, wx.TextDataObject('[146.520000/+0.600]'))
+    _cursor(memedit, 2, 'name')
+    memedit.cb_paste()
+    mem = memedit._radio.get_memory(2)
+    assert (mem.freq, mem.duplex, mem.offset) == (146520000, '+', 600000)
+    assert mem.name == ''
+
+
+def test_row_delete_unchanged(memedit):
+    _seeded(memedit, {1: 'A'})
+    memedit._grid.SelectRow(1)
+    memedit.cb_delete()
+    assert memedit._radio.get_memory(1).empty
