@@ -68,6 +68,21 @@ class TestHamPresets(unittest.TestCase):
         self.assertEqual([437490000, 437500000, 437510000],
                          [mems['PO101 %s' % s].offset for s in 'ACF'])
 
+    def test_lpd_and_pmr446(self):
+        mems = self.memories('IT LPD e PMR446.csv')
+        lpd = [m for m in mems if m.name.startswith('LPD')]
+        pmr = [m for m in mems if m.name.startswith('PMR')]
+        self.assertEqual((69, 16), (len(lpd), len(pmr)))
+        self.assertEqual((433075000, 434775000), (lpd[0].freq, lpd[-1].freq))
+        self.assertEqual((446006250, 446193750), (pmr[0].freq, pmr[-1].freq))
+        self.assertLessEqual(len(mems), 128)
+        self.assertEqual(len(mems), len({m.name for m in mems}))
+        for m in mems:
+            band = freq_check.band_for(m.freq)
+            self.assertEqual(freq_check.FREE, band.use, m.name)
+            self.assertLessEqual(freq_check.watts(m.power),
+                                 band.max_watts * 1.05, m.name)
+
     def test_presets_transmit_only_in_amateur_bands(self):
         for name in self.files:
             for m in self.memories(name):

@@ -76,7 +76,12 @@ funzioni dell'originale, più queste modifiche.
     ISS, AO-123, PO-101, AO-91, in split con CTCSS e tre passi di Doppler
     (A inizio, C centro, F fine passaggio);
   - "IT Radioamatori tutto in uno": tutte le liste insieme, 72 canali che
-    stanno nelle 128 memorie di una Baofeng.
+    stanno nelle 128 memorie di una Baofeng;
+  - "IT LPD e PMR446": i 69 canali LPD e i 16 PMR446 alla potenza di legge
+    (10 mW e 0,5 W). Sono bande senza licenza ma solo per apparati
+    omologati: la Baofeng non lo è e scende al massimo a 1 W, perciò il
+    controllo frequenze li segnala. Non sta nel "tutto in uno" (non ci
+    starebbe nelle 128 memorie).
 
   Le liste generate vengono da `tools/make_ham_presets.py`: per aggiornare i
   satelliti (la tabella AMSAT cambia) si modifica lo script e lo si rilancia.

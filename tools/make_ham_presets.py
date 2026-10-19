@@ -1,4 +1,4 @@
-"""Write the Italian amateur radio presets in chirp/stock_configs.
+"""Write the Italian amateur, LPD and PMR446 presets in chirp/stock_configs.
 
 Usage:  .venv\\Scripts\\python tools\\make_ham_presets.py
 
@@ -8,6 +8,8 @@ Writes:
   IT Satelliti FM radioamatori.csv FM satellites, three Doppler steps each
   IT Radioamatori tutto in uno.csv the list above plus "IT Chiamata e
                                    simplex radioamatori", for a single import
+  IT LPD e PMR446.csv              the 69 LPD and 16 PMR446 channels, at
+                                   their legal power (licence free bands)
 
 Sources (checked October 2026): the Italian repeater channel plan of the
 ministry circular as reported by ARI sections, and the AMSAT "FM
@@ -50,13 +52,13 @@ SATELLITES = [
 
 
 def row(name, freq, comment, duplex='', offset=0.0, tone='', rtone=88.5,
-        mode='NFM', step=12.5):
+        mode='NFM', step=12.5, power='5.0W'):
     return {'Name': name, 'Frequency': '%.6f' % freq, 'Duplex': duplex,
             'Offset': '%.6f' % offset, 'Tone': tone,
             'rToneFreq': '%.1f' % rtone, 'cToneFreq': '88.5',
             'DtcsCode': '023', 'DtcsPolarity': 'NN', 'RxDtcsCode': '023',
             'CrossMode': 'Tone->Tone', 'Mode': mode, 'TStep': '%.2f' % step,
-            'Skip': '', 'Power': '5.0W', 'Comment': comment}
+            'Skip': '', 'Power': power, 'Comment': comment}
 
 
 def repeaters_2m():
@@ -113,6 +115,30 @@ def satellites():
     return rows
 
 
+def lpd_pmr():
+    # LPD: 433.075-434.775 MHz every 25 kHz, 10 mW. PMR446: 446.00625-
+    # 446.19375 MHz every 12.5 kHz, 0.5 W. A Baofeng cannot go that low
+    # and is not an approved radio for either band: the comment says so.
+    rows = []
+    for i in range(69):
+        freq = 433.075 + i * 0.025
+        rows.append(row(
+            'LPD %02i' % (i + 1), freq,
+            '[LPD] Canale %i, %.3f MHz: senza licenza ma solo con apparati '
+            'LPD omologati, max 10 mW (la Baofeng scende a 1 W)' % (
+                i + 1, freq),
+            mode='FM', step=25.0, power='0.01W'))
+    for i in range(16):
+        freq = 446.00625 + i * 0.0125
+        rows.append(row(
+            'PMR %02i' % (i + 1), freq,
+            '[PMR446] Canale %i, %.5f MHz: senza licenza ma solo con '
+            'apparati PMR446 omologati con antenna fissa, max 0,5 W' % (
+                i + 1, freq),
+            step=6.25, power='0.5W'))
+    return rows
+
+
 def read_calling():
     with open(os.path.join(STOCK, CALLING), encoding='utf-8',
               newline='') as f:
@@ -140,6 +166,8 @@ def presets():
     for rows in files.values():
         everything.extend(rows)
     files['IT Radioamatori tutto in uno.csv'] = everything
+    # Not in the all-in-one list: 85 more channels would not fit 128
+    files['IT LPD e PMR446.csv'] = lpd_pmr()
     return {name: render(rows) for name, rows in files.items()}
 
 
