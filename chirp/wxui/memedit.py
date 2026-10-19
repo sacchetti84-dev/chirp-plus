@@ -49,6 +49,8 @@ LOG = logging.getLogger(__name__)
 CONF = config.get()
 WX_GTK = 'gtk' in wx.version().lower()
 TX_WORKFLOW_ID = wx.NewId()
+# Grid.GetSelectedBlocks() only exists from wxPython 4.1
+HAS_SELECTED_BLOCKS = hasattr(wx.grid.Grid, 'GetSelectedBlocks')
 
 
 class ChirpGridTable(wx.grid.GridStringTable):
@@ -861,7 +863,8 @@ class MemeditUndoContext(MemeditActionContext):
     def __init__(self, memedit, name):
         super().__init__(memedit, name)
         LOG.info('[%s] Creating undo item %r', self._id, self.name)
-        self._pre_selection = self._memedit._grid.GetSelectedRows()
+        # Whole rows by the same rule as the row commands
+        self._pre_selection = self._memedit.selected_rows()
         self._pre_pos = (self._memedit._grid.GetGridCursorRow(),
                          self._memedit._grid.GetGridCursorCol())
         self._post_selection = self._post_pos = None
@@ -895,7 +898,7 @@ class MemeditUndoContext(MemeditActionContext):
             self._mem_after.append(new_mem.dupe())
         LOG.debug('[%s] Recorded changes made to %i memories',
                   self._id, len(self._mem_before))
-        self._post_selection = self._memedit._grid.GetSelectedRows()
+        self._post_selection = self._memedit.selected_rows()
         self._post_pos = (self._memedit._grid.GetGridCursorRow(),
                           self._memedit._grid.GetGridCursorCol())
 
@@ -991,9 +994,10 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         # AssignTable added in wxPython 4.1, so use the older interface for
         # earlier version support (i.e. Ubuntu Jammy)
         # Cells can be selected one by one or in rectangles; the row
-        # number still selects whole rows (see _row_click)
+        # number still selects whole rows (see _row_click). SelectCells
+        # is the name that also exists before wxPython 4.1
         self._grid.SetTable(self._table, takeOwnership=True,
-                            selmode=wx.grid.Grid.GridSelectCells)
+                            selmode=wx.grid.Grid.SelectCells)
         self._grid.DisableDragRowSize()
         self._grid.SetFocus()
         theme.style_grid(self._grid)
@@ -1232,7 +1236,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             multi = event.CmdDown()
         else:
             multi = event.ControlDown()
-        cur_selected = self._grid.GetSelectedRows()
+        cur_selected = self.selected_rows()
         x, y = self._grid.CalcUnscrolledPosition(event.GetX(), event.GetY())
         row, _cell = self._grid.XYToCell(x, y)
         if event.LeftDown():
@@ -1287,7 +1291,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
         if self._dragging_rows is not None:
             row, x, y = self._dragging_rows
-            if row not in self._grid.GetSelectedRows():
+            if row not in self.selected_rows():
                 # Drag started from a non-selected cell, so ignore
                 return
             if abs(event.GetX() - x) > 10 or abs(event.GetY() - y) > 10:
@@ -2310,7 +2314,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             # This is a right-click on a column header
             return
         menu = wx.Menu()
-        selected_rows = self._grid.GetSelectedRows()
+        selected_rows = self.selected_rows()
         if not selected_rows:
             selected_rows = [event.GetRow()]
 
@@ -2818,18 +2822,50 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         rectangles that cover every visible column. If there are none
         (nothing selected, or only some cells), use the row of the cursor
         """
-        selected = set(self._grid.GetSelectedRows())
-        shown = self._shown_cols()
-        for block in self._grid.GetSelectedBlocks():
-            if (shown and block.GetLeftCol() <= shown[0] and
-                    block.GetRightCol() >= shown[-1]):
-                selected.update(range(block.GetTopRow(),
-                                      block.GetBottomRow() + 1))
+        selected = self._whole_rows()
         if not selected:
             return [self._grid.GetGridCursorRow()]
         # Filter out any rows that aren't actually visible because of
         # hide-empty or an active filter query
         return [r for r in sorted(selected) if self._grid.IsRowShown(r)]
+
+    def selected_rows(self):
+        """The whole rows selected and visible, top to bottom, or [].
+
+        Same rule as get_selected_rows_safe(), for the commands where
+        nothing selected means something else than the cursor row.
+        """
+        return [r for r in sorted(self._whole_rows())
+                if self._grid.IsRowShown(r)]
+
+    def _whole_rows(self):
+        """Rows selected from the row number or by a rectangle that
+        covers every visible column (hidden rows included)."""
+        selected = set(self._grid.GetSelectedRows())
+        shown = self._shown_cols()
+        for top, left, bottom, right in self._selection_blocks():
+            if shown and left <= shown[0] and right >= shown[-1]:
+                selected.update(range(top, bottom + 1))
+        return selected
+
+    def _selection_blocks(self):
+        """The selection as (top, left, bottom, right) rectangles."""
+        grid = self._grid
+        if HAS_SELECTED_BLOCKS:
+            return [(b.GetTopRow(), b.GetLeftCol(),
+                     b.GetBottomRow(), b.GetRightCol())
+                    for b in grid.GetSelectedBlocks()]
+        # wxPython < 4.1: whole rows, rectangles and single cells are
+        # reported separately
+        last_col = grid.GetNumberCols() - 1
+        blocks = [(r, 0, r, last_col) for r in grid.GetSelectedRows()]
+        blocks.extend(
+            (tl.GetRow(), tl.GetCol(), br.GetRow(), br.GetCol())
+            for tl, br in zip(grid.GetSelectionBlockTopLeft(),
+                              grid.GetSelectionBlockBottomRight()))
+        blocks.extend((c.GetRow(), c.GetCol(), c.GetRow(), c.GetCol())
+                      for c in grid.GetSelectedCells())
+        return blocks
 
     def _shown_cols(self):
         return [c for c in range(self._grid.GetNumberCols())
@@ -2848,11 +2884,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         """
         shown = set(self._shown_cols())
         cells = set()
-        for block in self._grid.GetSelectedBlocks():
-            cols = [c for c in range(block.GetLeftCol(),
-                                     block.GetRightCol() + 1)
-                    if c in shown]
-            for row in range(block.GetTopRow(), block.GetBottomRow() + 1):
+        for top, left, bottom, right in self._selection_blocks():
+            cols = [c for c in range(left, right + 1) if c in shown]
+            for row in range(top, bottom + 1):
                 if self._grid.IsRowShown(row):
                     cells.update((row, col) for col in cols)
         return sorted(cells)
@@ -3009,10 +3043,12 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         cols = [self._col_defs.index(self._col_def_by_name(x))
                 for x in search_cols]
         num_rows = self._grid.GetNumberRows()
-        try:
-            current_row = self._grid.GetSelectedRows()[0] + 1
-        except IndexError:
-            current_row = 0
+        selected = self.selected_rows()
+        if selected:
+            current_row = selected[0] + 1
+        else:
+            # Start after the cell the user clicked (-1: no cursor)
+            current_row = self._grid.GetGridCursorRow() + 1
         for row in range(current_row, current_row + num_rows):
             # Start at current row, and wrap around
             row_num = row % num_rows
@@ -3045,7 +3081,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         else:
             raise Exception(_('Export can only write CSV or Excel (.xlsx) '
                               'files'))
-        selected = self._grid.GetSelectedRows()
+        selected = self.selected_rows()
         if len(selected) <= 1:
             selected = range(0, self._grid.GetNumberRows())
 
@@ -3075,7 +3111,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         LOG.info('Wrote exported %s to %s', radio_cls.MODEL, filename)
 
     def get_selected_memories(self, or_all=True):
-        rows = self._grid.GetSelectedRows()
+        rows = self.selected_rows()
         if len(rows) <= 1 and or_all:
             rows = list(range(self._grid.GetNumberRows()))
         return [self._memory_cache[r] for r in rows]

@@ -4,6 +4,7 @@ Shared harness for the spreadsheet-like grid: the `memedit` fixture
 gives a ChirpMemEdit loaded with the UV-5R test image.
 """
 
+import builtins
 import os
 import sys
 import tempfile
@@ -438,6 +439,97 @@ def test_row_number_shift_click_selects_whole_rows(memedit):
     memedit._row_click(FakeMouse(grid, 3, False, shift=True))
     assert list(grid.GetSelectedRows()) == [1, 2, 3]
     assert memedit.get_selected_rows_safe() == [1, 2, 3]
+
+
+def test_find_starts_after_clicked_cell(memedit):
+    # TMOOK1-4 are memories 59-62 of the image; a click only moves the
+    # cursor in cell mode, and Find goes on from there
+    memedit._grid.SetGridCursor(60, _col_index(memedit, 'name'))
+    assert memedit.selected_rows() == []
+    assert memedit.cb_find('TMOOK')
+    assert memedit._grid.GetGridCursorRow() == 61
+
+
+def _rectangle_without_last_column(memedit, top, bottom):
+    grid = memedit._grid
+    grid.HideCol(grid.GetNumberCols() - 1)
+    shown = [c for c in range(grid.GetNumberCols()) if grid.IsColShown(c)]
+    assert shown[-1] < grid.GetNumberCols() - 1
+    grid.SelectBlock(top, shown[0], bottom, shown[-1])
+    # wx itself only counts rectangles from column 0 to the last one
+    assert list(grid.GetSelectedRows()) == []
+
+
+def _menu_labels(menu):
+    labels = []
+    for item in menu.GetMenuItems():
+        labels.append(item.GetItemLabelText())
+        if item.GetSubMenu():
+            labels.extend(_menu_labels(item.GetSubMenu()))
+    return labels
+
+
+def test_row_commands_share_whole_row_rule(memedit, monkeypatch, tmp_path):
+    _rectangle_without_last_column(memedit, 59, 61)
+    assert memedit.get_selected_rows_safe() == [59, 60, 61]
+    assert memedit.selected_rows() == [59, 60, 61]
+
+    # Right-click menu (Delete, Sort, Properties...); the app installs
+    # ngettext() as a builtin at startup
+    monkeypatch.setattr(builtins, 'ngettext',
+                        lambda one, many, n: one if n == 1 else many,
+                        raising=False)
+    shown = []
+    monkeypatch.setattr(memedit, 'PopupMenu',
+                        lambda menu: shown.extend(_menu_labels(menu)))
+    memedit._memory_rclick(FakeEvent(60, 2, ''))
+    assert '3 Memories' in shown
+    assert 'Sort 3 memories' in shown
+
+    # Print
+    assert ([m.number for m in memedit.get_selected_memories()] ==
+            [59, 60, 61])
+
+    # Export
+    out = tmp_path / 'out.csv'
+    memedit._export_to_file(str(out))
+    text = out.read_text()
+    assert [n for n in ('TMOOK1', 'TMOOK2', 'TMOOK3', 'TMOOK4')
+            if n in text] == ['TMOOK1', 'TMOOK2', 'TMOOK3']
+
+    # Undo restores the same rows
+    with memedit.undo_context('Nothing') as ctx:
+        pass
+    assert ctx._pre_selection == [59, 60, 61]
+
+
+def test_print_and_export_without_rows_mean_all(memedit, tmp_path):
+    _select(memedit, 59, 61, 'name')
+    assert memedit.selected_rows() == []
+    assert (len(memedit.get_selected_memories()) ==
+            memedit._grid.GetNumberRows())
+    out = tmp_path / 'out.csv'
+    memedit._export_to_file(str(out))
+    assert 'TMOOK4' in out.read_text() and 'VTAC13' in out.read_text()
+
+
+def test_selection_without_selected_blocks(memedit, monkeypatch):
+    # wxPython < 4.1 has no Grid.GetSelectedBlocks()
+    def fail(*a):
+        raise AssertionError('GetSelectedBlocks() used')
+    monkeypatch.setattr(memedit_mod, 'HAS_SELECTED_BLOCKS', False)
+    monkeypatch.setattr(memedit_mod.ChirpMemoryGrid, 'GetSelectedBlocks',
+                        fail, raising=False)
+    grid = memedit._grid
+    grid.SetGridCursor(6, 0)
+    assert memedit.get_selected_rows_safe() == [6]
+    grid.SelectRow(2)
+    assert memedit.get_selected_rows_safe() == [2]
+    assert memedit.selected_rows() == [2]
+    _select(memedit, 3, 4, 'name')
+    assert memedit.get_selected_rows_safe() == [6]
+    assert memedit.selected_cells() == [(3, _col_index(memedit, 'name')),
+                                        (4, _col_index(memedit, 'name'))]
 
 
 def test_column_header_click_does_not_select_column(memedit):
