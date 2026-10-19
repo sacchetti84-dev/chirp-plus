@@ -996,3 +996,208 @@ def test_row_delete_unchanged(memedit):
     memedit._grid.SelectRow(1)
     memedit.cb_delete()
     assert memedit._radio.get_memory(1).empty
+
+
+def test_paste_anchor_is_top_left_of_block(memedit):
+    # Dragged from the bottom-right cell: the cursor stays there, the
+    # table still starts at the top-left cell, as in a spreadsheet
+    grid = memedit._grid
+    grid.ClearSelection()
+    grid.SetGridCursor(4, _col_index(memedit, 'name'))
+    grid.SelectBlock(2, _col_index(memedit, 'freq'),
+                     4, _col_index(memedit, 'name'))
+    memedit.paste_table('145.600000\tP1\n145.625000\tP2\n')
+    mem2, mem3 = (memedit._radio.get_memory(n) for n in (2, 3))
+    assert (mem2.freq, mem2.name) == (145600000, 'P1')
+    assert (mem3.freq, mem3.name) == (145625000, 'P2')
+    assert memedit._radio.get_memory(4).empty
+
+
+# Keyboard, menu and series
+
+def _key(window, code, modifiers=wx.MOD_NONE):
+    """Send a key press to `window`; True if nobody skipped it."""
+    event = wx.KeyEvent(wx.wxEVT_KEY_DOWN)
+    event.SetKeyCode(code)
+    event.SetControlDown(bool(modifiers & wx.MOD_CONTROL))
+    event.SetShiftDown(bool(modifiers & wx.MOD_SHIFT))
+    event.SetEventObject(window)
+    return window.GetEventHandler().ProcessEvent(event)
+
+
+def test_ctrl_d_calls_fill_down(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 6)})
+    _set_tone(memedit, 1, 100.0)
+    _select(memedit, 1, 5, 'rtone')
+    _key(memedit._grid.GetGridWindow(), ord('D'), wx.MOD_CONTROL)
+    assert _tones(memedit, range(1, 6)) == [('Tone', 100.0)] * 5
+    assert memedit._undo_queue[0].name == 'Fill 4 cells'
+
+
+def _edit(memedit, row, name, value):
+    """Open the cell editor at (row, name) and type `value` in it."""
+    grid = memedit._grid
+    col = _col_index(memedit, name)
+    grid.SetGridCursor(row, col)
+    grid.EnableCellEditControl()
+    assert grid.IsCellEditControlShown()
+    editor = grid.GetCellEditor(row, col)
+    editor.GetControl().SetValue(value)
+    editor.DecRef()
+
+
+def test_ctrl_enter_writes_all_selected(memedit):
+    memedit.GetTopLevelParent().Show()
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 5)})
+    _select(memedit, 1, 4, 'name')
+    _edit(memedit, 1, 'name', 'NEW')
+    # While editing, the editor gives Enter to the grid itself
+    _key(memedit._grid, wx.WXK_RETURN, wx.MOD_CONTROL)
+    assert not memedit._grid.IsCellEditControlShown()
+    assert _names(memedit, range(1, 5)) == ['NEW'] * 4
+    assert len(memedit._undo_queue) == 1
+    assert memedit._undo_queue[0].name == 'Fill 4 cells'
+    memedit._undo(None)
+    assert _names(memedit, range(1, 5)) == ['M1', 'M2', 'M3', 'M4']
+
+
+def test_ctrl_enter_in_choice_column(memedit):
+    # The choice editor always reports a change when it closes: the
+    # value it had must not be stored on its own first
+    memedit.GetTopLevelParent().Show()
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 4)})
+    _select(memedit, 1, 3, 'mode')
+    _edit(memedit, 1, 'mode', 'NFM')
+    assert memedit.enter_in_selection()
+    assert [memedit._radio.get_memory(n).mode for n in (1, 2, 3)] == \
+        ['NFM'] * 3
+    assert len(memedit._undo_queue) == 1
+    assert memedit._undo_queue[0].name == 'Fill 3 cells'
+    # Not editing: nothing to write
+    assert not memedit.enter_in_selection()
+
+
+def test_delete_key_clears_cells(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 4)})
+    _select(memedit, 1, 3, 'name')
+    assert _key(memedit._grid.GetGridWindow(), wx.WXK_DELETE)
+    assert _names(memedit, range(1, 4)) == ['', '', '']
+    assert memedit._undo_queue[0].name == 'Clear 3 cells'
+
+
+def test_delete_key_with_rows_unchanged(memedit):
+    _seeded(memedit, {1: 'A'})
+    memedit._grid.SelectRow(1)
+    _key(memedit._grid.GetGridWindow(), wx.WXK_DELETE)
+    assert _names(memedit, [1]) == ['A']
+    assert not memedit._undo_queue
+
+
+def test_series_dialog_values(wx_app):
+    from chirp.wxui import seriesdialog
+    d = seriesdialog.SeriesDialog(None, '431.600', 3)
+    try:
+        d._step.SetValue('0.025')
+        assert d.values == ['431.600', '431.625', '431.650']
+        assert '431.600, 431.625, 431.650' in d._preview.GetLabel()
+        assert d.FindWindow(wx.ID_OK).IsEnabled()
+        d._step.SetValue('abc')
+        assert not d.FindWindow(wx.ID_OK).IsEnabled()
+        d._start.SetValue('CH08')
+        d._step.SetValue('2')
+        assert d.values == ['CH08', 'CH10', 'CH12']
+    finally:
+        d.Destroy()
+
+
+def _menu(memedit, monkeypatch, row, name, click=None):
+    """Right-click (row, name): the menu labels, enabled or not.
+
+    With `click`, that item of the menu is chosen.
+    """
+    items = []
+
+    def popup(menu):
+        for item in menu.GetMenuItems():
+            items.append((item.GetItemLabelText(), item.IsEnabled()))
+            if item.GetItemLabelText() == click:
+                menu.ProcessEvent(wx.CommandEvent(wx.wxEVT_MENU,
+                                                  item.GetId()))
+    monkeypatch.setattr(memedit, 'PopupMenu', popup)
+    monkeypatch.setattr(builtins, 'ngettext',
+                        lambda one, many, n: one if n == 1 else many,
+                        raising=False)
+    memedit._memory_rclick(FakeEvent(row, _col_index(memedit, name), ''))
+    return items
+
+
+CELL_MENU = ['Copy cells', 'Paste', 'Fill down', 'Series...', 'Clear cells']
+
+
+def test_cell_menu_items(memedit, monkeypatch):
+    _cursor(memedit, 1, 'name')
+    _select(memedit, 1, 3, 'name')
+    items = _menu(memedit, monkeypatch, 2, 'name')
+    assert [label for label, enabled in items] == CELL_MENU
+    assert all(enabled for label, enabled in items)
+
+    monkeypatch.setattr(memedit_mod.ChirpMemEdit, 'editable',
+                        property(lambda self: False))
+    items = _menu(memedit, monkeypatch, 2, 'name')
+    assert [label for label, enabled in items if enabled] == ['Copy cells']
+
+    # The cursor alone, or whole rows: the menu of today
+    _cursor(memedit, 2, 'name')
+    assert 'Properties' in [label for label, enabled in
+                            _menu(memedit, monkeypatch, 2, 'name')]
+    memedit._grid.SelectRow(2)
+    assert 'Properties' in [label for label, enabled in
+                            _menu(memedit, monkeypatch, 2, 'name')]
+
+
+def test_cell_menu_commands(memedit, monkeypatch):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 4)})
+    _select(memedit, 1, 3, 'name')
+    _menu(memedit, monkeypatch, 1, 'name', click='Fill down')
+    assert _names(memedit, range(1, 4)) == ['M1'] * 3
+    _menu(memedit, monkeypatch, 1, 'name', click='Clear cells')
+    assert _names(memedit, range(1, 4)) == [''] * 3
+    copied = _clipboard_out(memedit, monkeypatch)
+    _menu(memedit, monkeypatch, 1, 'name', click='Copy cells')
+    assert copied[0].GetText() == '\n\n\n'
+
+
+class FakeSeries:
+    made = []
+
+    def __init__(self, parent, start, count):
+        self.start, self.count = start, count
+        FakeSeries.made.append(self)
+        from chirp import grid_fill
+        self.values = grid_fill.make_series('431.600000', '0.025', count)
+
+    def ShowModal(self):
+        return wx.ID_OK
+
+    def Destroy(self):
+        pass
+
+
+def test_cell_menu_series(memedit, monkeypatch):
+    from chirp.wxui import seriesdialog
+    monkeypatch.setattr(seriesdialog, 'SeriesDialog', FakeSeries)
+    monkeypatch.setattr(FakeSeries, 'made', [])
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 5)})
+    # A block of two columns: the series goes in the cursor column
+    memedit._grid.ClearSelection()
+    memedit._grid.SetGridCursor(1, _col_index(memedit, 'freq'))
+    memedit._grid.SelectBlock(1, _col_index(memedit, 'freq'),
+                              4, _col_index(memedit, 'name'))
+    _menu(memedit, monkeypatch, 1, 'freq', click='Series...')
+    dialog, = FakeSeries.made
+    assert (dialog.start, dialog.count) == ('145.525000', 4)
+    assert ([memedit._radio.get_memory(n).freq for n in range(1, 5)] ==
+            [431600000, 431625000, 431650000, 431675000])
+    assert _names(memedit, range(1, 5)) == ['M1', 'M2', 'M3', 'M4']
+    assert memedit._undo_queue[0].name == 'Series in 4 cells'
+    assert len(memedit._undo_queue) == 1

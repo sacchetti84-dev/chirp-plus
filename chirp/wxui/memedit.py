@@ -44,6 +44,7 @@ from chirp.wxui import config
 from chirp.wxui import common
 from chirp.wxui import developer
 from chirp.wxui import memquery
+from chirp.wxui import seriesdialog
 from chirp.wxui import theme
 
 _ = wx.GetTranslation
@@ -1058,6 +1059,10 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         # though focus lives inside the grid widget rather than on the panel.
         self._grid.GetGridWindow().Bind(wx.EVT_KEY_DOWN,
                                         self._keyboard_overrides)
+        # While a cell is edited, its editor hands Enter to the grid
+        # itself, not to the grid window
+        self._grid.Bind(wx.EVT_KEY_DOWN, self._editor_keys)
+        self._discarding_edit = False
         row_labels = self._grid.GetGridRowLabelWindow()
         row_labels.Bind(wx.EVT_LEFT_DOWN, self._row_click)
         row_labels.Bind(wx.EVT_LEFT_UP, self._row_click)
@@ -1216,8 +1221,63 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             # grid-window binding point here, ensuring the event is caught
             # regardless of which sub-window holds focus.
             self._show_context_menu_at_cursor()
+        elif (event.GetKeyCode() == ord('D') and
+              event.GetModifiers() == wx.MOD_CONTROL):
+            # Ctrl+D fills down, as in spreadsheets
+            self.fill_down()
+        elif (event.GetKeyCode() in (wx.WXK_DELETE, wx.WXK_NUMPAD_DELETE) and
+              event.GetModifiers() == wx.MOD_NONE and self._cells_only()):
+            # Delete empties the selected cells; with rows selected it
+            # does what it always did (deleting memories is Ctrl+Backspace)
+            self.clear_cells()
         else:
             event.Skip()
+
+    def _editor_keys(self, event):
+        """Keys the cell editor passes on to the grid."""
+        if (event.GetKeyCode() in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) and
+                event.GetModifiers() == wx.MOD_CONTROL and
+                self.enter_in_selection()):
+            return
+        event.Skip()
+
+    def enter_in_selection(self):
+        """Write the value being edited in every selected cell (Ctrl+Enter).
+
+        The edit itself is cancelled: its text goes to the cursor cell and
+        the selected ones as one bulk edit. False if no cell is edited.
+        """
+        grid = self._grid
+        if not grid.IsCellEditControlShown():
+            return False
+        row, col = grid.GetGridCursorRow(), grid.GetGridCursorCol()
+        # A new reference: without DecRef() the editor is never freed, and
+        # wx asserts when the grid is destroyed
+        editor = grid.GetCellEditor(row, col)
+        try:
+            text = editor.GetValue()
+            editor.Reset()
+        finally:
+            editor.DecRef()
+        # Some editors report a change even after Reset(): _memory_edited()
+        # must not store the old value on its own
+        self._discarding_edit = True
+        try:
+            grid.DisableCellEditControl()
+        finally:
+            self._discarding_edit = False
+
+        cells = set(self.selected_cells())
+        cells.add((row, col))
+        edits = []
+        for cell_row, cell_col in sorted(cells):
+            mem = self._memory_cache.get(cell_row)
+            if not text and (mem is None or mem.empty):
+                continue
+            edits.append(cellops.CellEdit(cell_row, cell_col, text or None))
+        if edits:
+            self.bulk_edit(_('Fill %i cells') % len(edits), edits)
+        return True
 
     def _show_context_menu_at_cursor(self):
         """Open the right-click context menu at the focused grid cell.
@@ -1234,9 +1294,14 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         # Build a fake event-like object that satisfies _memory_rclick's
         # use of GetRow(), then delegate to the shared menu builder.
 
+        col = self._grid.GetGridCursorCol()
+
         class _FakeGridEvent:
             def GetRow(self_):
                 return row
+
+            def GetCol(self_):
+                return col
         self._memory_rclick(_FakeGridEvent())
 
     def _row_click(self, event):
@@ -2148,6 +2213,11 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         Validates the memory with the radio, then writes the memory to the
         radio and displays an error if needed.
         """
+        if self._discarding_edit:
+            # Ctrl+Enter stores the value itself, in every selected cell
+            event.Veto()
+            return
+
         row = event.GetRow()
         col = event.GetCol()
         val = event.GetString()
@@ -2325,6 +2395,10 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         if event.GetRow() == -1:
             # This is a right-click on a column header
             return
+        if self._cells_only() and event.GetCol() != -1:
+            # The row numbers keep the menu of the memories
+            self._cell_menu()
+            return
         menu = wx.Menu()
         selected_rows = self.selected_rows()
         if not selected_rows:
@@ -2491,6 +2565,50 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
         self.PopupMenu(menu)
         menu.Destroy()
+
+    def _cell_menu(self):
+        """The right-click menu for a selection of cells."""
+        menu = wx.Menu()
+        editable = self.editable
+        for label, command, enabled in (
+                (_('Copy cells'), lambda: self.cb_copy(cut=False), True),
+                (_('Paste'), self.cb_paste, editable),
+                (_('Fill down'), self.fill_down, editable),
+                (_('Series...'), self.fill_series,
+                 editable and len(self._series_cells()) > 1),
+                (_('Clear cells'), self.clear_cells, editable)):
+            item = menu.Append(wx.ID_ANY, label)
+            # Bound to the menu, so the handlers go away with it
+            menu.Bind(wx.EVT_MENU,
+                      lambda event, command=command: command(), item)
+            item.Enable(enabled)
+        self.PopupMenu(menu)
+        menu.Destroy()
+
+    def _series_cells(self):
+        """The selected cells of the cursor column, top to bottom."""
+        col = self._grid.GetGridCursorCol()
+        return [(row, c) for row, c in self.selected_cells() if c == col]
+
+    def fill_series(self):
+        """Ask for a series and write it in the cells of _series_cells().
+
+        Returns the BulkResult, or None if nothing was written.
+        """
+        cells = self._series_cells()
+        if len(cells) < 2 or not self.editable:
+            return None
+        start = self._grid.GetCellValue(*cells[0])
+        d = seriesdialog.SeriesDialog(self, start, len(cells))
+        try:
+            if d.ShowModal() != wx.ID_OK:
+                return None
+            values = d.values
+        finally:
+            d.Destroy()
+        edits = [cellops.CellEdit(row, col, value)
+                 for (row, col), value in zip(cells, values)]
+        return self.bulk_edit(_('Series in %i cells') % len(edits), edits)
 
     @common.error_proof()
     def _mem_properties(self, rows, event):
@@ -3061,7 +3179,8 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
     def paste_table(self, text):
         """Paste a table of text, as copied from a spreadsheet, in cells.
 
-        The table starts at the cursor cell and goes on in the visible
+        The table starts at the top-left selected cell (at the cursor if
+        no cell is selected), as in spreadsheets, and goes on in the visible
         rows and columns; a header row is skipped. A single value goes to
         every selected cell. Returns the BulkResult, or None if there is
         nothing to paste or the user does not want to overwrite cells.
@@ -3111,17 +3230,23 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                            col_def.label.replace('\n', ' ')))
         return grid_fill.is_header_row(matrix[0], labels)
 
+    def _paste_anchor(self):
+        """Top-left selected cell, or the cursor if none is selected."""
+        cells = self.selected_cells()
+        if cells:
+            return cells[0][0], min(col for row, col in cells)
+        return self._grid.GetGridCursorRow(), self._grid.GetGridCursorCol()
+
     def _table_targets(self, matrix):
-        """Cells for a pasted table from the cursor on, and how many
+        """Cells for a pasted table from the anchor on, and how many
         values do not fit. Hidden columns are skipped, as copies do."""
         shown = self._shown_cols()
-        first = [i for i, col in enumerate(shown)
-                 if col >= self._grid.GetGridCursorCol()]
+        anchor_row, anchor_col = self._paste_anchor()
+        first = [i for i, col in enumerate(shown) if col >= anchor_col]
         if not first:
             return [], sum(1 for values in matrix for v in values if v)
         cells, dropped = grid_fill.target_cells(
-            self._grid.GetGridCursorRow(), first[0], matrix,
-            self.visible_rows(), len(shown))
+            anchor_row, first[0], matrix, self.visible_rows(), len(shown))
         return [(row, shown[i], value) for row, i, value in cells], dropped
 
     def _confirm_overwrite(self, targets):
