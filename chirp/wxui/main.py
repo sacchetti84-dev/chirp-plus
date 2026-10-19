@@ -2718,8 +2718,9 @@ GNU General Public License for more details."""
 def display_update_notice(version):
     LOG.info('Server reports %s is latest' % version)
 
-    # Builds of this fork are tagged like next-20261016-plus
-    if version == CHIRP_VERSION.removesuffix('-plus'):
+    # Builds of this fork are tagged like next-20261016-plus or
+    # next-20261016-plus.2: the official build they start from is current
+    if version == CHIRP_VERSION.split('-plus')[0]:
         return
 
     if CONF.get_bool("skip_update_check", "state"):
