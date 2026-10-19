@@ -162,14 +162,15 @@ def build(version, onefile):
     return distpath, workpath
 
 
-# Written by chirp-plus.spec (tools/third_party.py) into the workpath
+# Written by chirp-plus.spec (tools/third_party.py) into its own workpath,
+# which PyInstaller names after the spec
 LEGAL = ('THIRD-PARTY-NOTICES.txt', 'CHIRP-Plus-librerie-sorgente.zip')
 
 
 def copy_legal(workpath, target):
     """Put the license files next to the program"""
     for name in LEGAL:
-        shutil.copy2(os.path.join(workpath, name), target)
+        shutil.copy2(os.path.join(workpath, 'chirp-plus', name), target)
     shutil.copy2(os.path.join(ROOT, 'COPYING'), target)
 
 
