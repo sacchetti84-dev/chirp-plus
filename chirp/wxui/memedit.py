@@ -36,6 +36,7 @@ from chirp import errors
 from chirp import import_logic
 from chirp import settings
 from chirp.wxui import accessibility
+from chirp.wxui import cellops
 from chirp.wxui import config
 from chirp.wxui import common
 from chirp.wxui import developer
@@ -1975,32 +1976,45 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         # If we are filtered we need to re-filter after the above refresh
         wx.CallAfter(self._do_filter_query)
 
-    @common.error_proof()
-    def _memory_edited(self, event):
-        """
-        Called when the memory row in the UI is edited.
+    def memory_for_row(self, row):
+        """A copy of the memory shown in `row`; KeyError if not loaded."""
+        return self._memory_cache[row].dupe()
 
-        Responsible for updating our copy of the memory with changes from the
-        grid, defaults where appropriate, and extra values when required.
-        Validates the memory with the radio, then writes the memory to the
-        radio and displays an error if needed.
-        """
-        row = event.GetRow()
-        col = event.GetCol()
-        val = event.GetString()
+    def column(self, col):
+        return self._col_defs[col]
 
-        col_def = self._col_defs[col]
+    def validate(self, mem):
+        """Ask the radio about `mem`, returning (warnings, errors)."""
+        return chirp_common.split_validation_msgs(
+            self._radio.validate_memory(chirp_common.FrozenMemory(mem)))
 
+    def _digest_power(self, mem, col_def, text):
+        """Set a fixed power level from its label or from watts."""
+        levels = self._features.valid_power_levels
+        for level in levels:
+            if str(level) == text:
+                mem.power = level
+                return
         try:
-            mem = self._memory_cache[row].dupe()
-        except KeyError:
-            # This means we never loaded this memory from the radio in the
-            # first place, likely due to some error.
-            wx.MessageBox(_('Unable to edit memory before radio is loaded'))
-            event.Veto()
-            return
+            watts = chirp_common.dBm_to_watts(
+                float(chirp_common.parse_power(text.replace(',', '.'))))
+        except ValueError:
+            raise cellops.CellRejected(
+                _('Invalid value for %s: %r') % (col_def.name, text))
+        mem.power = import_logic.find_closest_power(watts, levels)
 
-        orig_mem = mem.dupe()
+    def apply_cell_value(self, mem, col_def, text, interactive=True):
+        """Apply `text` typed in the `col_def` cell to `mem` and return it.
+
+        Band defaults and the fields that go with the edited one are set
+        here too. With `interactive` the user is asked for what is
+        missing (offset, tones, cross mode) and a cancelled prompt raises
+        CellRejected with an empty message; without it nothing is ever
+        asked, and an edit that would need a question is rejected.
+        The result is not validated.
+        """
+        val = text
+        old_duplex = mem.duplex
 
         # Filter the name according to the radio's rules before we try to
         # validate it
@@ -2022,26 +2036,39 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
         # This is where the column definition actually applies the edit they
         # made to the memory.
-        col_def.digest_value(mem, val)
+        try:
+            if (col_def.name == 'power' and
+                    not isinstance(col_def, ChirpVariablePowerColumn)):
+                self._digest_power(mem, col_def, val)
+            else:
+                col_def.digest_value(mem, val)
+        except (ValueError, errors.InvalidValueError) as e:
+            if interactive:
+                raise
+            raise cellops.CellRejected(str(e))
 
         # If they edited the frequency, we assume that they are likely going
         # to want band defaults applied (duplex, offset, etc).
         if col_def.name == 'freq':
             self._set_memory_defaults(mem)
 
+        needs_choice = _('Needs a choice the bulk edit cannot make')
+
         # If they edited cross mode, they definitely want a tone mode of
         # 'Cross'. For radios that do not store all the tone/code values
         # all the time, we need to set certain tones or codes at the same
         # time as this selection was made.
         if col_def.name == 'cross_mode':
+            if not interactive:
+                raise cellops.CellRejected(needs_choice)
             mem.tmode = 'Cross'
             if not self._resolve_cross_mode(mem):
-                event.Veto()
-                return
+                raise cellops.CellRejected('')
         elif col_def.name == 'tmode' and val == 'Cross':
+            if not interactive:
+                raise cellops.CellRejected(needs_choice)
             if not self._resolve_tmode_cross(mem):
-                event.Veto()
-                return
+                raise cellops.CellRejected('')
 
         # If they edited one of the tone values and tmode is not Cross,
         # select the right thing for them. Note that we could get fancy
@@ -2059,20 +2086,66 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         # we need to prompt for the offset so it is set in the same operation.
         # For split mode, we should always prompt, because trying to set a
         # TX frequency of 600 kHz is likely to fail on most radios.
+        # Without prompts, a +/- memory that had no offset in use gets the
+        # band one (a later offset cell of the same edit overrides it).
         if col_def.name == 'duplex' and val != '':
-            if not self._resolve_duplex(mem):
-                event.Veto()
-                return
+            if interactive:
+                if not self._resolve_duplex(mem):
+                    raise cellops.CellRejected('')
+            elif val in ('+', '-') and (old_duplex not in ('+', '-') or
+                                        not mem.offset):
+                self._set_memory_defaults(mem, 'offset')
 
         if col_def.name == 'offset' and mem.duplex in ('', 'off'):
-            if not self._resolve_offset(mem):
-                event.Veto()
-                return
+            if interactive:
+                if not self._resolve_offset(mem):
+                    raise cellops.CellRejected('')
+            else:
+                self._set_memory_defaults(mem, 'duplex')
+                if mem.duplex == '':
+                    raise cellops.CellRejected(needs_choice)
+
+        return mem
+
+    @common.error_proof()
+    def _memory_edited(self, event):
+        """
+        Called when the memory row in the UI is edited.
+
+        Responsible for updating our copy of the memory with changes from the
+        grid, defaults where appropriate, and extra values when required.
+        Validates the memory with the radio, then writes the memory to the
+        radio and displays an error if needed.
+        """
+        row = event.GetRow()
+        col = event.GetCol()
+        val = event.GetString()
+
+        col_def = self._col_defs[col]
+
+        try:
+            mem = self.memory_for_row(row)
+        except KeyError:
+            # This means we never loaded this memory from the radio in the
+            # first place, likely due to some error.
+            wx.MessageBox(_('Unable to edit memory before radio is loaded'))
+            event.Veto()
+            return
+
+        orig_mem = mem.dupe()
+
+        try:
+            mem = self.apply_cell_value(mem, col_def, val)
+        except cellops.CellRejected as e:
+            # An empty message means the user cancelled a prompt
+            if str(e):
+                wx.MessageBox(_('Invalid edit: %s') % e, _('Invalid Entry'))
+            event.Veto()
+            return
 
         # Try to validate these changes with the radio before we go to store
         # them, as now is the best time to present an error to the user.
-        warnings, errors = chirp_common.split_validation_msgs(
-            self._radio.validate_memory(chirp_common.FrozenMemory(mem)))
+        warnings, errors = self.validate(mem)
         if errors:
             LOG.warning('Memory failed validation: %r', mem)
             wx.MessageBox(_('Invalid edit: %s') % '; '.join(errors),
