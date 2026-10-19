@@ -65,8 +65,23 @@ funzioni dell'originale, più queste modifiche.
 - **Controllo frequenze** (Radio > Controlla frequenze…, regole italiane):
   bande solo ricezione, licenza necessaria, potenza oltre i limiti LPD
   (10 mW) e PMR446 (0,5 W).
-- **Lista italiana** "IT Chiamata e simplex radioamatori" tra le
-  configurazioni predefinite (la lista europea LPD/PMR c'era già).
+- **Preset radioamatori italiani** tra le configurazioni predefinite
+  (File > Apri la configurazione predefinita; la lista europea LPD/PMR
+  c'era già):
+  - "IT Chiamata e simplex radioamatori": chiamata 145.500/433.500,
+    simplex 2 m e 70 cm, APRS, voce ISS;
+  - "IT Ponti ripetitori 2 m": R0-R7 e canali "alfa" (RV48-RV63), −600 kHz;
+  - "IT Ponti ripetitori 70 cm": RU0-RU15 (uscita 431.600-431.975), −1,6 MHz;
+  - "IT Satelliti FM radioamatori": SO-50 (con canale per armare il timer),
+    ISS, AO-123, PO-101, AO-91, in split con CTCSS e tre passi di Doppler
+    (A inizio, C centro, F fine passaggio);
+  - "IT Radioamatori tutto in uno": tutte le liste insieme, 72 canali che
+    stanno nelle 128 memorie di una Baofeng.
+
+  Le liste generate vengono da `tools/make_ham_presets.py`: per aggiornare i
+  satelliti (la tabella AMSAT cambia) si modifica lo script e lo si rilancia.
+  Il tono di accesso dei ponti (1750 Hz o CTCSS) dipende dal singolo ponte e
+  non è impostato.
 - **Scheda canali tascabile** (File > Scheda canali tascabile…): anteprima di
   stampa A4 su due colonne.
 - **Mappa della memoria** (Radio > Mappa della memoria…): dump esadecimale
