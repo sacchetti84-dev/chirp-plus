@@ -19,6 +19,8 @@ Pure Python, no wx: series that continue a few cells, tables pasted from
 a spreadsheet and the cells they land on.
 """
 
+import csv
+import io
 import math
 import re
 
@@ -133,3 +135,47 @@ def make_series(start, step, count):
         if series is not None:
             return series
     return [start] * count
+
+
+def parse_table(text):
+    """Split tab-separated text, as copied from a spreadsheet, into rows.
+
+    Cells quoted by the spreadsheet (those holding tabs or line breaks)
+    are unquoted.
+    """
+    return list(csv.reader(io.StringIO(text, newline=''), delimiter='\t'))
+
+
+def is_header_row(row, labels):
+    """True if every filled cell of `row` is one of the column labels."""
+    wanted = {label.strip().casefold() for label in labels}
+    cells = [cell.strip().casefold() for cell in row if cell.strip()]
+    return bool(cells) and all(cell in wanted for cell in cells)
+
+
+def target_cells(anchor_row, anchor_col, matrix, visible_rows, ncols):
+    """Place a pasted matrix on the grid, starting at the anchor cell.
+
+    Each matrix row goes to the next visible row from `anchor_row` on, so
+    hidden rows are skipped. Returns the (row, column, text) cells to
+    write and how many values fall outside the grid. Empty values are
+    left out and not counted.
+    """
+    rows = [r for r in visible_rows if r >= anchor_row]
+    cells = []
+    dropped = 0
+    for i, values in enumerate(matrix):
+        for j, text in enumerate(values):
+            if not text:
+                continue
+            col = anchor_col + j
+            if i >= len(rows) or col >= ncols:
+                dropped += 1
+            else:
+                cells.append((rows[i], col, text))
+    return cells, dropped
+
+
+def spread(value, cells):
+    """Give the same value to every (row, column) cell."""
+    return [(row, col, value) for row, col in cells]
