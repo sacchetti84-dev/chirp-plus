@@ -19,6 +19,7 @@ import platform
 import re
 import textwrap
 import threading
+import time
 import webbrowser
 
 import serial
@@ -30,8 +31,12 @@ from chirp import chirp_common
 from chirp import directory
 from chirp.drivers import fake
 from chirp import errors
+from chirp import radio_compare
+from chirp import radio_detect
 from chirp.wxui import config
 from chirp.wxui import common
+from chirp.wxui import changes as changes_dialog
+from chirp.wxui import console
 from chirp.wxui import developer
 from chirp.wxui import portdetect
 from chirp.wxui import serialtrace
@@ -45,6 +50,14 @@ CUSTOM = _('Custom...')
 ID_RECENT = wx.NewId()
 ID_REFRESH_PORTS = wx.NewId()
 ID_SEARCH_MODEL = wx.NewId()
+ID_DETECT = wx.NewId()
+
+# After answering the handshake a Baofeng stays in program mode for only
+# 2-3 seconds of silence (measured on a UV-9R). A detected session is reused
+# only when the download can start right away; otherwise we wait for the
+# radio to be back at rest and let the driver do its own handshake.
+DETECT_REUSE_SECONDS = 1.5
+DETECT_IDLE_SECONDS = 3.5
 
 PORT_COLORS = {
     'good': wx.Colour(0x1B, 0x7F, 0x2A),
@@ -471,6 +484,8 @@ class ChirpCloneDialog(wx.Dialog):
         hbox.Add(self._vendor, proportion=1, border=10, flag=wx.RIGHT)
         hbox.Add(self._recent, border=5, flag=wx.RIGHT)
         hbox.Add(self._search_model)
+        self._vendor_panel = panel
+        self._vendor_hbox = hbox
         _add_grid(_('Vendor'), panel)
 
         self._model_choices = []
@@ -486,9 +501,9 @@ class ChirpCloneDialog(wx.Dialog):
         self._header = None
         if theme.enabled():
             self._header = wx.StaticText(self, label='')
-            self._header.SetFont(theme.stencil_font(20))
+            self._header.SetFont(theme.heading_font(13))
             self._header.SetForegroundColour(theme.colour('accent'))
-            self._header._nvg_keep_fg = self._header._nvg_keep_font = True
+            theme.keep(self._header, fg=True, font=True)
             vbox.Add(self._header, border=15, flag=wx.LEFT | wx.TOP)
             self.set_title(self.GetTitle())
         intro = wx.StaticText(self, label=_(
@@ -500,6 +515,10 @@ class ChirpCloneDialog(wx.Dialog):
         vbox.Add(grid, proportion=1,
                  flag=wx.TOP | wx.BOTTOM | wx.EXPAND,
                  border=15)
+        # Subclasses add their options (check boxes) here
+        self._options = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self._options, border=15,
+                 flag=wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND)
         self.model_msg = wx.StaticText(
             self,
             label='',
@@ -553,28 +572,33 @@ class ChirpCloneDialog(wx.Dialog):
         self._monitor = portdetect.get_monitor()
         self._monitor.add_listener(self._ports_changed_bg)
         self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
-        for btn, name in ((self._refresh, 'refresh'),
-                          (self._recent, 'history'),
-                          (self._search_model, 'search'),
-                          (self.FindWindowById(wx.ID_CANCEL), 'x')):
+        for btn, name, tone in ((self._refresh, 'refresh', 'info'),
+                                (self._recent, 'history', 'info'),
+                                (self._search_model, 'search', 'info'),
+                                (self.FindWindowById(wx.ID_CANCEL), 'x',
+                                 'dim')):
             if btn:
-                btn.SetBitmap(theme.icon(name, 16, 'accent'))
+                btn.SetBitmap(theme.icon(name, 16, tone))
         if theme.enabled():
             theme.style_dialog(self)
             # The monospace font changes control sizes
             self.Fit()
 
-    def _set_action(self, label, icon):
-        """Label and icon of the button that starts the clone"""
+    def _set_action(self, label, icon, tone):
+        """Label, icon and color (rx/tx) of the button that starts the
+        clone"""
         btn = self.FindWindowById(wx.ID_OK)
         btn.SetLabel(label)
-        btn.SetBitmap(theme.icon(icon, 16, 'accent'))
+        btn.SetBitmap(theme.icon(icon, 16, tone))
+        if theme.enabled():
+            btn.SetForegroundColour(theme.colour(tone))
+            theme.keep(btn, fg=True)
         self.Fit()
 
     def set_title(self, title):
         self.SetTitle(title)
         if self._header is not None:
-            self._header.SetLabel('■ ' + title.upper())
+            self._header.SetLabel(theme.prompt(title.lower()))
             self.Layout()
 
     def _destroyed(self, event):
@@ -674,13 +698,13 @@ class ChirpCloneDialog(wx.Dialog):
         icon = {'good': 'circle-check',
                 'warn': 'alert-triangle',
                 'bad': 'circle-x'}.get(level, 'info-circle')
-        tone = {'good': 'accent', 'warn': 'warn',
-                'bad': 'bad'}.get(level, 'fg')
+        tone = {'good': 'ok', 'warn': 'warn',
+                'bad': 'bad'}.get(level, 'info')
         self._port_icon.SetBitmap(theme.icon(icon, 18, tone))
         if theme.enabled():
             self._port_status.SetForegroundColour(theme.colour(tone))
-            self._port_status._nvg_keep_fg = True
-            text = text.upper()
+            theme.keep(self._port_status, fg=True)
+            text = '%s %s' % (theme.TAGS[tone], text.lower())
         else:
             self._port_status.SetForegroundColour(
                 PORT_COLORS.get(level, wx.SystemSettings.GetColour(
@@ -990,6 +1014,9 @@ class ChirpCloneDialog(wx.Dialog):
         wx.CallAfter(self.EndModal, wx.ID_OK)
 
     def fail(self, error):
+        console.log('bad', '%s: %s' % (_('Error communicating with radio'),
+                                       error))
+
         def safe_fail():
             common.error_proof.show_error(
                 error, parent=self,
@@ -1040,9 +1067,22 @@ class ChirpCloneDialog(wx.Dialog):
 
 class ChirpDownloadDialog(ChirpCloneDialog):
     def __init__(self, *a, **k):
+        detect = k.pop('detect', False)
         super().__init__(*a, **k)
         self.set_title(_('Download from radio'))
-        self._set_action(_('Download'), 'download')
+        self._detect_cancel = False
+        self._detect = wx.Button(self._vendor_panel, ID_DETECT,
+                                 label=_('Detect'))
+        self._detect.SetToolTip(_('Ask the radio on the cable which model '
+                                  'it is (read only)'))
+        self._detect.SetBitmap(theme.icon('search', 16, 'rx'))
+        if theme.enabled():
+            theme.apply(self._detect)
+            self._detect.SetForegroundColour(theme.colour('rx'))
+        self._vendor_hbox.Insert(1, self._detect, border=5, flag=wx.RIGHT)
+        self._set_action(_('Download'), 'download', 'rx')
+        if detect:
+            wx.CallAfter(self._start_detect)
         if (CONF.get_bool('always_start_recent', 'state') and
                 CONF.get('recent_models', 'state')):
             self._do_recent()
@@ -1073,10 +1113,144 @@ class ChirpDownloadDialog(ChirpCloneDialog):
                          rclass)
                 self.FindWindowById(wx.ID_OK).Enable()
 
+    def disable_model_select(self):
+        super().disable_model_select()
+        if hasattr(self, '_detect'):
+            self._detect.Disable()
+
+    def enable_model_select(self):
+        super().enable_model_select()
+        if hasattr(self, '_detect'):
+            self._detect.Enable()
+
+    def _start_detect(self):
+        if self._running:
+            return
+        port = self.get_selected_port()
+        if not port or port.startswith('Fake') or '://' in port:
+            self.fail(_('Choose the serial port of the cable first'))
+            return
+        try:
+            preferred = self.get_selected_rclass()
+        except Exception:
+            preferred = None
+        if preferred is not None and not radio_detect._magics(preferred):
+            preferred = None
+        probes = radio_detect.build_probes(preferred=preferred)
+        self._detect_preferred = preferred
+        settings = preferred or probes[0].classes[0]
+        self.disable_model_select()
+        self.disable_running()
+        self._detect_cancel = False
+        console.log('rx', _('Looking for a radio on %s') % port)
+        try:
+            pipe = open_serial(port, settings)
+        except Exception as e:
+            self.fail(str(e))
+            return
+        threading.Thread(target=self._detect_thread, args=(pipe, probes),
+                         daemon=True).start()
+
+    def _detect_thread(self, pipe, probes):
+        def progress(i, total, probe):
+            wx.CallAfter(self._detect_progress, i, total, probe)
+        result = radio_detect.identify(
+            pipe, probes, status=progress,
+            cancelled=lambda: self._detect_cancel)
+        wx.CallAfter(self._detected, pipe, result, time.monotonic())
+
+    def _detect_progress(self, i, total, probe):
+        if not self:
+            return
+        s = chirp_common.Status()
+        s.cur, s.max = i, total
+        s.msg = _('Trying %(model)s (%(i)i/%(n)i)') % {
+            'model': radio_detect.model_name(probe.classes[0]),
+            'i': i + 1, 'n': total}
+        self._status(s)
+
+    def _detected(self, pipe, result, answered_at):
+        if not self or self._detect_cancel:
+            pipe.close()
+            return
+        if result is None:
+            pipe.close()
+            msg = _('No radio answered. Check that it is on, the cable is '
+                    'fully inserted and the volume is up, then retry.')
+            console.log('warn', msg)
+            self.cancel_action()
+            self.status_msg.SetLabel(msg)
+            return
+        console.log('rx', _('Radio answered: %(ident)s, compatible with '
+                            '%(models)s') % {
+                                'ident': result.ident.hex(' '),
+                                'models': result.probe.label})
+        preferred = getattr(self, '_detect_preferred', None)
+        if preferred in result.classes:
+            # The model already chosen is compatible: no question to ask,
+            # so the download can reuse this session right away.
+            rclass = preferred
+        else:
+            # Asking takes longer than the radio waits in program mode
+            pipe.close()
+            pipe = None
+            rclass = self._choose_detected(result.classes)
+            if rclass is None:
+                self.cancel_action()
+                return
+        try:
+            self.select_vendor_model(rclass.VENDOR, model_value(rclass))
+        except ValueError:
+            LOG.warning('Detected %s is not selectable', rclass)
+        self._selected_model(None)
+        if not self.FindWindowById(wx.ID_OK).IsEnabled():
+            # Experimental driver risk not accepted
+            if pipe:
+                pipe.close()
+            self.cancel_action()
+            return
+        self._persist_choices()
+        rclass = self.get_selected_rclass()
+        elapsed = time.monotonic() - answered_at
+        if pipe and elapsed < DETECT_REUSE_SECONDS:
+            self._begin_download(rclass, pipe, ident=result.ident)
+            return
+        if pipe:
+            pipe.close()
+        # Let the radio go back to rest, then a normal download with the
+        # driver's own handshake.
+        wait = max(0, DETECT_IDLE_SECONDS - elapsed)
+        self.status_msg.SetLabel(_('Waiting for the radio to be ready...'))
+        wx.CallLater(int(wait * 1000), self._begin_download, rclass)
+
+    def _choose_detected(self, classes):
+        if len(classes) == 1:
+            return classes[0]
+        names = [radio_detect.model_name(c) for c in classes]
+        last = '%s %s' % (CONF.get('last_vendor', 'state'),
+                          CONF.get('last_model', 'state'))
+        d = wx.SingleChoiceDialog(
+            self,
+            _('These models use the same protocol and memory layout. '
+              'Choose the one written on your radio:'),
+            _('Radio detected'), names)
+        theme.style_dialog(d)
+        if last in names:
+            d.SetSelection(names.index(last))
+        try:
+            if d.ShowModal() != wx.ID_OK:
+                return None
+            return classes[d.GetSelection()]
+        finally:
+            d.Destroy()
+
     def _actual_action(self, event):
         id = event.GetEventObject().GetId()
         if id == ID_RECENT:
             self._do_recent()
+            return
+        elif id == ID_DETECT:
+            self._start_detect()
             return
 
         self._persist_choices()
@@ -1105,8 +1279,33 @@ class ChirpDownloadDialog(ChirpCloneDialog):
                 self.cancel_action()
                 return
 
-        serial = open_serial(port, rclass)
+        self._begin_download(rclass)
 
+    def _begin_download(self, rclass, serial=None, ident=None):
+        """Open the radio and start the clone thread.
+
+        With @serial and @ident (from a detection a few seconds ago) the
+        radio is still in program mode, so its handshake is not repeated.
+        """
+        if not self:
+            if serial:
+                serial.close()
+            return
+        self.disable_model_select()
+        self.disable_running()
+        if serial is None:
+            try:
+                serial = open_serial(self.get_selected_port(), rclass)
+            except Exception as e:
+                self.fail(str(e))
+                return
+        if ident is None:
+            rclass = self._detect_from_serial(rclass, serial)
+            if rclass is None:
+                return
+        self._start_clone(rclass, serial, ident)
+
+    def _detect_from_serial(self, rclass, serial):
         # See if the driver detects we should be using a different radio class
         # to communicate with this model
         try:
@@ -1117,12 +1316,14 @@ class ChirpDownloadDialog(ChirpCloneDialog):
         except errors.RadioError as e:
             LOG.error('Radio serial detection failed: %s', e)
             self.fail(str(e))
-            return
+            return None
         except Exception as e:
             LOG.exception('Exception during detection: %s', e)
             self.fail(_('Internal driver error'))
-            return
+            return None
+        return rclass
 
+    def _start_clone(self, rclass, serial, ident=None):
         self.model_msg.SetLabel('%s %s %s' % (
             rclass.VENDOR, rclass.MODEL, rclass.VARIANT))
 
@@ -1148,7 +1349,16 @@ class ChirpDownloadDialog(ChirpCloneDialog):
         self._radio.status_fn = self._status
 
         self._clone_thread = CloneThread(self._radio, self, 'sync_in')
+        if ident is not None:
+            radio = self._radio
+            self._clone_thread._fn = (
+                lambda: radio_detect.sync_in_after_identify(radio, ident))
         self._clone_thread.start()
+
+    def _action(self, event):
+        if event.GetEventObject().GetId() == wx.ID_CANCEL:
+            self._detect_cancel = True
+        super()._action(event)
 
     def _persist_choices(self):
         # On download, persist the selections from the actual UI boxes
@@ -1175,19 +1385,145 @@ class ChirpUploadDialog(ChirpCloneDialog):
         super(ChirpUploadDialog, self).__init__(*a, allow_detected_models=True,
                                                 **k)
         self.set_title(_('Upload to radio'))
-        self._set_action(_('Upload'), 'upload')
+        self._set_action(_('Upload'), 'upload', 'tx')
         self._radio = radio
+        self.verified = None
 
         self.select_vendor_model(self._radio.VENDOR, model_value(self._radio))
         self.disable_model_select()
 
+        self._precheck = self._verify = None
+        if isinstance(self._radio, chirp_common.CloneModeRadio):
+            self._precheck = wx.CheckBox(
+                self, label=_('Compare with the radio before uploading'))
+            self._precheck.SetValue(
+                CONF.get_bool('upload_precheck', 'prefs', True))
+            self._verify = wx.CheckBox(
+                self, label=_('Read back and verify after uploading'))
+            self._verify.SetValue(
+                CONF.get_bool('upload_verify', 'prefs', True))
+            for box in (self._precheck, self._verify):
+                self._options.Add(box, border=3, flag=wx.TOP)
+                if theme.enabled():
+                    theme.apply(box)
+                    box.SetForegroundColour(theme.colour('rx'))
+                    theme.keep(box, fg=True)
+            self.Fit()
+
         if isinstance(self._radio, chirp_common.LiveRadio):
             self._radio = common.LiveAdapter(self._radio)
+
+    def _option(self, box, key):
+        if box is None:
+            return False
+        CONF.set_bool(key, box.GetValue(), 'prefs')
+        return box.GetValue()
 
     def _actual_action(self, event):
         self._persist_choices()
         self.disable_running()
         port = self.get_selected_port()
+        self._do_verify = self._option(self._verify, 'upload_verify')
+        if self._option(self._precheck, 'upload_precheck'):
+            self._start_precheck(port)
+            return
+        self._upload(port)
+
+    def _read_radio(self, port, done):
+        """Download the radio into a scratch copy of the driver (thread)"""
+        rclass = type(self._radio)
+
+        def run():
+            pipe = None
+            try:
+                pipe = open_serial(port, rclass)
+                copy = rclass(pipe)
+                copy.status_fn = self._status
+                copy.sync_in()
+                result = copy
+            except Exception as e:
+                LOG.exception('Reading the radio failed: %s', e)
+                result = e
+            finally:
+                if pipe:
+                    try:
+                        pipe.close()
+                    except Exception:
+                        pass
+            wx.CallAfter(done, result, time.monotonic())
+        threading.Thread(target=run, daemon=True).start()
+
+    def _start_precheck(self, port):
+        console.log('rx', _('Reading the radio to compare it with %s') %
+                    model_value(self._radio))
+        self._read_radio(port, lambda r, t: self._precheck_done(port, r, t))
+
+    def _precheck_done(self, port, result, finished_at):
+        if not self:
+            return
+        if isinstance(result, Exception):
+            self.fail(result)
+            return
+        found = radio_compare.diff_radios(result, self._radio)
+        counts = radio_compare.summary(found)
+        console.log('warn' if found else 'ok',
+                    _('Compared with the radio: %(memories)i channels and '
+                      '%(settings)i settings differ') % {
+                          'memories': counts['memory'],
+                          'settings': counts['setting']})
+        with changes_dialog.ChangesDialog(
+                self, found, _('Changes in the radio'), _('Upload')) as d:
+            if d.ShowModal() != wx.ID_OK:
+                self.cancel_action()
+                return
+        # The radio must be back at rest before the upload handshake
+        wait = max(0, DETECT_IDLE_SECONDS - (time.monotonic() - finished_at))
+        wx.CallLater(int(wait * 1000), self._upload, port)
+
+    def complete(self):
+        self._radio.pipe.close()
+        if not getattr(self, '_do_verify', False):
+            wx.CallAfter(self.EndModal, wx.ID_OK)
+            return
+        console.log('tx', _('Upload finished, reading it back to verify'))
+
+        def readback():
+            # Give the radio time to leave program mode first
+            wx.CallLater(int(DETECT_IDLE_SECONDS * 1000), self._read_radio,
+                         self.get_selected_port(), self._verified_cb)
+        wx.CallAfter(readback)
+
+    def _verified_cb(self, result, finished_at):
+        if not self:
+            return
+        if isinstance(result, Exception):
+            self.verified = False
+            console.log('bad', _('Verify failed: could not read the radio '
+                                 'back (%s)') % result)
+            wx.MessageBox(_('The upload finished, but reading the radio back '
+                            'failed: %s') % result,
+                          _('Verify'), wx.ICON_WARNING, parent=self)
+            self.EndModal(wx.ID_OK)
+            return
+        method, problems = radio_compare.verify_upload(self._radio, result)
+        self.verified = not problems
+        if problems:
+            console.log('bad', _('Verify FAILED: %i differences between the '
+                                 'image and the radio') % len(problems))
+            wx.MessageBox(_('The radio does not hold what was uploaded '
+                            '(%i differences). Try the upload again.') %
+                          len(problems), _('Verify'), wx.ICON_ERROR,
+                          parent=self)
+        else:
+            console.log('ok', _('Verify OK: the radio holds the uploaded '
+                                'image (%s)') % (
+                                    _('byte by byte') if method == 'bytes'
+                                    else _('channel by channel')))
+        self.EndModal(wx.ID_OK)
+
+    def _upload(self, port):
+        if not self:
+            return
 
         prompts = self._radio.get_prompts()
         if prompts.info:

@@ -13,10 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Night vision ("NVG") theme: black background, phosphor green text.
+"""Terminal look: black background, monospace text and semantic colors.
 
-Everything here is a no-op when the theme is disabled, so callers can
-apply it unconditionally.
+Colors mean the same thing everywhere (see TONES and PIANO-TERMINALE.md):
+green ok, yellow warning, red error, cyan info, blue reads from the radio,
+orange writes to the radio, white files, magenta tones and codes.
+
+Everything here is a no-op with the classic look, so callers can apply it
+unconditionally.
 """
 
 import logging
@@ -28,32 +32,128 @@ from chirp.wxui import config
 
 LOG = logging.getLogger(__name__)
 CONF = config.get()
+_ = wx.GetTranslation
+
+STYLE_TERMINAL = 'terminal'
+STYLE_CLASSIC = 'classic'
 
 PALETTE = {
-    'bg': '#0B110B',        # window background
-    'panel': '#0F1A0F',     # raised surfaces (toolbar, dialogs)
-    'field': '#0D1A0D',     # editable fields, grid cells
-    'alt': '#0D170D',       # alternate surface
-    'fg': '#7CFF6B',        # phosphor text
-    'dim': '#3E8C36',       # secondary text, borders
-    'faint': '#1E3A1C',     # grid lines, scan lines
-    'accent': '#C8FF3D',    # highlights, active items
-    'select': '#1F4D1A',    # selection background
-    'readonly': '#142414',  # immutable cells
-    'warn': '#FFB000',
-    'bad': '#FF4D3D',
+    # Surfaces
+    'bg': '#0C0C0C',        # window background
+    'panel': '#151515',     # toolbar, dialogs, labels
+    'field': '#101010',     # editable fields, grid cells
+    'faint': '#262626',     # grid lines, borders
+    'select': '#1E3A5F',    # selection background
+    'readonly': '#1A1A1A',  # immutable cells
+    # Text
+    'fg': '#CCCCCC',
+    'dim': '#767676',
+    'accent': '#16C60C',    # the prompt
+    # Semantic tones
+    'ok': '#16C60C',
+    'warn': '#F9C74F',
+    'bad': '#FF5F5F',
+    'info': '#61D6D6',
+    'rx': '#5C7CFA',
+    'tx': '#FF8F3F',
+    'file': '#F2F2F2',
+    'code': '#D670D6',
+}
+
+# Short tags shown in front of messages, terminal style
+TAGS = {
+    'ok': '[ OK ]',
+    'warn': '[WARN]',
+    'bad': '[ERR ]',
+    'info': '[INFO]',
+    'rx': '[ RX ]',
+    'tx': '[ TX ]',
+    'file': '[FILE]',
+}
+
+# Same meaning, darker shades readable on the classic light background
+CLASSIC_TONES = {
+    'fg': '#2E2E2E',
+    'dim': '#6B6B6B',
+    'accent': '#107C10',
+    'ok': '#107C10',
+    'warn': '#9A6700',
+    'bad': '#C42B1C',
+    'info': '#00707A',
+    'rx': '#0B57D0',
+    'tx': '#C25100',
+    'file': '#2E2E2E',
+    'code': '#8E2A8E',
+}
+
+# Memory grid: each column is colored by what it is for
+COLUMN_TONES = {
+    'freq': 'info',
+    'duplex': 'info',
+    'offset': 'info',
+    'name': 'file',
+    'tmode': 'code',
+    'rtone': 'code',
+    'ctone': 'code',
+    'dtcs': 'code',
+    'rx_dtcs': 'code',
+    'dtcs_polarity': 'code',
+    'cross_mode': 'code',
+    'power': 'tx',
+    'skip': 'rx',
+    'mode': 'fg',
+    'tuning_step': 'fg',
+    'comment': 'dim',
 }
 
 MONO_FACES = ('Cascadia Mono', 'Consolas', 'Lucida Console', 'Courier New')
-STENCIL_FACES = ('Stencil', 'OCR A Extended')
+
+
+def style():
+    value = CONF.get('ui_style', 'prefs')
+    if value in (STYLE_TERMINAL, STYLE_CLASSIC):
+        return value
+    # Earlier builds had an on/off "night vision" switch
+    if CONF.is_defined('nvg_theme', 'prefs') and not CONF.get_bool(
+            'nvg_theme', 'prefs'):
+        return STYLE_CLASSIC
+    return STYLE_TERMINAL
 
 
 def enabled():
-    return CONF.get_bool('nvg_theme', 'prefs', True)
+    return style() == STYLE_TERMINAL
+
+
+def set_style(value):
+    CONF.set('ui_style', value, 'prefs')
 
 
 def colour(name):
     return wx.Colour(PALETTE[name])
+
+
+def tone(name):
+    """A semantic color for text on the current background"""
+    table = PALETTE if enabled() else CLASSIC_TONES
+    return wx.Colour(table.get(name, PALETTE.get(name, '#000000')))
+
+
+def legend():
+    """(tone, meaning) pairs, in the order shown to the user"""
+    return [('ok', _('ok')),
+            ('warn', _('warning')),
+            ('bad', _('error')),
+            ('info', _('info')),
+            ('rx', _('reads the radio')),
+            ('tx', _('writes the radio')),
+            ('file', _('file')),
+            ('code', _('tones'))]
+
+
+def column_tone(col_name):
+    if col_name.startswith('extra.'):
+        return 'fg'
+    return COLUMN_TONES.get(col_name, 'fg')
 
 
 def init_app(app):
@@ -85,39 +185,47 @@ def mono_font(size=10, bold=False):
     return wx.Font(size, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, weight)
 
 
-def stencil_font(size=24):
-    face = _first_face(STENCIL_FACES)
-    if face:
-        return wx.Font(size, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL,
-                       wx.FONTWEIGHT_NORMAL, faceName=face)
+def heading_font(size=16):
     return mono_font(size, bold=True)
 
 
-def label(text):
-    """Military style labels are upper case"""
-    return text.upper() if enabled() else text
+def label(text, key=None):
+    """Terminal labels read like commands: lower case, with the shortcut"""
+    if not enabled():
+        return text
+    text = text.lower()
+    return '%s [%s]' % (text, key) if key else text
 
 
-# Icon colors for the classic (light) look
-CLASSIC_TONES = {
-    'fg': '#2E3A2E',
-    'dim': '#5F6B5F',
-    'accent': '#1B7F2A',
-    'warn': '#B35C00',
-    'bad': '#C62828',
-}
+def wrap(text_ctrl, width):
+    """Wrap a StaticText in the font it will be shown with.
+
+    Wrapping before the terminal font is applied leaves the text cut, as
+    the monospace font is wider.
+    """
+    if enabled():
+        size = text_ctrl.GetFont().GetPointSize()
+        text_ctrl.SetFont(mono_font(size if 7 <= size <= 14 else 9))
+        keep(text_ctrl, font=True)
+    text_ctrl.Wrap(width)
+    return text_ctrl
+
+
+def prompt(command):
+    """A shell prompt line, e.g. for dialog headers"""
+    return 'chirp@plus:~$ %s' % command
+
 
 _ICON_CACHE = {}
 
 
-def icon(name, size=24, tone='fg'):
+def icon(name, size=24, tone_name='fg'):
     """A Tabler icon from chirp/share/icons as a wx.BitmapBundle.
 
-    The SVGs draw with currentColor, which becomes the theme color for
-    @tone (a PALETTE key). Bundles scale cleanly on high DPI screens.
+    The SVGs draw with currentColor, which becomes the color of the
+    semantic tone (see TONES). Bundles scale cleanly on high DPI screens.
     """
-    color = (PALETTE if enabled() else CLASSIC_TONES).get(
-        tone, PALETTE.get(tone, '#000000'))
+    color = tone(tone_name).GetAsString(wx.C2S_HTML_SYNTAX)
     key = (name, size, color)
     if key not in _ICON_CACHE:
         from importlib import resources
@@ -151,11 +259,20 @@ _FONT_CLASSES = (wx.StaticText, wx.Button, wx.CheckBox, wx.RadioButton,
                  wx.StaticBox, wx.SpinCtrl)
 
 
+def keep(win, fg=False, font=False):
+    """Mark a control whose color/font was set on purpose"""
+    if fg:
+        win._term_keep_fg = True
+    if font:
+        win._term_keep_font = True
+    return win
+
+
 def _apply_one(win):
     # Imported here so this module loads with a mocked wx in unit tests
     import wx.grid
     if (isinstance(win, _FONT_CLASSES) and
-            not getattr(win, '_nvg_keep_font', False)):
+            not getattr(win, '_term_keep_font', False)):
         size = win.GetFont().GetPointSize()
         win.SetFont(mono_font(size if 7 <= size <= 14 else 9,
                               bold=win.GetFont().GetWeight() >=
@@ -171,24 +288,26 @@ def _apply_one(win):
     except ImportError:
         pass
 
+    keep_fg = getattr(win, '_term_keep_fg', False)
     if isinstance(win, (wx.TextCtrl, wx.SearchCtrl, wx.ListBox,
                         wx.ListCtrl, wx.ComboBox, wx.SpinCtrl,
                         wx.CheckListBox)):
         win.SetBackgroundColour(colour('field'))
-        win.SetForegroundColour(colour('fg'))
+        if not keep_fg:
+            win.SetForegroundColour(colour('fg'))
     elif isinstance(win, wx.Button):
         win.SetBackgroundColour(colour('field'))
-        win.SetForegroundColour(colour('accent'))
+        if not keep_fg:
+            win.SetForegroundColour(colour('fg'))
     elif isinstance(win, (wx.StaticText, wx.CheckBox, wx.RadioButton,
                           wx.StaticBox)):
         win.SetBackgroundColour(win.GetParent().GetBackgroundColour()
                                 if win.GetParent() else colour('bg'))
-        # Keep colors that code set deliberately (e.g. port status)
-        if not getattr(win, '_nvg_keep_fg', False):
+        if not keep_fg:
             win.SetForegroundColour(colour('fg'))
     elif isinstance(win, wx.Gauge):
         win.SetBackgroundColour(colour('field'))
-        win.SetForegroundColour(colour('fg'))
+        win.SetForegroundColour(colour('ok'))
     elif isinstance(win, (wx.Dialog, wx.Frame, wx.ToolBar, wx.StatusBar)):
         win.SetBackgroundColour(colour('panel'))
         win.SetForegroundColour(colour('fg'))
@@ -214,17 +333,17 @@ def style_grid(grid):
     grid.SetDefaultCellBackgroundColour(colour('field'))
     grid.SetDefaultCellTextColour(colour('fg'))
     grid.SetLabelBackgroundColour(colour('panel'))
-    grid.SetLabelTextColour(colour('accent'))
+    grid.SetLabelTextColour(colour('dim'))
     grid.SetLabelFont(mono_font(9, bold=True))
     grid.SetGridLineColour(colour('faint'))
     grid.SetSelectionBackground(colour('select'))
-    grid.SetSelectionForeground(colour('accent'))
+    grid.SetSelectionForeground(colour('file'))
     grid.SetCellHighlightColour(colour('accent'))
     grid.SetBackgroundColour(colour('bg'))
     grid.GetGridWindow().SetBackgroundColour(colour('bg'))
     if hasattr(grid, 'SetDefaultColLabelRenderer'):
-        grid.SetDefaultColLabelRenderer(NVGLabelRenderer())
-        grid.SetCornerLabelRenderer(NVGLabelRenderer())
+        grid.SetDefaultColLabelRenderer(TermLabelRenderer())
+        grid.SetCornerLabelRenderer(TermLabelRenderer())
 
 
 def style_propgrid(pg):
@@ -233,7 +352,7 @@ def style_propgrid(pg):
     pg.SetBackgroundColour(colour('bg'))
     pg.SetFont(mono_font(9))
     pg.SetCaptionBackgroundColour(colour('panel'))
-    pg.SetCaptionTextColour(colour('accent'))
+    pg.SetCaptionTextColour(colour('info'))
     pg.SetCellBackgroundColour(colour('field'))
     pg.SetCellTextColour(colour('fg'))
     pg.SetCellDisabledTextColour(colour('dim'))
@@ -241,31 +360,36 @@ def style_propgrid(pg):
     pg.SetLineColour(colour('faint'))
     pg.SetEmptySpaceColour(colour('bg'))
     pg.SetSelectionBackgroundColour(colour('select'))
-    pg.SetSelectionTextColour(colour('accent'))
+    pg.SetSelectionTextColour(colour('file'))
 
 
-def draw_label(grid, dc, rect, text, h_align, v_align, fill=None):
-    """Flat, bordered label in NVG colors (for grid label renderers)"""
+def draw_label(grid, dc, rect, text, h_align, v_align, fill=None,
+               text_colour=None):
+    """Flat, bordered grid label (for grid label renderers)"""
     dc.SetBrush(wx.Brush(fill or colour('panel')))
     dc.SetPen(wx.Pen(colour('faint')))
     dc.DrawRectangle(rect)
     dc.SetBackgroundMode(wx.TRANSPARENT)
-    dc.SetTextForeground(grid.GetLabelTextColour())
+    dc.SetTextForeground(text_colour or grid.GetLabelTextColour())
     dc.SetFont(grid.GetLabelFont())
     inner = wx.Rect(*rect)
     inner.Deflate(3, 2)
     grid.DrawTextRectangle(dc, text, inner, h_align, v_align)
 
 
-class NVGLabelRenderer:
-    """Column/corner label renderer for GridWithLabelRenderersMixin"""
+class TermLabelRenderer:
+    """Column/corner label renderer for GridWithLabelRenderersMixin.
+
+    Column headers take the color of their column's function."""
     def Draw(self, grid, dc, rect, col):
         if col < 0:
             draw_label(grid, dc, rect, '', wx.ALIGN_CENTER, wx.ALIGN_CENTER)
             return
         h_align, v_align = grid.GetColLabelAlignment()
+        # Set by the memory editor: {column index: wx.Colour}
+        color = getattr(grid, 'column_tones', {}).get(col)
         draw_label(grid, dc, rect, grid.GetColLabelValue(col),
-                   h_align, v_align)
+                   h_align, v_align, text_colour=color)
 
 
 def make_tab_art():
@@ -285,75 +409,114 @@ def make_tab_art():
     return art
 
 
-class NVGPanel(wx.Panel):
-    """A panel painted like a night vision scope: a ranging grid, a reticle
-    and corner brackets. Children (buttons) sit on top. With the theme
-    disabled this is a plain wx.Panel."""
-    # Reticle center, as a fraction of the panel size
-    RETICLE_AT = (0.5, 0.62)
+class TermPanel(wx.Panel):
+    """A panel painted like a terminal screen: lines of colored text and
+    clickable commands. Subclasses fill self.lines in refresh_lines().
+
+    A line is a list of (text, tone) segments. A command line also has
+    a callback and is drawn highlighted under the mouse. With the classic
+    look this is a plain wx.Panel and draws nothing.
+    """
+    LINE_SPACING = 4
 
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        if enabled():
-            self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
-            self.Bind(wx.EVT_PAINT, self._paint)
-            self.Bind(wx.EVT_SIZE, self._resized)
+        self.lines = []
+        self._hits = []
+        self._hover = None
+        self._cursor_on = True
+        if not enabled():
+            return
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
+        self.Bind(wx.EVT_PAINT, self._paint)
+        self.Bind(wx.EVT_SIZE, self._resized)
+        self.Bind(wx.EVT_MOTION, self._motion)
+        self.Bind(wx.EVT_LEFT_UP, self._click)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self._leave)
+        self._blink = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self._toggle_cursor, self._blink)
+        self._blink.Start(530)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
+
+    def _destroyed(self, event):
+        event.Skip()
+        if event.GetEventObject() is self:
+            self._blink.Stop()
 
     def _resized(self, event):
         self.Refresh()
         event.Skip()
 
-    def reticle(self):
-        w, h = self.GetClientSize()
-        cx = int(w * self.RETICLE_AT[0])
-        cy = int(h * self.RETICLE_AT[1])
-        r = max(40, min(w, h) // 5)
-        return cx, cy, r
+    def _toggle_cursor(self, event):
+        self._cursor_on = not self._cursor_on
+        self.RefreshRect(self._cursor_rect if hasattr(self, '_cursor_rect')
+                         else self.GetClientRect())
+
+    def _motion(self, event):
+        hover = None
+        for i, (rect, _fn) in enumerate(self._hits):
+            if rect.Contains(event.GetPosition()):
+                hover = i
+                break
+        if hover != self._hover:
+            self._hover = hover
+            self.SetCursor(wx.Cursor(wx.CURSOR_HAND if hover is not None
+                                     else wx.CURSOR_ARROW))
+            self.Refresh()
+
+    def _leave(self, event):
+        if self._hover is not None:
+            self._hover = None
+            self.Refresh()
+
+    def _click(self, event):
+        for rect, fn in self._hits:
+            if rect.Contains(event.GetPosition()):
+                fn()
+                return
+        event.Skip()
+
+    def refresh_lines(self):
+        """Override: rebuild self.lines"""
+
+    def font(self):
+        return mono_font(11)
 
     def _paint(self, event):
+        self.refresh_lines()
         dc = wx.AutoBufferedPaintDC(self)
         w, h = self.GetClientSize()
         dc.SetBackground(wx.Brush(colour('bg')))
         dc.Clear()
-        # Ranging grid
-        dc.SetPen(wx.Pen(colour('faint'), 1))
-        step = 48
-        for x in range(0, w, step):
-            dc.DrawLine(x, 0, x, h)
-        for y in range(0, h, step):
-            dc.DrawLine(0, y, w, y)
-        # Reticle: three rings, a broken crosshair and mil ticks
-        cx, cy, r = self.reticle()
-        dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.SetPen(wx.Pen(colour('dim'), 1))
-        for factor in (0.45, 1.0, 1.5):
-            dc.DrawCircle(cx, cy, int(r * factor))
-        gap, reach = int(r * 0.2), int(r * 1.7)
-        dc.DrawLine(cx - reach, cy, cx - gap, cy)
-        dc.DrawLine(cx + gap, cy, cx + reach, cy)
-        dc.DrawLine(cx, cy - reach, cx, cy - gap)
-        dc.DrawLine(cx, cy + gap, cx, cy + reach)
-        tick_step = max(8, r // 8)
-        for tick in range(tick_step, int(r * 1.5), tick_step):
-            for sign in (-1, 1):
-                dc.DrawLine(cx + sign * tick, cy - 4, cx + sign * tick, cy + 4)
-                dc.DrawLine(cx - 4, cy + sign * tick, cx + 4, cy + sign * tick)
-        # Corner brackets
-        dc.SetPen(wx.Pen(colour('fg'), 2))
-        m, s = 14, 36
-        for x0, y0, dx, dy in ((m, m, 1, 1), (w - m, m, -1, 1),
-                               (m, h - m, 1, -1), (w - m, h - m, -1, -1)):
-            dc.DrawLine(x0, y0, x0 + dx * s, y0)
-            dc.DrawLine(x0, y0, x0, y0 + dy * s)
-        self.paint_extra(dc, w, h)
-
-    def paint_extra(self, dc, w, h):
-        pass
-
-    @staticmethod
-    def draw_centered(dc, text, font, color, cx, y):
-        dc.SetFont(font)
-        dc.SetTextForeground(color)
-        tw, th = dc.GetTextExtent(text)
-        dc.DrawText(text, cx - tw // 2, y)
-        return th
+        dc.SetBackgroundMode(wx.TRANSPARENT)
+        margin = 28
+        y = margin
+        self._hits = []
+        for line in self.lines:
+            segments, fn, font = line['segments'], line.get('fn'), \
+                line.get('font') or self.font()
+            dc.SetFont(font)
+            # Block art (the banner) must touch the next line
+            lh = dc.GetCharHeight() + line.get('spacing', self.LINE_SPACING)
+            x = margin
+            if fn is not None:
+                rect = wx.Rect(margin - 8, y - 2, w - 2 * margin + 16, lh + 2)
+                if self._hover == len(self._hits):
+                    dc.SetBrush(wx.Brush(colour('select')))
+                    dc.SetPen(wx.TRANSPARENT_PEN)
+                    dc.DrawRectangle(rect)
+                self._hits.append((rect, fn))
+            for text, tone_name in segments:
+                dc.SetTextForeground(tone(tone_name))
+                dc.DrawText(text, x, y)
+                x += dc.GetTextExtent(text)[0]
+            if line.get('cursor'):
+                cw = dc.GetTextExtent('_')[0]
+                self._cursor_rect = wx.Rect(x, y, cw + 2, lh)
+                if self._cursor_on:
+                    dc.SetBrush(wx.Brush(colour('accent')))
+                    dc.SetPen(wx.TRANSPARENT_PEN)
+                    dc.DrawRectangle(x + 1, y + 2, cw, lh - 6)
+            y += lh
+            if y > h:
+                break

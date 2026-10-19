@@ -2,54 +2,76 @@
 
 Versione modificata di CHIRP basata sulla build ufficiale `next-20261016`
 (commit upstream `832d349e`, ramo `baofeng-plus`). Ha tutti i driver e le
-funzioni dell'originale, più queste modifiche:
+funzioni dell'originale, più queste modifiche.
+
+## Stile terminale (`chirp/wxui/theme.py`, `console.py`)
+- Sfondo nero, font monospace ovunque, etichette come comandi
+  (`scarica dalla radio [alt+d]`), intestazioni a prompt
+  (`chirp@plus:~$ scarica dalla radio`).
+- **Colori con un significato unico in tutta l'app**:
+
+  | Colore | Significato |
+  |---|---|
+  | verde | riuscito, cavo pronto, verifica OK |
+  | giallo | attenzione |
+  | rosso | errore |
+  | ciano | informazione, frequenze |
+  | blu | **legge** dalla radio |
+  | arancio | **scrive** nella radio |
+  | bianco | file |
+  | magenta | toni e codici (CTCSS/DCS) |
+  | grigio | secondario, canali vuoti |
+
+- Griglia memorie colorata per funzione (frequenze ciano, nomi bianchi, toni
+  magenta, potenza arancio) e numeri di riga per stato (verde programmato,
+  grigio vuoto, rosso errore).
+- Pagina iniziale come avvio di sistema: righe `[ OK ]`/`[WARN]`/`[INFO]` con
+  stato del cavo e delle porte, comandi numerati (clic o tasto 1-5),
+  legenda, prompt con cursore.
+- Console eventi a colori in basso (Visualizza > Mostra console eventi): cavo
+  collegato/scollegato, download, caricamenti, verifiche, file.
+- Visualizza > Aspetto > Terminale/Classico, con "Riavvia ora".
+- Icone Tabler (MIT) dal pacchetto di Pathfinder in `chirp/share/icons`,
+  colorate con gli stessi codici.
 
 ## Rilevamento automatico del cavo (`chirp/wxui/portdetect.py`)
-- Riconosce i chip dei cavi di programmazione dall'ID USB: CH340/CH341/CH343,
-  PL2303 (tutte le revisioni), FTDI, CP210x, STM32 VCP.
-- Mette i cavi in cima alla lista e li sceglie da solo; Bluetooth e porte
-  integrate (COM1) finiscono in fondo.
-- Ricorda la porta usata per ogni modello, ma non la preferisce a un cavo vero
-  se era una porta sbagliata (es. COM1).
-- Hot-plug: quando colleghi il cavo con il dialogo aperto lo seleziona subito;
-  se lo scolleghi te lo segnala.
-- Avvisa dei PL2303 contraffatti/non supportati e non li sceglie.
+- Riconosce i chip dei cavi dall'ID USB (CH340/341/343, PL2303, FTDI,
+  CP210x, STM32), li mette in cima e li sceglie da solo; Bluetooth e COM1 in
+  fondo. Hot-plug: un cavo collegato con il dialogo aperto viene selezionato.
+- Avvisa dei PL2303 contraffatti e non li sceglie.
 
-## Interfaccia
-- Barra strumenti: Scarica dalla radio, Carica sulla radio, Apri, Salva (si può
-  nascondere da Visualizza > Mostra barra strumenti).
-- Stato del cavo sempre visibile nella barra strumenti e in quella di stato.
-- Pagina di benvenuto con i pulsanti "Scarica dalla radio" e "Apri un file".
-- Dialogo radio: istruzioni, riga di stato del cavo (verde/arancio/rosso),
-  pulsante Aggiorna, pulsanti "Scarica"/"Carica" al posto di OK.
-- "Cerca...": trova la radio scrivendo parte del nome (es. `uv5r`, `uv9r`).
-- Traduzione italiana completa delle nuove voci.
+## Rileva radio (`chirp/radio_detect.py`)
+- Radio > Rileva radio e scarica (Alt+R) o pulsante "Rileva": prova le
+  strette di mano dei driver Baofeng (solo identificazione, nessuna lettura
+  o scrittura di memoria) e trova il modello.
+- Se il modello già scelto è compatibile, scarica subito nella stessa
+  sessione (la radio resta in modalità programmazione solo 2-3 secondi);
+  altrimenti chiede il modello e fa un download normale.
 
-## Import/export Excel (`chirp/drivers/generic_xlsx.py`)
-- File > Esporta in Excel... (Ctrl+Maiusc+E): salva le memorie in `.xlsx`
-  con le stesse colonne del CSV di CHIRP, numeri come numeri, intestazione
-  bloccata e filtro automatico. Se selezioni più righe esporta solo quelle.
-- File > Importa da Excel...: legge `.xlsx` e anche i vecchi `.xls`
-  (Excel 97-2003) e sostituisce le memorie della scheda aperta. I file Excel
-  si possono anche aprire direttamente con Apri e copiare/incollare i canali.
-- Va bene anche un foglio scritto a mano: basta la riga di intestazione
-  (almeno `Location` e `Frequency`); righe vuote e colonne extra sono
-  ignorate. I `.xls` si possono solo leggere: per salvarli usa Salva con nome
-  in formato Excel (.xlsx).
+## Caricamento sicuro (`chirp/radio_compare.py`, `chirp/wxui/changes.py`)
+- "Confronta con la radio prima di caricare": legge la radio e mostra cosa
+  cambierà (aggiunto verde, rimosso rosso, modificato giallo) prima di
+  scrivere.
+- "Rileggi e verifica dopo il caricamento": riscarica e confronta byte per
+  byte le zone scritte dal driver.
 
-## Aspetto "visore notturno" (`chirp/wxui/theme.py`)
-- Nero e verde fosforo, accenti lime; avvisi in ambra, errori in rosso.
-- Tema scuro nativo di Windows per menu, barre del titolo, barre di scorrimento
-  e finestre di sistema.
-- Pagina iniziale a mirino (griglia, reticolo, angoli) con titolo in Stencil e
-  stato del cavo al centro del reticolo (PRONTO / IN ATTESA / NESSUN SEGNALE).
-- Griglia memorie, impostazioni, schede e dialoghi in font monospace (Cascadia
-  Mono, poi Consolas), etichette in maiuscolo, icone ricolorate.
-- Si spegne da Visualizza > Aspetto visore notturno (vale dal riavvio).
-- Icone Tabler (MIT) prese dal pacchetto di Pathfinder, in
-  `chirp/share/icons`: barra strumenti, menu, dialoghi e pagina iniziale.
-  Sono SVG colorate al volo con i colori del tema (nitide anche in alta
-  risoluzione).
+## Programmazione in serie (`chirp/batch_program.py`, `wxui/batch.py`)
+- Radio > Programma più radio: stessa immagine su più radio, una dopo
+  l'altra (pulsante o Invio), con verifica, esito per radio e totali.
+
+## Altri strumenti
+- **Backup** (File > Backup…): elenco dei backup automatici, apertura,
+  confronto con la scheda aperta.
+- **Controllo frequenze** (Radio > Controlla frequenze…, regole italiane):
+  bande solo ricezione, licenza necessaria, potenza oltre i limiti LPD
+  (10 mW) e PMR446 (0,5 W).
+- **Lista italiana** "IT Chiamata e simplex radioamatori" tra le
+  configurazioni predefinite (la lista europea LPD/PMR c'era già).
+- **Scheda canali tascabile** (File > Scheda canali tascabile…): anteprima di
+  stampa A4 su due colonne.
+- **Mappa della memoria** (Radio > Mappa della memoria…): dump esadecimale
+  colorato per funzione, con le zone che il driver non descrive (taratura).
+- **Import/export Excel** (`.xlsx` lettura/scrittura, `.xls` lettura).
 
 ## Uso
 Il programma compilato è in `%LOCALAPPDATA%\Programs\CHIRP-Plus\chirpwx.exe`;
@@ -58,9 +80,11 @@ lo ZIP è in `dist\`. Usa le stesse impostazioni del CHIRP ufficiale
 
 ## Sviluppo
 ```
-.venv\Scripts\python chirpwx.py                 # avvio dal sorgente
-.venv\Scripts\python -m pytest tests\unit -n 8  # test
-.venv\Scripts\python tools\build_windows.py     # build + ZIP
+.venv\Scripts\python chirpwx.py                    # avvio dal sorgente
+.venv\Scripts\python -m pytest tests\unit -n 8     # test
+.venv\Scripts\python tools\build_windows.py        # build + ZIP
+.venv\Scripts\python tools\sync_upstream.py        # novità di CHIRP ufficiale
+.venv\Scripts\python tools\sync_upstream.py --merge
 ```
 CHIRP è GPLv3: se distribuisci questa versione devi rendere disponibile anche
 il sorgente modificato.

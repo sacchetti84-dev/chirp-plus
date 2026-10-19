@@ -128,20 +128,30 @@ class ChirpRowLabelRenderer(glr.GridDefaultRowLabelRenderer):
         self.bgcolor = None
 
     def set_error(self):
-        self.bgcolor = theme.PALETTE['bad'] if theme.enabled() else '#FF0000'
+        self.bgcolor = '#FF0000'
+        self.state = 'bad'
 
     def set_progress(self):
-        self.bgcolor = (theme.PALETTE['select'] if theme.enabled()
-                        else '#98FB98')
+        self.bgcolor = '#98FB98'
+        self.state = 'info'
 
     def clear_error(self):
         self.bgcolor = None
+        self.state = None
 
     def Draw(self, grid, dc, rect, row):
         if theme.enabled():
+            # Terminal look: the number tells the state of the channel
+            state = getattr(self, 'state', None)
+            if state is None:
+                cache = getattr(grid.GetParent(), '_memory_cache', {})
+                mem = cache.get(row)
+                state = 'dim' if mem is None or mem.empty else 'ok'
+            fill = {'bad': '#3A1414', 'info': '#14303A'}.get(state)
             hAlign, vAlign = grid.GetRowLabelAlignment()
             theme.draw_label(grid, dc, rect, grid.GetRowLabelValue(row),
-                             hAlign, vAlign, fill=self.bgcolor)
+                             hAlign, vAlign, fill=fill,
+                             text_colour=theme.colour(state))
             return
         if self.bgcolor:
             dc.SetBrush(wx.Brush(self.bgcolor))
@@ -1313,6 +1323,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         else:
             minwidth = 75
 
+        self._grid.column_tones = {}
         for col, col_def in enumerate(self._col_defs):
             if not col_def.valid:
                 self._grid.HideCol(col)
@@ -1324,6 +1335,11 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 self._grid.SetColLabelValue(col, label)
                 attr = wx.grid.GridCellAttr()
                 attr.SetEditor(col_def.get_editor())
+                if theme.enabled():
+                    # Columns are colored by function (see theme.py)
+                    color = theme.tone(theme.column_tone(col_def.name))
+                    attr.SetTextColour(color)
+                    self._grid.column_tones[col] = color
                 self._grid.SetColAttr(col, attr)
                 self._grid.SetColMinimalWidth(col, minwidth)
                 try:

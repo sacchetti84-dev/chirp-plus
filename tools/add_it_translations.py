@@ -87,6 +87,232 @@ TRANSLATIONS = {
     'Export to Excel...': 'Esporta in Excel...',
     'Excel Files': 'File Excel',
     'Export Excel': 'Esporta Excel',
+    # Terminal look
+    'ok': 'ok',
+    'warning': 'attenzione',
+    'error': 'errore',
+    'info': 'info',
+    'reads the radio': 'legge la radio',
+    'writes the radio': 'scrive la radio',
+    'file': 'file',
+    'tones': 'toni',
+    'built-in': 'integrata',
+    'bluetooth': 'bluetooth',
+    'Show event console': 'Mostra console eventi',
+    'Look': 'Aspetto',
+    'Terminal': 'Terminale',
+    'Classic': 'Classico',
+    'Saved %s': 'Salvato %s',
+    'Downloaded %s %s': 'Scaricata %s %s',
+    'legend': 'legenda',
+    'CHIRP %(version)s started, %(count)i radio models supported':
+        'CHIRP %(version)s avviato, %(count)i modelli di radio supportati',
+    'Opened %(file)s (%(radio)s)': 'Aperto %(file)s (%(radio)s)',
+    'Exported %s': 'Esportato %s',
+    'Uploaded to %s %s': 'Caricato su %s %s',
+    'Programming cable': 'Cavo di programmazione',
+    'Other ports': 'Altre porte',
+    '%i radio models supported': '%i modelli di radio supportati',
+    'commands': 'comandi',
+    'Last radio': 'Ultima radio',
+    'Serial port %s connected': 'Porta seriale %s collegata',
+    # Radio detection
+    'Detect radio and download...': 'Rileva radio e scarica...',
+    'Ask the radio on the cable which model it is (read only)':
+        'Chiede alla radio collegata che modello è (solo lettura)',
+    'Trying %(model)s (%(i)i/%(n)i)': 'Provo %(model)s (%(i)i/%(n)i)',
+    'No radio answered. Check that it is on, the cable is fully inserted '
+    'and the volume is up, then retry.':
+        'Nessuna radio ha risposto. Controlla che sia accesa, che il cavo '
+        'sia inserito a fondo e il volume alzato, poi riprova.',
+    'Waiting for the radio to be ready...':
+        'Attendo che la radio torni pronta...',
+    'These models use the same protocol and memory layout. Choose the one '
+    'written on your radio:':
+        'Questi modelli usano lo stesso protocollo e la stessa memoria. '
+        'Scegli quello scritto sulla tua radio:',
+    'Radio detected': 'Radio rilevata',
+    'Detect': 'Rileva',
+    'Choose the serial port of the cable first':
+        'Prima scegli la porta seriale del cavo',
+    'Looking for a radio on %s': 'Cerco una radio su %s',
+    'Radio answered: %(ident)s, compatible with %(models)s':
+        'La radio ha risposto: %(ident)s, compatibile con %(models)s',
+    # Compare and verify
+    'Upload finished, reading it back to verify':
+        'Caricamento finito, rileggo la radio per verificare',
+    'Reading the radio to compare it with %s':
+        'Leggo la radio per confrontarla con %s',
+    'Compared with the radio: %(memories)i channels and %(settings)i '
+    'settings differ':
+        'Confronto con la radio: %(memories)i canali e %(settings)i '
+        'impostazioni diversi',
+    'Changes in the radio': 'Modifiche nella radio',
+    'Verify': 'Verifica',
+    'Compare with the radio before uploading':
+        'Confronta con la radio prima di caricare',
+    'Read back and verify after uploading':
+        'Rileggi e verifica dopo il caricamento',
+    'Verify failed: could not read the radio back (%s)':
+        'Verifica fallita: non riesco a rileggere la radio (%s)',
+    'The upload finished, but reading the radio back failed: %s':
+        'Il caricamento è finito, ma la rilettura della radio non è '
+        'riuscita: %s',
+    'Verify FAILED: %i differences between the image and the radio':
+        'Verifica FALLITA: %i differenze tra immagine e radio',
+    'The radio does not hold what was uploaded (%i differences). Try the '
+    'upload again.':
+        'La radio non contiene quanto caricato (%i differenze). Ripeti il '
+        'caricamento.',
+    'Verify OK: the radio holds the uploaded image (%s)':
+        'Verifica OK: la radio contiene l\'immagine caricata (%s)',
+    'byte by byte': 'byte per byte',
+    'channel by channel': 'canale per canale',
+    'added': 'aggiunto',
+    'removed': 'rimosso',
+    'changed': 'modificato',
+    'The radio already holds this image: nothing would change.':
+        'La radio contiene già questa immagine: non cambierebbe nulla.',
+    '%(memories)i channels and %(settings)i settings will change in the '
+    'radio.':
+        'Nella radio cambieranno %(memories)i canali e %(settings)i '
+        'impostazioni.',
+    'Change': 'Modifica',
+    'Where': 'Dove',
+    'In the radio now': 'Ora nella radio',
+    'After upload': 'Dopo il caricamento',
+    'Memory %s': 'Memoria %s',
+    'image': 'immagine',
+    # Batch programming
+    'Program several radios...': 'Programma più radio...',
+    'Program several radios': 'Programma più radio',
+    'Only images downloaded from a radio (clone mode) can be written into '
+    'several radios.':
+        'Solo le immagini scaricate da una radio (clone) si possono '
+        'scrivere in più radio.',
+    'The same image is written into each radio. For every radio: connect '
+    'the cable, turn the radio on, then press the button (or Enter). Wait '
+    'for the result before moving the cable.':
+        'La stessa immagine viene scritta in ogni radio. Per ogni radio: '
+        'collega il cavo, accendi la radio, poi premi il pulsante (o '
+        'Invio). Aspetta il risultato prima di spostare il cavo.',
+    'Read back and verify each radio': 'Rileggi e verifica ogni radio',
+    'Writing radio %i...': 'Scrivo la radio %i...',
+    'Batch: writing radio %i': 'In serie: scrivo la radio %i',
+    'written': 'scritta',
+    'not checked': 'non verificata',
+    'OK': 'OK',
+    'Batch: radio %(n)i %(result)s, verify %(verify)s':
+        'In serie: radio %(n)i %(result)s, verifica %(verify)s',
+    'Program radio %i': 'Programma la radio %i',
+    'Radios: %(done)i   ok: %(good)i   failed: %(failed)i':
+        'Radio: %(done)i   ok: %(good)i   fallite: %(failed)i',
+    'Wait for the current radio to finish.':
+        'Aspetta che finisca la radio in corso.',
+    'Image': 'Immagine',
+    'Result': 'Risultato',
+    'Time': 'Tempo',
+    'ERROR: %s': 'ERRORE: %s',
+    '%i differences': '%i differenze',
+    'Radio %i done: connect the next one and press the button':
+        'Radio %i fatta: collega la prossima e premi il pulsante',
+    'Radio %i failed: check it and press the button to retry with the next '
+    'one':
+        'Radio %i fallita: controllala e premi il pulsante per riprovare '
+        'con la prossima',
+    # Backups, frequency check, memory map, pocket card, restart
+    'Check frequencies...': 'Controlla frequenze...',
+    'Memory map...': 'Mappa della memoria...',
+    'The new look needs a restart of CHIRP. Restart now? You will be asked '
+    'to save open files first.':
+        'Il nuovo aspetto richiede di riavviare CHIRP. Riavvio adesso? Prima '
+        'ti verrà chiesto di salvare i file aperti.',
+    'Restart now': 'Riavvia ora',
+    'Later': 'Più tardi',
+    'Pocket channel card': 'Scheda canali tascabile',
+    'Pocket channel card...': 'Scheda canali tascabile...',
+    'Backups...': 'Backup...',
+    'The frequency check works on images, not on live radios.':
+        'Il controllo frequenze funziona sulle immagini, non sulle radio in '
+        'diretta.',
+    'Frequency check': 'Controllo frequenze',
+    'Frequency check: %(bad)i errors, %(warn)i warnings, %(info)i notes':
+        'Controllo frequenze: %(bad)i errori, %(warn)i avvisi, %(info)i '
+        'note',
+    'Pocket card for %s': 'Scheda tascabile per %s',
+    'The memory map is available for images downloaded from a radio.':
+        'La mappa della memoria è disponibile per le immagini scaricate da '
+        'una radio.',
+    'Memory map': 'Mappa della memoria',
+    'Backups': 'Backup',
+    'CHIRP saves a copy of the radio on every download and before every '
+    'upload. Blue: read from the radio, orange: before writing to it.':
+        'CHIRP salva una copia della radio a ogni download e prima di ogni '
+        'caricamento. Blu: letta dalla radio, arancio: prima di scriverla.',
+    'Compare with open tab': 'Confronta con la scheda aperta',
+    'Open folder': 'Apri cartella',
+    'Backup compared with the open tab':
+        'Backup confrontato con la scheda aperta',
+    'Date': 'Data',
+    'Type': 'Tipo',
+    'Size': 'Dimensione',
+    'download': 'download',
+    'upload': 'caricamento',
+    'In the backup': 'Nel backup',
+    'In the open tab': 'Nella scheda aperta',
+    'open tab': 'scheda-aperta',
+    'errors': 'errori',
+    'warnings': 'avvisi',
+    'notes': 'note',
+    'Rules for Italy. This is advice, not a legal opinion: check your '
+    'license and the radio approval.':
+        'Regole per l\'Italia. È un aiuto, non un parere legale: verifica la '
+        'tua licenza e l\'omologazione della radio.',
+    'Channel': 'Canale',
+    'Level': 'Livello',
+    'Band': 'Banda',
+    'Message': 'Messaggio',
+    'No problems found.': 'Nessun problema trovato.',
+    'channels': 'canali',
+    'names': 'nomi',
+    'settings': 'impostazioni',
+    'messages and ident': 'messaggi e identità',
+    'service (squelch, limits): careful':
+        'servizio (squelch, limiti): attenzione',
+    'unknown data (calibration?)': 'dati sconosciuti (taratura?)',
+    'Start': 'Inizio',
+    'End': 'Fine',
+    'Bytes': 'Byte',
+    'Name': 'Nome',
+    '%(size)i bytes: %(known)i described by the driver, %(unknown)i with '
+    'data the driver does not describe':
+        '%(size)i byte: %(known)i descritti dal driver, %(unknown)i con dati '
+        'che il driver non descrive',
+    '%(memories)i channels and %(settings)i settings are different.':
+        '%(memories)i canali e %(settings)i impostazioni sono diversi.',
+    'No differences.': 'Nessuna differenza.',
+    'transmits on %(freq)s, outside the known bands':
+        'trasmette su %(freq)s, fuori dalle bande note',
+    'transmits on %(freq)s (%(band)s): receive only, set Duplex to off':
+        'trasmette su %(freq)s (%(band)s): solo ricezione, imposta Duplex '
+        'su off',
+    '%(band)s: transmitting needs a license':
+        '%(band)s: per trasmettere serve la licenza',
+    '%(band)s allows %(max)s W, this channel uses %(watts)s W':
+        '%(band)s consente %(max)s W, questo canale usa %(watts)s W',
+    '%(band)s: %(note)s': '%(band)s: %(note)s',
+    'FM broadcast': 'radio FM',
+    'airband': 'banda aeronautica',
+    'amateur 2 m': 'radioamatori 2 m',
+    'marine VHF': 'VHF nautico',
+    'amateur 70 cm': 'radioamatori 70 cm',
+    'amateur satellite 70 cm': 'satelliti radioamatoriali 70 cm',
+    'needs a maritime radio licence': 'serve la licenza radio nautica',
+    'only with approved PMR446 radios and fixed antenna':
+        'solo con radio omologate PMR446 e antenna fissa',
+    'Ch': 'Can',
+    'MHz': 'MHz',
+    'Shift': 'Passo',
     'Export can only write CSV or Excel (.xlsx) files':
         "L'esportazione può scrivere solo file CSV o Excel (.xlsx)",
 }

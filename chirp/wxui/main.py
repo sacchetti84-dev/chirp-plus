@@ -20,6 +20,7 @@ from importlib import resources
 import logging
 import os
 import pickle
+import subprocess
 import platform
 import sys
 import time
@@ -31,21 +32,29 @@ import wx
 import wx.adv
 import wx.aui
 import wx.lib.newevent
+import wx.html
 
 from chirp import bandplan
 from chirp import chirp_common
 from chirp import directory
 from chirp import errors
+from chirp import freq_check
+from chirp import pocket_card
 from chirp import logger
 from chirp import platform as chirp_platform
 from chirp.sources import base
 from chirp.wxui import config
+from chirp.wxui import backups
 from chirp.wxui import bankedit
+from chirp.wxui import batch
 from chirp.wxui import bugreport
 from chirp.wxui import common
 from chirp.wxui import clone
+from chirp.wxui import console
 from chirp.wxui import developer
+from chirp.wxui import freqcheck
 from chirp.wxui import memedit
+from chirp.wxui import memmap_view
 from chirp.wxui import portdetect
 from chirp.wxui import printing
 from chirp.wxui import query_sources
@@ -380,58 +389,60 @@ class ChirpLiveEditorSet(ChirpEditorSet):
         return any(t.pending != 0 for t in self._threads)
 
 
-class ChirpWelcomePanel(theme.NVGPanel):
-    """Fake "editorset" that just displays the welcome screen."""
+class ChirpWelcomePanel(theme.TermPanel):
+    """Fake "editorset" that just displays the welcome screen.
+
+    Terminal look: a boot log with the state of the cable, numbered
+    commands (click or press the number) and the color legend.
+    """
+
+    BANNER = [
+        ' ██████╗██╗  '
+        '██╗██╗█████'
+        '█╗ ██████╗ ',
+        '██╔════╝██║  '
+        '██║██║██╔══'
+        '██╗██╔══██╗',
+        '██║     ███████║'
+        '██║██████╔╝'
+        '██████╔╝',
+        '██║     ██╔══██║'
+        '██║██╔══██╗'
+        '██╔═══╝ ',
+        '╚██████╗██║  '
+        '██║██║██║  ██'
+        '║██║     ',
+        ' ╚═════╝╚═╝  '
+        '╚═╝╚═╝╚═╝  ╚═'
+        '╝╚═╝     ',
+    ]
 
     def __init__(self, *a, **k):
         super(ChirpWelcomePanel, self).__init__(*a, **k)
-        self._cable_text = ''
-        self._cable_level = 'warn'
+        self._ports = None
+        frame = wx.GetTopLevelParent(self)
+        self._frame = frame
+
+        if theme.enabled():
+            self.Bind(wx.EVT_CHAR, self._key)
+            wx.CallAfter(self.SetFocus)
+            return
 
         vbox = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(vbox)
-
         # Quick actions for the most common tasks, so a new user does not
         # have to find them in the menus
         actions = wx.BoxSizer(wx.HORIZONTAL)
-        self._actions = actions
-        frame = wx.GetTopLevelParent(self)
-        self._buttons = []
-        for ident, label, icon, tip in (
-                (getattr(frame, '_download_menu_item', None),
-                 _('Download from radio'), 'download',
-                 _('Connect the cable and read your radio')),
-                (wx.ID_OPEN, _('Open a file'), 'folders',
-                 _('Open a saved radio image or CSV file'))):
-            if ident is None:
-                continue
-            btn = wx.Button(self, label=theme.label(label))
-            btn.SetBitmap(theme.icon(icon, 24, 'accent'))
+        for key, label, tone, fn in frame.welcome_commands():
+            btn = wx.Button(self, label=label)
+            btn.SetBitmap(theme.icon(self.ICONS.get(tone, 'info-circle'),
+                                     24, tone))
             btn.SetBitmapMargins(6, 0)
-            if theme.enabled():
-                btn.SetFont(theme.mono_font(12, bold=True))
-            else:
-                font = btn.GetFont()
-                font.SetPointSize(font.GetPointSize() + 2)
-                btn.SetFont(font)
-            btn._nvg_keep_font = True
-            btn.SetToolTip(tip)
-            btn.Bind(wx.EVT_BUTTON,
-                     functools.partial(self._post_menu, frame, ident))
+            font = btn.GetFont()
+            font.SetPointSize(font.GetPointSize() + 2)
+            btn.SetFont(font)
+            btn.Bind(wx.EVT_BUTTON, lambda e, fn=fn: fn())
             actions.Add(btn, border=8, flag=wx.LEFT | wx.RIGHT)
-            self._buttons.append(btn)
-
-        if theme.enabled():
-            # Everything else is painted (see paint_extra); the buttons sit
-            # between the title and the reticle.
-            self._top_space = vbox.AddSpacer(10)
-            vbox.Add(actions, flag=wx.ALIGN_CENTER_HORIZONTAL)
-            vbox.AddStretchSpacer()
-            for btn in self._buttons:
-                theme.apply(btn)
-            self.Bind(wx.EVT_SIZE, self._nvg_resized)
-            return
-
         vbox.Add(actions, border=12, flag=wx.ALL | wx.ALIGN_CENTER_HORIZONTAL)
 
         # Search for welcome_screen_en_US, welcome_screen_en, welcome_screen
@@ -447,73 +458,106 @@ class ChirpWelcomePanel(theme.NVGPanel):
 
         with resources.as_file(welcome_file) as welcome:
             bmp = wx.Bitmap(str(welcome))
-        width, height = self.GetSize()
         img = wx.StaticBitmap(self, wx.ID_ANY, bmp)
         vbox.Add(img, 1, flag=wx.EXPAND)
 
-    @staticmethod
-    def _post_menu(frame, ident, event):
-        wx.PostEvent(frame, wx.CommandEvent(wx.wxEVT_MENU, ident))
+    ICONS = {'rx': 'download', 'tx': 'upload', 'file': 'folders'}
+    KIND_NAMES = {
+        portdetect.KIND_BUILTIN: _('built-in'),
+        portdetect.KIND_BLUETOOTH: _('bluetooth'),
+        portdetect.KIND_OTHER: '',
+    }
 
-    RETICLE_AT = (0.5, 0.64)
-
-    def _title_height(self):
-        return max(150, int(self.GetClientSize()[1] * 0.25))
-
-    def _nvg_resized(self, event):
-        self._top_space.AssignSpacer((10, self._title_height()))
-        self.Layout()
-        self.Refresh()
+    def _key(self, event):
+        key = chr(event.GetKeyCode()) if 32 <= event.GetKeyCode() < 127 \
+            else ''
+        for k, label, tone, fn in self._frame.welcome_commands():
+            if k == key:
+                fn()
+                return
         event.Skip()
 
-    def set_cable(self, text, level):
-        """Shown inside the reticle (night vision theme only)"""
-        self._cable_text = text
-        self._cable_level = level
+    def set_ports(self, ports):
+        """Latest scan from the port monitor (list of PortInfo)"""
+        self._ports = ports
         self.Refresh()
 
-    def paint_extra(self, dc, w, h):
-        cx, cy, r = self.reticle()
-        y = max(24, self._title_height() - 130)
-        y += self.draw_centered(dc, 'CHIRP', theme.stencil_font(48),
-                                theme.colour('accent'), w // 2, y)
-        self.draw_centered(dc, _('RADIO PROGRAMMER') + '  //  NVG',
-                           theme.mono_font(12, bold=True),
-                           theme.colour('dim'), w // 2, y + 2)
+    def _port_lines(self):
+        if self._ports is None:
+            return [[('[....] ', 'dim'), (_('Searching for cables...'),
+                                          'dim')]]
+        cables = [p for p in self._ports if p.is_cable]
+        bad = [p for p in self._ports if not p.usable]
+        lines = []
+        for p in cables:
+            lines.append([(theme.TAGS['ok'] + ' ', 'ok'),
+                          (_('Programming cable') + ': ', 'fg'),
+                          ('%s (%s)' % (p.short_device, p.chip or 'USB'),
+                           'ok')])
+        for p in bad:
+            lines.append([(theme.TAGS['bad'] + ' ', 'bad'),
+                          ('%s: ' % p.short_device, 'fg'),
+                          (wx.GetTranslation(p.warning), 'bad')])
+        if not cables and not bad:
+            lines.append([(theme.TAGS['warn'] + ' ', 'warn'),
+                          (_('No programming cable connected'), 'warn')])
+        others = [p for p in self._ports if p.usable and not p.is_cable]
+        if others:
+            lines.append([(theme.TAGS['info'] + ' ', 'info'),
+                          (_('Other ports') + ': ', 'fg'),
+                          (', '.join('%s %s' % (
+                              p.short_device, self.KIND_NAMES.get(p.kind, ''))
+                              for p in others), 'dim')])
+        return lines
 
-        # Cable status, "target acquired" style
-        level = {'good': 'accent', 'warn': 'warn',
-                 'bad': 'bad'}.get(self._cable_level, 'fg')
-        status = self._cable_text or _('Searching for cables...')
-        font = theme.mono_font(13, bold=True)
-        dc.SetFont(font)
-        th = dc.GetTextExtent(status)[1]
-        self.draw_centered(dc, status.upper(), font, theme.colour(level),
-                           cx, cy - th // 2)
-        marker = ({'good': _('READY'), 'warn': _('STANDBY'),
-                   'bad': _('NO SIGNAL')}).get(self._cable_level, '')
-        self.draw_centered(dc, '[ %s ]' % marker,
-                           theme.mono_font(10, bold=True),
-                           theme.colour(level), cx, cy + th)
+    @staticmethod
+    def _banner_segments(row):
+        """Solid blocks bright, the box-drawing shadow dim"""
+        segments = []
+        for char in row:
+            tone = 'accent' if char == '█' else 'dim'
+            if segments and segments[-1][1] == tone:
+                segments[-1] = (segments[-1][0] + char, tone)
+            else:
+                segments.append((char, tone))
+        return segments
 
-        # Procedure, bottom left
-        font = theme.mono_font(10)
-        lines = [_('PROCEDURE'),
-                 '01  ' + _('Connect the cable to the radio and the PC'),
-                 '02  ' + _('Turn the radio on'),
-                 '03  ' + _('Press DOWNLOAD FROM RADIO')]
-        dc.SetFont(font)
-        lh = dc.GetTextExtent('Ag')[1] + 4
-        y = h - 40 - lh * len(lines)
-        for i, line in enumerate(lines):
-            dc.SetTextForeground(theme.colour('accent' if i == 0 else 'dim'))
-            dc.DrawText(line.upper(), 40, y + i * lh)
-
-        # Version, bottom right
-        dc.SetTextForeground(theme.colour('faint'))
-        text = 'CHIRP %s' % CHIRP_VERSION
-        tw = dc.GetTextExtent(text)[0]
-        dc.DrawText(text.upper(), w - 40 - tw, h - 40 - lh)
+    def refresh_lines(self):
+        big = theme.mono_font(13, bold=True)
+        lines = [{'segments': self._banner_segments(row), 'font': big,
+                  'spacing': 0} for row in self.BANNER]
+        lines.append({'segments': [
+            ('  plus', 'ok'), ('  //  ', 'dim'),
+            (_('RADIO PROGRAMMER').lower(), 'fg'),
+            ('  //  %s' % CHIRP_VERSION, 'dim')]})
+        lines.append({'segments': [('', 'fg')]})
+        lines.append({'segments': [
+            (theme.TAGS['ok'] + ' ', 'ok'),
+            (_('%i radio models supported') % len(directory.DRV_TO_RADIO),
+             'fg')]})
+        for segments in self._port_lines():
+            lines.append({'segments': segments})
+        last = CONF.get('last_vendor', 'state'), CONF.get('last_model',
+                                                          'state')
+        if all(last):
+            lines.append({'segments': [
+                (theme.TAGS['info'] + ' ', 'info'),
+                (_('Last radio') + ': ', 'fg'), ('%s %s' % last, 'info')]})
+        lines.append({'segments': [('', 'fg')]})
+        lines.append({'segments': [(_('commands') + ':', 'dim')]})
+        for key, label, tone, fn in self._frame.welcome_commands():
+            lines.append({'segments': [('  [%s] ' % key, tone),
+                                       (label.lower(), tone)],
+                          'fn': fn})
+        lines.append({'segments': [('', 'fg')]})
+        legend = [(_('legend') + ': ', 'dim')]
+        for tone, text in theme.legend():
+            legend += [('■ ', tone), (text + '  ', 'dim')]
+        lines.append({'segments': legend})
+        lines.append({'segments': [('', 'fg')]})
+        lines.append({'segments': [(theme.prompt(''), 'accent')],
+                      'cursor': True})
+        self.lines = lines
 
     def close(self):
         pass
@@ -542,6 +586,11 @@ class ChirpMain(wx.Frame):
         except TypeError:
             pass
 
+        if not ALL_MAIN_WINDOWS:
+            console.log('ok', _('CHIRP %(version)s started, %(count)i radio '
+                                'models supported') % {
+                'version': CHIRP_VERSION,
+                'count': len(directory.DRV_TO_RADIO)})
         ALL_MAIN_WINDOWS.append(self)
 
         if not CONF.get_bool('agreed_to_license', 'state'):
@@ -561,8 +610,13 @@ class ChirpMain(wx.Frame):
         if not CONF.get_bool('show_toolbar', 'prefs', True):
             self.GetToolBar().Hide()
 
+        # Tabs on top, the event console below
+        self._splitter = wx.SplitterWindow(
+            self, style=wx.SP_LIVE_UPDATE | wx.SP_NOBORDER)
+        self._splitter.SetSashGravity(1.0)
+        self._splitter.SetMinimumPaneSize(60)
         self._editors = wx.aui.AuiNotebook(
-            self,
+            self._splitter,
             style=(wx.aui.AUI_NB_CLOSE_ON_ALL_TABS |
                    wx.aui.AUI_NB_SCROLL_BUTTONS |
                    wx.aui.AUI_NB_WINDOWLIST_BUTTON))
@@ -595,9 +649,17 @@ class ChirpMain(wx.Frame):
         portdetect.get_monitor().add_listener(self._ports_changed_bg)
         self.Bind(wx.EVT_WINDOW_DESTROY, self._destroyed)
 
+        self._console = console.ConsolePanel(self._splitter)
+        if CONF.get_bool('show_console', 'prefs', True):
+            self._splitter.SplitHorizontally(self._editors, self._console,
+                                             -130)
+        else:
+            self._splitter.Initialize(self._editors)
+            self._console.Hide()
+
         vbox = wx.BoxSizer()
         self.SetSizer(vbox)
-        vbox.Add(self._editors, 1, flag=wx.EXPAND)
+        vbox.Add(self._splitter, 1, flag=wx.EXPAND)
 
         self.add_tab_panel = wx.Panel(self, pos=(0, 0), size=(600, 600))
         self.add_tab_panel.Hide()
@@ -713,6 +775,10 @@ class ChirpMain(wx.Frame):
         self.adj_menu_open_recent(filename)
         editorset = ChirpEditorSet(radio, filename, self._editors)
         self.add_editorset(editorset, select=select)
+        if exists:
+            console.log('file', _('Opened %(file)s (%(radio)s)') % {
+                'file': os.path.basename(filename),
+                'radio': '%s %s' % (radio.VENDOR, radio.MODEL)})
 
     def add_editorset(self, editorset, select=True, atindex=None):
         self._remove_welcome_page()
@@ -869,6 +935,16 @@ class ChirpMain(wx.Frame):
                   functools.partial(self._menu_import, excel=True),
                   import_excel)
 
+        self._pocket_menu_item = wx.NewId()
+        pocket_item = file_menu.Append(wx.MenuItem(
+            file_menu, self._pocket_menu_item, _('Pocket channel card...')))
+        self.Bind(wx.EVT_MENU, self._menu_pocket, pocket_item)
+
+        self._backups_menu_item = wx.NewId()
+        backups_item = file_menu.Append(wx.MenuItem(
+            file_menu, self._backups_menu_item, _('Backups...')))
+        self.Bind(wx.EVT_MENU, self._menu_backups, backups_item)
+
         self._export_excel_item = wx.NewId()
         export_excel = file_menu.Append(wx.MenuItem(
             file_menu, self._export_excel_item, _('Export to Excel...')))
@@ -994,12 +1070,21 @@ class ChirpMain(wx.Frame):
         self.Bind(wx.EVT_MENU, self._menu_show_toolbar, toolbar_item)
         toolbar_item.Check(CONF.get_bool('show_toolbar', 'prefs', True))
 
-        nvg_item = wx.MenuItem(view_menu, wx.NewId(),
-                               _('Night vision look'),
-                               kind=wx.ITEM_CHECK)
-        view_menu.Append(nvg_item)
-        self.Bind(wx.EVT_MENU, self._menu_nvg_theme, nvg_item)
-        nvg_item.Check(theme.enabled())
+        console_item = wx.MenuItem(view_menu, wx.NewId(),
+                                   _('Show event console'),
+                                   kind=wx.ITEM_CHECK)
+        view_menu.Append(console_item)
+        self.Bind(wx.EVT_MENU, self._menu_show_console, console_item)
+        console_item.Check(CONF.get_bool('show_console', 'prefs', True))
+
+        style_menu = wx.Menu()
+        for style, text in ((theme.STYLE_TERMINAL, _('Terminal')),
+                            (theme.STYLE_CLASSIC, _('Classic'))):
+            item = style_menu.AppendRadioItem(wx.ID_ANY, text)
+            item.Check(theme.style() == style)
+            self.Bind(wx.EVT_MENU,
+                      functools.partial(self._menu_style, style=style), item)
+        view_menu.AppendSubMenu(style_menu, _('Look'))
 
         lang_item = wx.MenuItem(view_menu, wx.NewId(),
                                 _('Language') + '...')
@@ -1021,6 +1106,15 @@ class ChirpMain(wx.Frame):
         self.Bind(wx.EVT_MENU, self._menu_download, download_item)
         radio_menu.Append(download_item)
 
+        self._detect_menu_item = wx.NewId()
+        detect_item = wx.MenuItem(radio_menu, self._detect_menu_item,
+                                  _('Detect radio and download...'))
+        detect_item.SetAccel(wx.AcceleratorEntry(updownmod, ord('R')))
+        self.Bind(wx.EVT_MENU,
+                  functools.partial(self._menu_download, detect=True),
+                  detect_item)
+        radio_menu.Append(detect_item)
+
         self._upload_menu_item = wx.NewId()
         upload_item = wx.MenuItem(
             radio_menu, self._upload_menu_item,
@@ -1028,6 +1122,24 @@ class ChirpMain(wx.Frame):
         upload_item.SetAccel(wx.AcceleratorEntry(updownmod, ord('U')))
         self.Bind(wx.EVT_MENU, self._menu_upload, upload_item)
         radio_menu.Append(upload_item)
+
+        self._freqcheck_menu_item = wx.NewId()
+        freqcheck_item = wx.MenuItem(radio_menu, self._freqcheck_menu_item,
+                                     _('Check frequencies...'))
+        self.Bind(wx.EVT_MENU, self._menu_freqcheck, freqcheck_item)
+        radio_menu.Append(freqcheck_item)
+
+        self._memmap_menu_item = wx.NewId()
+        memmap_item = wx.MenuItem(radio_menu, self._memmap_menu_item,
+                                  _('Memory map...'))
+        self.Bind(wx.EVT_MENU, self._menu_memmap, memmap_item)
+        radio_menu.Append(memmap_item)
+
+        self._batch_menu_item = wx.NewId()
+        batch_item = wx.MenuItem(radio_menu, self._batch_menu_item,
+                                 _('Program several radios...'))
+        self.Bind(wx.EVT_MENU, self._menu_batch, batch_item)
+        radio_menu.Append(batch_item)
 
         source_menu = wx.Menu()
         radio_menu.AppendSubMenu(source_menu, _('Query Source'))
@@ -1217,69 +1329,122 @@ class ChirpMain(wx.Frame):
                                 wx.TB_HORZ_LAYOUT | wx.TB_NODIVIDER)
         tb.SetToolBitmapSize((24, 24))
 
-        def bm(name):
-            return theme.icon(name, 24, 'accent')
+        def bm(name, tone):
+            return theme.icon(name, 24, tone)
 
         lbl = theme.label
         # The tools share the menu item IDs, so the existing menu handlers
-        # (and enable/disable logic) apply to them as well.
-        tb.AddTool(self._download_menu_item, lbl(_('Download from radio')),
-                   bm('download'),
+        # (and enable/disable logic) apply to them as well. The icon color
+        # tells what a tool does: blue reads the radio, orange writes it,
+        # white works on files (see theme.py).
+        tb.AddTool(self._download_menu_item,
+                   lbl(_('Download from radio'), 'alt+d'),
+                   bm('download', 'rx'),
                    _('Read the memories and settings from the radio'))
-        tb.AddTool(self._upload_menu_item, lbl(_('Upload to radio')),
-                   bm('upload'),
+        tb.AddTool(self._upload_menu_item,
+                   lbl(_('Upload to radio'), 'alt+u'),
+                   bm('upload', 'tx'),
                    _('Write this tab to the radio'))
         tb.AddSeparator()
-        tb.AddTool(wx.ID_OPEN, lbl(_('Open')), bm('folders'),
-                   _('Open a file'))
-        tb.AddTool(wx.ID_SAVE, lbl(_('Save')), bm('device-floppy'),
-                   _('Save file'))
-        tb.AddSeparator()
+        tb.AddTool(wx.ID_OPEN, lbl(_('Open'), 'ctrl+o'),
+                   bm('folders', 'file'), _('Open a file'))
+        tb.AddTool(wx.ID_SAVE, lbl(_('Save'), 'ctrl+s'),
+                   bm('device-floppy', 'file'), _('Save file'))
         tb.AddTool(self._export_excel_item, lbl(_('Export Excel')),
-                   bm('file-text'), _('Export to Excel...'))
+                   bm('file-text', 'file'), _('Export to Excel...'))
         tb.AddSeparator()
         tb.AddStretchableSpace()
         self._toolbar_cable = wx.StaticText(tb, label='')
         if theme.enabled():
-            tb.SetFont(theme.mono_font(9, bold=True))
+            tb.SetFont(theme.mono_font(9))
             tb.SetBackgroundColour(theme.colour('panel'))
-            tb.SetForegroundColour(theme.colour('accent'))
+            tb.SetForegroundColour(theme.colour('fg'))
             self._toolbar_cable.SetFont(theme.mono_font(10, bold=True))
-            self._toolbar_cable._nvg_keep_fg = True
-            self._toolbar_cable._nvg_keep_font = True
+            theme.keep(self._toolbar_cable, fg=True, font=True)
         tb.AddControl(self._toolbar_cable)
         tb.Realize()
         return tb
 
+    def welcome_commands(self):
+        """Numbered commands of the welcome screen: (key, label, tone, fn)"""
+        def post(ident):
+            return lambda: wx.PostEvent(
+                self, wx.CommandEvent(wx.wxEVT_MENU, ident))
+        return [
+            ('1', _('Download from radio'), 'rx',
+             post(self._download_menu_item)),
+            ('2', _('Open a file'), 'file', post(wx.ID_OPEN)),
+            ('3', _('Detect radio and download...').rstrip('.'), 'rx',
+             post(self._detect_menu_item)),
+            ('4', _('Import from Excel...').rstrip('.'), 'file',
+             post(self._import_excel_item)),
+            ('5', _('Backups...').rstrip('.'), 'file',
+             post(self._backups_menu_item)),
+        ]
+
     def _set_menu_icons(self):
         icons = {
-            wx.ID_NEW: 'plus',
-            wx.ID_OPEN: 'folders',
-            wx.ID_SAVE: 'device-floppy',
-            wx.ID_CLOSE: 'x',
-            wx.ID_PRINT: 'printer',
-            wx.ID_EXIT: 'logout',
-            wx.ID_FIND: 'search',
-            wx.ID_DELETE: 'trash',
-            wx.ID_PASTE: 'clipboard-text',
-            self._download_menu_item: 'download',
-            self._upload_menu_item: 'upload',
-            self._import_menu_item: 'file-text',
-            self._export_menu_item: 'file-text',
-            self._import_excel_item: 'file-text',
-            self._export_excel_item: 'file-text',
+            wx.ID_NEW: ('plus', 'file'),
+            wx.ID_OPEN: ('folders', 'file'),
+            wx.ID_SAVE: ('device-floppy', 'file'),
+            wx.ID_CLOSE: ('x', 'dim'),
+            wx.ID_PRINT: ('printer', 'file'),
+            wx.ID_EXIT: ('logout', 'bad'),
+            wx.ID_FIND: ('search', 'info'),
+            wx.ID_DELETE: ('trash', 'bad'),
+            wx.ID_PASTE: ('clipboard-text', 'fg'),
+            self._download_menu_item: ('download', 'rx'),
+            self._detect_menu_item: ('search', 'rx'),
+            self._upload_menu_item: ('upload', 'tx'),
+            self._batch_menu_item: ('upload', 'tx'),
+            self._freqcheck_menu_item: ('alert-triangle', 'warn'),
+            self._backups_menu_item: ('history', 'file'),
+            self._pocket_menu_item: ('printer', 'file'),
+            self._memmap_menu_item: ('file-text', 'info'),
+            self._import_menu_item: ('file-text', 'file'),
+            self._export_menu_item: ('file-text', 'file'),
+            self._import_excel_item: ('file-text', 'file'),
+            self._export_excel_item: ('file-text', 'file'),
         }
         menubar = self.GetMenuBar()
-        for ident, name in icons.items():
+        for ident, (name, tone) in icons.items():
             item = menubar.FindItemById(ident)
             if item:
-                item.SetBitmap(theme.icon(name, 16, 'fg'))
+                item.SetBitmap(theme.icon(name, 16, tone))
 
-    def _menu_nvg_theme(self, event):
-        CONF.set_bool('nvg_theme', event.IsChecked(), 'prefs')
-        wx.MessageBox(_('The new look is applied the next time CHIRP '
-                        'starts.'), 'CHIRP', wx.ICON_INFORMATION,
-                      parent=self)
+    def _menu_style(self, event, style):
+        if style == theme.style():
+            return
+        theme.set_style(style)
+        d = wx.MessageDialog(
+            self, _('The new look needs a restart of CHIRP. Restart now? '
+                    'You will be asked to save open files first.'),
+            'CHIRP', wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
+        d.SetYesNoLabels(_('Restart now'), _('Later'))
+        if d.ShowModal() == wx.ID_YES:
+            self._restart()
+
+    def _restart(self):
+        """Close (asking to save) and start CHIRP again"""
+        config._CONFIG.save()
+        if not self.Close():
+            return
+        if getattr(sys, 'frozen', False):
+            args = [sys.executable] + sys.argv[1:]
+        else:
+            args = [sys.executable] + sys.argv
+        LOG.info('Restarting: %s', args)
+        subprocess.Popen(args, close_fds=True)
+
+    def _menu_show_console(self, event):
+        show = event.IsChecked()
+        CONF.set_bool('show_console', show, 'prefs')
+        if show and not self._splitter.IsSplit():
+            self._console.Show()
+            self._splitter.SplitHorizontally(self._editors, self._console,
+                                             -130)
+        elif not show and self._splitter.IsSplit():
+            self._splitter.Unsplit(self._console)
 
     def _menu_show_toolbar(self, event):
         show = event.IsChecked()
@@ -1300,7 +1465,7 @@ class ChirpMain(wx.Frame):
             text = _('Cable: %s') % ', '.join(
                 '%s (%s)' % (p.short_device, p.chip or _('USB'))
                 for p in cables)
-            level = 'good'
+            level = 'ok'
         elif bad:
             text = _('Cable on %s needs a different driver') % (
                 bad[0].short_device)
@@ -1310,29 +1475,39 @@ class ChirpMain(wx.Frame):
             level = 'warn'
         self.statusbar.SetStatusText(text, i=1)
         if theme.enabled():
-            self._toolbar_cable.SetForegroundColour(theme.colour(
-                {'good': 'accent'}.get(level, level)))
-            self._toolbar_cable.SetLabel('%s %s  ' % (
-                {'good': '●', 'warn': '○'}.get(level, '✖'),
-                text.upper()))
+            self._toolbar_cable.SetForegroundColour(theme.colour(level))
+            self._toolbar_cable.SetLabel('%s %s  ' % (theme.TAGS[level],
+                                                      text.lower()))
         else:
             self._toolbar_cable.SetLabel(text + '  ')
         self.GetToolBar().Realize()
         for i in range(self._editors.GetPageCount()):
             page = self._editors.GetPage(i)
             if isinstance(page, ChirpWelcomePanel):
-                page.set_cable(text, level)
+                page.set_ports(ports)
         for port in ports:
             if port.device in added and port.is_cable:
-                self.statusbar.SetStatusText(
-                    _('Programming cable connected on %s') %
+                msg = _('Programming cable connected on %s') % (
                     port.short_device)
+                self.statusbar.SetStatusText(msg)
+                console.log('ok', '%s (%s)' % (msg, port.chip or 'USB'))
             elif port.device in added and not port.usable:
                 self.statusbar.SetStatusText(
                     wx.GetTranslation(port.warning))
+                console.log('bad', '%s: %s' % (
+                    port.short_device, wx.GetTranslation(port.warning)))
+            elif port.device in added:
+                console.log('info', _('Serial port %s connected') %
+                            port.short_device)
         for device in removed:
-            self.statusbar.SetStatusText(
-                _('Serial port %s disconnected') % device)
+            msg = _('Serial port %s disconnected') % device
+            self.statusbar.SetStatusText(msg)
+            console.log('warn', msg)
+        if not added and not removed and not getattr(self, '_ports_logged',
+                                                     False):
+            # First scan after start: say what we found once
+            self._ports_logged = True
+            console.log(level, text)
 
     def _destroyed(self, event):
         event.Skip()
@@ -1393,9 +1568,12 @@ class ChirpMain(wx.Frame):
             self.Bind(wx.EVT_MENU, self._menu_open_recent, mi)
 
     def _editor_page_changed(self, event):
-        self._editors.GetPage(event.GetSelection())
+        selection = event.GetSelection()
         self._update_window_for_editor()
-        editors = self._editors.GetPage(event.GetSelection())
+        if not 0 <= selection < self._editors.GetPageCount():
+            # Sent while the last tab is being closed: nothing to select
+            return
+        editors = self._editors.GetPage(selection)
         if editors:
             editors.selected()
 
@@ -1528,6 +1706,10 @@ class ChirpMain(wx.Frame):
             (wx.ID_SAVE, can_save),
             (wx.ID_SAVEAS, can_saveas),
             (self._upload_menu_item, can_upload),
+            (self._batch_menu_item, can_upload),
+            (self._freqcheck_menu_item, can_close),
+            (self._pocket_menu_item, is_memedit),
+            (self._memmap_menu_item, can_upload),
             (self._find_next_item, is_memedit),
             (wx.ID_FIND, is_memedit),
             (wx.ID_PRINT, is_memedit),
@@ -1725,6 +1907,7 @@ class ChirpMain(wx.Frame):
             chirp_platform.get_platform().set_last_dir(
                 fd.GetDirectory())
             eset.save(filename)
+            console.log('file', _('Saved %s') % os.path.basename(filename))
             self.adj_menu_open_recent(filename)
             self._update_editorset_title(eset)
             self._update_window_for_editor()
@@ -1750,6 +1933,8 @@ class ChirpMain(wx.Frame):
             return self._menu_save_as(event)
 
         editorset.save()
+        console.log('file', _('Saved %s') % os.path.basename(
+            editorset.filename))
         self._update_editorset_title(self.current_editorset)
 
     @common.error_proof(errors.ImageDetectFailed, FileNotFoundError)
@@ -1804,6 +1989,8 @@ class ChirpMain(wx.Frame):
             if fd.ShowModal() == wx.ID_CANCEL:
                 return
             self.current_editorset.export_to_file(fd.GetPath())
+            console.log('file', _('Exported %s') % os.path.basename(
+                fd.GetPath()))
 
     def _prompt_to_close_editor(self, editorset):
         """Returns True if it is okay to close the editor, False otherwise"""
@@ -1988,9 +2175,9 @@ class ChirpMain(wx.Frame):
 
         return backup_fn
 
-    def _menu_download(self, event):
+    def _menu_download(self, event, detect=False):
         self.enable_bugreport()
-        with clone.ChirpDownloadDialog(self) as d:
+        with clone.ChirpDownloadDialog(self, detect=detect) as d:
             d.Centre()
             ok = d.ShowModal() == wx.ID_OK
             radio = d._radio if ok else None
@@ -2009,6 +2196,8 @@ class ChirpMain(wx.Frame):
         wx.SafeYield()
         if not ok:
             return
+        console.log('rx', _('Downloaded %s %s') % (
+            radio.VENDOR, radio.MODEL))
         self._make_backup(radio, 'download')
         report.report_model(radio, 'download')
         if isinstance(radio, chirp_common.LiveRadio):
@@ -2016,6 +2205,78 @@ class ChirpMain(wx.Frame):
         else:
             editorset = ChirpEditorSet(radio, None, self._editors)
         self.add_editorset(editorset)
+
+    def _menu_backups(self, event):
+        eset = self.current_editorset
+        radio = eset.radio if eset is not None else None
+        with backups.BackupsDialog(self, radio) as d:
+            d.ShowModal()
+
+    def _menu_freqcheck(self, event):
+        if not self._require_editorset():
+            return
+        radio = self.current_editorset.radio
+        if isinstance(radio, chirp_common.LiveRadio):
+            wx.MessageBox(_('The frequency check works on images, not on '
+                            'live radios.'), _('Frequency check'),
+                          wx.ICON_INFORMATION, parent=self)
+            return
+        findings = freq_check.check_radio(radio)
+        counts = freq_check.summary(findings)
+        tone = 'bad' if counts['bad'] else 'warn' if counts['warn'] else 'ok'
+        console.log(tone, _('Frequency check: %(bad)i errors, %(warn)i '
+                            'warnings, %(info)i notes') % counts)
+        with freqcheck.FreqCheckDialog(self, radio, findings) as d:
+            d.ShowModal()
+
+    def _menu_pocket(self, event):
+        if not self._require_editorset():
+            return
+        radio = self.current_editorset.radio
+        labels = {k: wx.GetTranslation(v)
+                  for k, v in pocket_card.LABELS.items()}
+        page = pocket_card.build_html(radio, labels=labels)
+        printer = wx.html.HtmlEasyPrinting(_('Pocket channel card'), self)
+        printer.GetPrintData().SetPaperId(wx.PAPER_A4)
+        printer.GetPrintData().SetOrientation(wx.PORTRAIT)
+        printer.SetStandardFonts(7, 'Arial', 'Consolas')
+        console.log('file', _('Pocket card for %s') % os.path.basename(
+            self.current_editorset.filename))
+        printer.PreviewText(page)
+
+    def _menu_memmap(self, event):
+        if not self._require_editorset():
+            return
+        radio = self.current_editorset.radio
+        if not getattr(radio, '_memobj', None) or not isinstance(
+                radio, chirp_common.CloneModeRadio):
+            wx.MessageBox(_('The memory map is available for images '
+                            'downloaded from a radio.'), _('Memory map'),
+                          wx.ICON_INFORMATION, parent=self)
+            return
+        with memmap_view.MemoryMapDialog(self, radio) as d:
+            d.ShowModal()
+
+    def _menu_batch(self, event):
+        if not self._require_editorset():
+            return
+        radio = self.current_editorset.radio
+        if not batch.can_batch(radio):
+            wx.MessageBox(_('Only images downloaded from a radio (clone '
+                            'mode) can be written into several radios.'),
+                          _('Program several radios'), wx.ICON_INFORMATION,
+                          parent=self)
+            return
+        fn = self._make_backup(radio, 'upload')
+        with batch.BatchDialog(self, radio) as d:
+            d.ShowModal()
+            programmed = d.programmed
+        if not programmed and fn:
+            LOG.info('Removing unused batch backup %s', fn)
+            try:
+                os.remove(fn)
+            except Exception:
+                pass
 
     def _menu_upload(self, event):
         if not self._require_editorset():
@@ -2044,6 +2305,9 @@ class ChirpMain(wx.Frame):
         with d:
             d.Centre()
             r = d.ShowModal()
+            if r == wx.ID_OK and isinstance(d, clone.ChirpUploadDialog):
+                console.log('tx', _('Uploaded to %s %s') % (
+                    radio.VENDOR, radio.MODEL))
             if r != wx.ID_OK:
                 LOG.info('Removing un-uploaded backup %s', fn)
                 try:
