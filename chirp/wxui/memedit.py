@@ -2174,7 +2174,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 self._digest_power(mem, col_def, val)
             else:
                 col_def.digest_value(mem, val)
-        except (ValueError, errors.InvalidValueError) as e:
+        except (ValueError, errors.InvalidValueError,
+                settings.InvalidValueError) as e:
+            # settings.InvalidValueError: from the memory's extra fields
             if interactive:
                 raise
             raise cellops.CellRejected(str(e))
@@ -2625,6 +2627,8 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                  editable and len(self._series_cells()) > 1),
                 (_('Clear cells'), self.clear_cells, editable)):
             item = menu.Append(wx.ID_ANY, label)
+            # An error is shown, not lost in the event loop
+            command = common.error_proof()(command)
             # Bound to the menu, so the handlers go away with it
             menu.Bind(wx.EVT_MENU,
                       lambda event, command=command: command(), item)
@@ -3176,6 +3180,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         d.ShowModal()
         d.Destroy()
 
+    @common.error_proof()
     def fill_down(self):
         """Copy the top selected cell of each column to the others below.
 
@@ -3196,6 +3201,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         if edits:
             self.bulk_edit(_('Fill %i cells') % len(edits), edits)
 
+    @common.error_proof()
     def fill_to(self, last_row):
         """Continue the selected cells down to `last_row` (fill handle).
 
@@ -3267,6 +3273,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                       for col in cols) + '\n'
             for row, cols in sorted(rows.items()))
 
+    @common.error_proof()
     def clear_cells(self):
         """Empty the selected cells of the memories that are not empty."""
         edits = []

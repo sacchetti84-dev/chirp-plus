@@ -35,6 +35,7 @@ _CONF.set_bool('iaru_r1', True, 'bandplan')
 
 from chirp import chirp_common  # noqa: E402
 from chirp import directory  # noqa: E402
+from chirp import settings  # noqa: E402
 from chirp.wxui import memedit as memedit_mod  # noqa: E402
 from chirp.wxui import radiothread  # noqa: E402
 from chirp.wxui import cellops  # noqa: E402
@@ -281,6 +282,76 @@ def test_tone_column_sets_tmode(memedit):
                                    memedit._col_def_by_name('rtone'), '100.0',
                                    interactive=False)
     assert out.rtone == 100.0 and out.tmode == 'Tone'
+
+
+def _with_integer_extra(mem, mutable=True):
+    """`mem` with its own extra: an integer setting 0-10, now 5."""
+    value = settings.RadioSettingValueInteger(0, 10, 5)
+    value.set_mutable(mutable)
+    mem.extra = settings.RadioSettingGroup(
+        'extra', 'extra', settings.RadioSetting('volume', 'Volume', value))
+    return mem
+
+
+def test_noninteractive_bad_extra_value_rejected(memedit):
+    mem = _with_integer_extra(memedit.memory_for_row(1))
+    col = memedit_mod.get_column_for_extra(memedit._radio,
+                                           mem.extra['volume'])
+    assert col.name == 'extra.volume'
+    for text in ('abc', '42'):
+        with pytest.raises(cellops.CellRejected):
+            memedit.apply_cell_value(mem, col, text, interactive=False)
+    mem = _with_integer_extra(memedit.memory_for_row(1), mutable=False)
+    with pytest.raises(cellops.CellRejected):
+        memedit.apply_cell_value(mem, col, '7', interactive=False)
+    mem = _with_integer_extra(memedit.memory_for_row(1))
+    out = memedit.apply_cell_value(mem, col, '7', interactive=False)
+    assert int(out.extra['volume'].value) == 7
+
+
+def test_settings_error_in_a_cell_does_not_stop_bulk_edit(memedit,
+                                                          monkeypatch):
+    dialogs = Dialogs()
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    _seeded(memedit, {1: 'A', 2: 'B'})
+    name_col = memedit._col_def_by_name('name')
+    digest = name_col.digest_value
+
+    def picky(mem, value):
+        if value == 'BAD':
+            raise settings.InvalidValueError('Not for this radio')
+        return digest(mem, value)
+    monkeypatch.setattr(name_col, 'digest_value', picky)
+    name = _col_index(memedit, 'name')
+    comment = _col_index(memedit, 'comment')
+    result = memedit.bulk_edit('Test', [cellops.CellEdit(1, name, 'BAD'),
+                                        cellops.CellEdit(1, comment, 'c1'),
+                                        cellops.CellEdit(2, name, 'OK')])
+    assert [m.number for m in result.changed] == [1, 2]
+    assert memedit._radio.get_memory(1).name == 'A'
+    assert memedit._radio.get_memory(2).name == 'OK'
+    assert result.problems == [('1 name', 'Not for this radio')]
+    caption, message, extended = dialogs.shown[0]
+    assert extended == '[1 name]: Not for this radio'
+
+
+def test_cell_commands_show_unexpected_errors(memedit, monkeypatch):
+    shown = []
+    monkeypatch.setattr(common.error_proof, 'show_error',
+                        lambda *a, **k: shown.append(a))
+
+    def broken(editor, edits):
+        raise RuntimeError('boom')
+    monkeypatch.setattr(cellops, 'apply_edits', broken)
+    _seeded(memedit, {1: 'A', 2: 'B'})
+    _select(memedit, 1, 2, 'name')
+    memedit.fill_down()
+    memedit.clear_cells()
+    memedit.fill_to(4)
+    assert len(shown) == 3
+    _menu(memedit, monkeypatch, 1, 'name', click='Fill down')
+    assert len(shown) == 4
+    assert _names(memedit, [1, 2]) == ['A', 'B']
 
 
 def test_protocol_for_cellops(memedit):
