@@ -4942,3 +4942,67 @@ msgstr "Requiere una elección que la edición múltiple no puede hacer"
 
 msgid "Invalid value for %s: %r"
 msgstr "Valor inválido para %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: un perfil necesita \"name\" y \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" indica un canal, solo para números"
+
+msgid "no channel called %s"
+msgstr "ningún canal llamado %s"
+
+msgid "wrong kind of value: %r"
+msgstr "tipo de valor incorrecto: %r"
+
+msgid "this radio has no such setting"
+msgstr "esta radio no tiene ese ajuste"
+
+msgid "this channel has no such column"
+msgstr "este canal no tiene esa columna"
+
+msgid "Settings profile"
+msgstr "Perfil de ajustes"
+
+msgid "From file..."
+msgstr "Desde archivo..."
+
+msgid "Apply settings profile"
+msgstr "Aplicar perfil de ajustes"
+
+msgid "Some settings were not changed"
+msgstr "Algunos ajustes no se cambiaron"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Los perfiles de ajustes funcionan con imágenes descargadas de una radio, no "
+"con radios en vivo ni con archivos."
+
+msgid "The radio already has these settings."
+msgstr "La radio ya tiene estos ajustes."
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Applied profile %s"
+msgstr "Perfil %s aplicado"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "El perfil es para %s. ¿Aplicarlo de todos modos?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Los ajustes no se pueden deshacer: para volver atrás, abra la copia de "
+"seguridad de la descarga."
+
+msgid "Now"
+msgstr "Ahora"
+
+msgid "With the profile"
+msgstr "Con el perfil"
+
+msgid "Profile %s"
+msgstr "Perfil %s"

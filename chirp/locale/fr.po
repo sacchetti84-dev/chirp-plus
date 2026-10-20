@@ -4721,3 +4721,67 @@ msgstr "Nécessite un choix que la modification groupée ne peut pas faire"
 
 msgid "Invalid value for %s: %r"
 msgstr "Valeur invalide pour %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s : un profil doit avoir \"name\" et \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" désigne un canal, seulement pour les nombres"
+
+msgid "no channel called %s"
+msgstr "aucun canal nommé %s"
+
+msgid "wrong kind of value: %r"
+msgstr "mauvais type de valeur : %r"
+
+msgid "this radio has no such setting"
+msgstr "cette radio n'a pas ce réglage"
+
+msgid "this channel has no such column"
+msgstr "ce canal n'a pas cette colonne"
+
+msgid "Settings profile"
+msgstr "Profil de réglages"
+
+msgid "From file..."
+msgstr "Depuis un fichier..."
+
+msgid "Apply settings profile"
+msgstr "Appliquer un profil de réglages"
+
+msgid "Some settings were not changed"
+msgstr "Certains réglages n'ont pas été modifiés"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Les profils de réglages fonctionnent sur les images téléchargées d'une "
+"radio, pas sur les radios en direct ni sur les fichiers."
+
+msgid "The radio already has these settings."
+msgstr "La radio a déjà ces réglages."
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid "Applied profile %s"
+msgstr "Profil %s appliqué"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Le profil est pour %s. L'appliquer quand même ?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Les réglages ne peuvent pas être annulés : pour revenir en arrière, rouvrez "
+"la sauvegarde du téléchargement."
+
+msgid "Now"
+msgstr "Maintenant"
+
+msgid "With the profile"
+msgstr "Avec le profil"
+
+msgid "Profile %s"
+msgstr "Profil %s"

@@ -3792,3 +3792,67 @@ msgstr ""
 
 msgid "Invalid value for %s: %r"
 msgstr "Ungültiger Wert für %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: ein Profil braucht \"name\" und \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" bezeichnet einen Kanal, nur für Zahlen"
+
+msgid "no channel called %s"
+msgstr "kein Kanal namens %s"
+
+msgid "wrong kind of value: %r"
+msgstr "falsche Art von Wert: %r"
+
+msgid "this radio has no such setting"
+msgstr "dieses Funkgerät hat diese Einstellung nicht"
+
+msgid "this channel has no such column"
+msgstr "dieser Kanal hat diese Spalte nicht"
+
+msgid "Settings profile"
+msgstr "Einstellungsprofil"
+
+msgid "From file..."
+msgstr "Aus Datei..."
+
+msgid "Apply settings profile"
+msgstr "Einstellungsprofil anwenden"
+
+msgid "Some settings were not changed"
+msgstr "Einige Einstellungen wurden nicht geändert"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Einstellungsprofile funktionieren mit Abbildern, die von einem Funkgerät "
+"heruntergeladen wurden, nicht mit Live-Funkgeräten oder Dateien."
+
+msgid "The radio already has these settings."
+msgstr "Das Funkgerät hat diese Einstellungen bereits."
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "Applied profile %s"
+msgstr "Profil %s angewendet"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Das Profil ist für %s. Trotzdem anwenden?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Einstellungen lassen sich nicht rückgängig machen: zum Zurückgehen die "
+"Sicherung des Downloads öffnen."
+
+msgid "Now"
+msgstr "Jetzt"
+
+msgid "With the profile"
+msgstr "Mit dem Profil"
+
+msgid "Profile %s"
+msgstr "Profil %s"

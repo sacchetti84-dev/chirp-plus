@@ -4174,3 +4174,66 @@ msgstr "Wymaga wyboru, którego edycja zbiorcza nie może dokonać"
 
 msgid "Invalid value for %s: %r"
 msgstr "Niewłaściwa wartość dla %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: profil musi mieć \"name\" i \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" oznacza kanał, tylko dla liczb"
+
+msgid "no channel called %s"
+msgstr "brak kanału o nazwie %s"
+
+msgid "wrong kind of value: %r"
+msgstr "zły rodzaj wartości: %r"
+
+msgid "this radio has no such setting"
+msgstr "ta radiostacja nie ma takiego ustawienia"
+
+msgid "this channel has no such column"
+msgstr "ten kanał nie ma takiej kolumny"
+
+msgid "Settings profile"
+msgstr "Profil ustawień"
+
+msgid "From file..."
+msgstr "Z pliku..."
+
+msgid "Apply settings profile"
+msgstr "Zastosuj profil ustawień"
+
+msgid "Some settings were not changed"
+msgstr "Niektóre ustawienia nie zostały zmienione"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Profile ustawień działają na obrazach pobranych z radiostacji, nie na "
+"radiostacjach w trybie na żywo ani na plikach."
+
+msgid "The radio already has these settings."
+msgstr "Radiostacja ma już te ustawienia."
+
+msgid "Apply"
+msgstr "Zastosuj"
+
+msgid "Applied profile %s"
+msgstr "Zastosowano profil %s"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Profil jest dla %s. Zastosować mimo to?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Ustawień nie można cofnąć: aby wrócić, otwórz kopię zapasową z pobierania."
+
+msgid "Now"
+msgstr "Teraz"
+
+msgid "With the profile"
+msgstr "Z profilem"
+
+msgid "Profile %s"
+msgstr "Profil %s"

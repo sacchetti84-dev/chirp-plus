@@ -4737,3 +4737,67 @@ msgstr "Нужен выбор, который массовое изменени�
 
 msgid "Invalid value for %s: %r"
 msgstr "Неверное значение для %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: в профиле должны быть \"name\" и \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" обозначает канал, только для чисел"
+
+msgid "no channel called %s"
+msgstr "нет канала с именем %s"
+
+msgid "wrong kind of value: %r"
+msgstr "неверный тип значения: %r"
+
+msgid "this radio has no such setting"
+msgstr "у этой станции нет такого параметра"
+
+msgid "this channel has no such column"
+msgstr "у этого канала нет такого столбца"
+
+msgid "Settings profile"
+msgstr "Профиль параметров"
+
+msgid "From file..."
+msgstr "Из файла..."
+
+msgid "Apply settings profile"
+msgstr "Применить профиль параметров"
+
+msgid "Some settings were not changed"
+msgstr "Некоторые параметры не изменены"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Профили параметров работают с образами, загруженными из станции, а не со "
+"станциями в реальном времени или файлами."
+
+msgid "The radio already has these settings."
+msgstr "В станции уже эти параметры."
+
+msgid "Apply"
+msgstr "Применить"
+
+msgid "Applied profile %s"
+msgstr "Применён профиль %s"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Профиль предназначен для %s. Всё равно применить?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Изменение параметров нельзя отменить: чтобы вернуться, откройте резервную "
+"копию загрузки."
+
+msgid "Now"
+msgstr "Сейчас"
+
+msgid "With the profile"
+msgstr "С профилем"
+
+msgid "Profile %s"
+msgstr "Профиль %s"

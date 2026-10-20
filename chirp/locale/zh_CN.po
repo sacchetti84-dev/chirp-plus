@@ -4767,3 +4767,63 @@ msgstr "需要一个批量编辑无法做出的选择"
 
 msgid "Invalid value for %s: %r"
 msgstr "%s 的值无效：%r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: 配置文件需要 \"name\" 和 \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" 表示一个信道, 仅用于数字"
+
+msgid "no channel called %s"
+msgstr "没有名为 %s 的信道"
+
+msgid "wrong kind of value: %r"
+msgstr "值的类型错误: %r"
+
+msgid "this radio has no such setting"
+msgstr "此电台没有该设置"
+
+msgid "this channel has no such column"
+msgstr "此信道没有该列"
+
+msgid "Settings profile"
+msgstr "设置配置"
+
+msgid "From file..."
+msgstr "从文件..."
+
+msgid "Apply settings profile"
+msgstr "应用设置配置"
+
+msgid "Some settings were not changed"
+msgstr "部分设置未被更改"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr "设置配置适用于从电台下载的镜像, 不适用于实时连接的电台或文件。"
+
+msgid "The radio already has these settings."
+msgstr "电台已是这些设置。"
+
+msgid "Apply"
+msgstr "应用"
+
+msgid "Applied profile %s"
+msgstr "已应用配置 %s"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "此配置适用于 %s。仍要应用吗?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr "设置无法撤销: 要恢复, 请打开下载时的备份。"
+
+msgid "Now"
+msgstr "当前"
+
+msgid "With the profile"
+msgstr "应用配置后"
+
+msgid "Profile %s"
+msgstr "配置 %s"

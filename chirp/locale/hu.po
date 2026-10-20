@@ -4333,3 +4333,67 @@ msgstr "Olyan döntést igényel, amelyet a tömeges szerkesztés nem hozhat meg
 
 msgid "Invalid value for %s: %r"
 msgstr "Érvénytelen érték a(z) %s mezőben: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: a profilnak kell \"name\" és \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "a \"@\" csatornát jelöl, csak számokhoz"
+
+msgid "no channel called %s"
+msgstr "nincs %s nevű csatorna"
+
+msgid "wrong kind of value: %r"
+msgstr "rossz fajta érték: %r"
+
+msgid "this radio has no such setting"
+msgstr "ennek a rádiónak nincs ilyen beállítása"
+
+msgid "this channel has no such column"
+msgstr "ennek a csatornának nincs ilyen oszlopa"
+
+msgid "Settings profile"
+msgstr "Beállítási profil"
+
+msgid "From file..."
+msgstr "Fájlból..."
+
+msgid "Apply settings profile"
+msgstr "Beállítási profil alkalmazása"
+
+msgid "Some settings were not changed"
+msgstr "Néhány beállítás nem változott"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"A beállítási profilok a rádióról letöltött képfájlokon működnek, élő "
+"rádiókon és fájlokon nem."
+
+msgid "The radio already has these settings."
+msgstr "A rádióban már ezek a beállítások vannak."
+
+msgid "Apply"
+msgstr "Alkalmaz"
+
+msgid "Applied profile %s"
+msgstr "A(z) %s profil alkalmazva"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "A profil ehhez készült: %s. Mégis alkalmazza?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"A beállítások nem vonhatók vissza: a visszatéréshez nyissa meg a letöltés "
+"biztonsági mentését."
+
+msgid "Now"
+msgstr "Most"
+
+msgid "With the profile"
+msgstr "A profillal"
+
+msgid "Profile %s"
+msgstr "Profil: %s"

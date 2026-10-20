@@ -4665,3 +4665,65 @@ msgstr "Toplu düzenlemenin yapamayacağı bir seçim gerektiriyor"
 
 msgid "Invalid value for %s: %r"
 msgstr "%s için geçersiz değer: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: bir profilde \"name\" ve \"settings\" olmalı"
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" bir kanalı gösterir, yalnızca sayılar için"
+
+msgid "no channel called %s"
+msgstr "%s adında kanal yok"
+
+msgid "wrong kind of value: %r"
+msgstr "yanlış değer türü: %r"
+
+msgid "this radio has no such setting"
+msgstr "bu telsizde böyle bir ayar yok"
+
+msgid "this channel has no such column"
+msgstr "bu kanalda böyle bir sütun yok"
+
+msgid "Settings profile"
+msgstr "Ayar profili"
+
+msgid "From file..."
+msgstr "Dosyadan..."
+
+msgid "Apply settings profile"
+msgstr "Ayar profilini uygula"
+
+msgid "Some settings were not changed"
+msgstr "Bazı ayarlar değiştirilmedi"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Ayar profilleri bir telsizden indirilen imajlarda çalışır; canlı telsizlerde"
+" veya dosyalarda çalışmaz."
+
+msgid "The radio already has these settings."
+msgstr "Telsizde bu ayarlar zaten var."
+
+msgid "Apply"
+msgstr "Uygula"
+
+msgid "Applied profile %s"
+msgstr "%s profili uygulandı"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Profil %s için. Yine de uygulansın mı?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr "Ayarlar geri alınamaz: geri dönmek için indirmenin yedeğini açın."
+
+msgid "Now"
+msgstr "Şimdi"
+
+msgid "With the profile"
+msgstr "Profille"
+
+msgid "Profile %s"
+msgstr "Profil %s"

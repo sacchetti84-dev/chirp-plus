@@ -4391,3 +4391,67 @@ msgstr "Necesită o alegere pe care editarea în masă nu o poate face"
 
 msgid "Invalid value for %s: %r"
 msgstr "Valoare invalidă pentru %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: un profil are nevoie de \"name\" și \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "\"@\" indică un canal, doar pentru numere"
+
+msgid "no channel called %s"
+msgstr "niciun canal numit %s"
+
+msgid "wrong kind of value: %r"
+msgstr "tip greșit de valoare: %r"
+
+msgid "this radio has no such setting"
+msgstr "această stație nu are această setare"
+
+msgid "this channel has no such column"
+msgstr "acest canal nu are această coloană"
+
+msgid "Settings profile"
+msgstr "Profil de setări"
+
+msgid "From file..."
+msgstr "Din fișier..."
+
+msgid "Apply settings profile"
+msgstr "Aplică profil de setări"
+
+msgid "Some settings were not changed"
+msgstr "Unele setări nu au fost schimbate"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Profilurile de setări funcționează pe imagini descărcate dintr-o stație, nu "
+"pe stații în direct sau pe fișiere."
+
+msgid "The radio already has these settings."
+msgstr "Stația are deja aceste setări."
+
+msgid "Apply"
+msgstr "Aplică"
+
+msgid "Applied profile %s"
+msgstr "Profilul %s a fost aplicat"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Profilul este pentru %s. Îl aplicați oricum?"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Setările nu pot fi anulate: pentru a reveni, deschideți copia de siguranță a"
+" descărcării."
+
+msgid "Now"
+msgstr "Acum"
+
+msgid "With the profile"
+msgstr "Cu profilul"
+
+msgid "Profile %s"
+msgstr "Profil %s"

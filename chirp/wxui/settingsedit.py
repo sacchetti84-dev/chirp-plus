@@ -100,7 +100,11 @@ class ChirpSettingsEdit(common.ChirpEditor):
             self._restore_selection = pos
 
     def refresh(self):
-        self._restore_selection = self._group_control.GetSelection()
+        # CHIRP Plus: a tab that was never shown has no page selected
+        # (NOT_FOUND); restoring that would assert once it loads
+        selection = self._group_control.GetSelection()
+        self._restore_selection = (selection if selection != wx.NOT_FOUND
+                                   else None)
         self._group_control.DeleteAllPages()
         # Next select will re-load everything
         self._initialized = False

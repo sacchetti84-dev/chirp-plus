@@ -161,6 +161,23 @@ calcolo, con la validazione della radio e i colori del tema.
     sente. Prima di usarle, lasciate le frequenze in scansione qualche giorno
     nella vostra zona e sostituite quelle occupate.
 
+    Con il preset c'è il **profilo di impostazioni** "IT Team Sierra -
+    impostazioni UV-5R" (`chirp/settings_profiles/`): squelch 3, risparmio
+    batteria 1:2, timeout 60 s, display con i nomi, LED/beep/voce/roger
+    beep spenti, dual watch con trasmissione su A, blocco su canale occupato,
+    blocco tasti, radio FM spenta, STE, menu ridotto, **trasmissione UHF
+    disattivata** (niente trasmissioni per sbaglio su PMR/LPD), solo
+    canali, A = SIERRA1 e B = PMR 01, VFO a bassa potenza e banda stretta,
+    niente PTT-ID; nei canali PTT-ID Off su tutti e BCL On sui SIERR*.
+    Uso: scarica la radio → importa "IT Team Sierra" → **Radio > Applica
+    profilo impostazioni** → controlla l'elenco "Ora / Con il profilo" →
+    Applica → carica (o Programma più radio). Non tocca firmware, messaggi
+    di avvio, limiti di frequenza, codici DTMF e VFO di ogni radio; le voci
+    che una radio non ha sono saltate ed elencate. Le impostazioni non si
+    annullano con Ctrl+Z (i canali sì): per tornare indietro si riapre il
+    backup del download. "Da file…" applica un profilo JSON vostro (formato
+    in `chirp/settings_profile.py`).
+
   Le liste generate vengono da `tools/make_ham_presets.py`: per aggiornare i
   satelliti (la tabella AMSAT cambia) si modifica lo script e lo si rilancia.
   Il tono di accesso dei ponti (1750 Hz o CTCSS) dipende dal singolo ponte e

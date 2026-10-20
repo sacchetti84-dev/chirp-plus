@@ -3835,3 +3835,67 @@ msgstr "Απαιτεί μια επιλογή που η μαζική επεξερ
 
 msgid "Invalid value for %s: %r"
 msgstr "Μη έγκυρη τιμή για %s: %r"
+
+msgid "%s: a profile needs a \"name\" and \"settings\""
+msgstr "%s: ένα προφίλ χρειάζεται \"name\" και \"settings\""
+
+msgid "\"@\" names a channel, only for numbers"
+msgstr "το \"@\" δείχνει κανάλι, μόνο για αριθμούς"
+
+msgid "no channel called %s"
+msgstr "δεν υπάρχει κανάλι με όνομα %s"
+
+msgid "wrong kind of value: %r"
+msgstr "λάθος είδος τιμής: %r"
+
+msgid "this radio has no such setting"
+msgstr "αυτός ο πομποδέκτης δεν έχει αυτή τη ρύθμιση"
+
+msgid "this channel has no such column"
+msgstr "αυτό το κανάλι δεν έχει αυτή τη στήλη"
+
+msgid "Settings profile"
+msgstr "Προφίλ ρυθμίσεων"
+
+msgid "From file..."
+msgstr "Από αρχείο..."
+
+msgid "Apply settings profile"
+msgstr "Εφαρμογή προφίλ ρυθμίσεων"
+
+msgid "Some settings were not changed"
+msgstr "Ορισμένες ρυθμίσεις δεν άλλαξαν"
+
+msgid ""
+"Settings profiles work on radio images downloaded from a radio, not on live "
+"radios or files."
+msgstr ""
+"Τα προφίλ ρυθμίσεων λειτουργούν σε εικόνες που λήφθηκαν από πομποδέκτη, όχι "
+"σε πομποδέκτες σε πραγματικό χρόνο ή σε αρχεία."
+
+msgid "The radio already has these settings."
+msgstr "Ο πομποδέκτης έχει ήδη αυτές τις ρυθμίσεις."
+
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+msgid "Applied profile %s"
+msgstr "Εφαρμόστηκε το προφίλ %s"
+
+msgid "The profile is for %s. Apply it anyway?"
+msgstr "Το προφίλ είναι για %s. Να εφαρμοστεί παρ' όλα αυτά;"
+
+msgid ""
+"Settings cannot be undone: to go back, open the backup of the download."
+msgstr ""
+"Οι ρυθμίσεις δεν αναιρούνται: για επιστροφή, ανοίξτε το αντίγραφο ασφαλείας "
+"της λήψης."
+
+msgid "Now"
+msgstr "Τώρα"
+
+msgid "With the profile"
+msgstr "Με το προφίλ"
+
+msgid "Profile %s"
+msgstr "Προφίλ %s"

@@ -56,6 +56,7 @@ adds tools for people who use radios in Italy.
 | 🗂️ | **Pocket channel card** to print | File > Pocket channel card |
 | 📊 | **Excel import/export** (`.xlsx`, and reading `.xls`) | File > Import / Export |
 | 🇮🇹 | **Italian presets**: calling and simplex, 2 m and 70 cm repeaters, satellites, LPD and PMR446 | File > Open Stock Config |
+| ⚙️ | **Settings profiles**: a team's radio settings applied in one go, after a review of every change | Radio > Apply settings profile |
 | 🌍 | **18 languages**: every new text is translated too | follows the Windows language |
 
 ### A terminal look, where colors mean something
@@ -217,7 +218,7 @@ and the channel comments are in Italian.
 | IT Satelliti FM radioamatori | 16 | SO-50 (with the timer arming channel), ISS, AO-123, PO-101, AO-91: split with CTCSS and three Doppler steps |
 | IT Radioamatori tutto in uno | 72 | all of the above together, fits the 128 memories of a UV-9R |
 | IT LPD e PMR446 | 85 | 69 LPD and 16 PMR446 channels at their legal power |
-| IT Team Sierra | 95 | SIERRA 1–10 team channels (2 m simplex on little-used 12.5 kHz channels, one DCS code each, amateur license needed), plus PMR446 1–16 and LPD 1–69 receive only to hear licence-free teams |
+| IT Team Sierra | 95 | SIERRA 1–10 team channels (2 m simplex on little-used 12.5 kHz channels, one DCS code each, amateur license needed), plus PMR446 1–16 and LPD 1–69 receive only to hear licence-free teams. Comes with a **settings profile** for the UV-5R (Radio > Apply settings profile): squelch, LEDs and beeps off, dual watch, busy-channel lockout, UHF transmit off, channel mode, no PTT-ID |
 
 > [!NOTE]
 > Transmitting on 2 m and 70 cm needs an amateur radio license. LPD and

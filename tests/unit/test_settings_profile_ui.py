@@ -148,6 +148,20 @@ def test_apply_shows_changes_then_applies(sierra_set, answer, monkeypatch):
     assert refreshed
 
 
+def test_refresh_before_settings_tab_was_ever_shown(sierra_set):
+    # Applying a profile refreshes the Settings tab even if it was never
+    # opened: loading it afterwards must not select page -1
+    editor = next(e for _t, e in sierra_set.iter_editors(
+        settingsedit.ChirpSettingsEdit))
+    editor.refresh()
+
+    class Job:
+        result = sierra_set.radio.get_settings()
+    editor._initialize(Job())
+    wx.SafeYield()
+    assert editor._group_control.GetPageCount() > 0
+
+
 def test_cancel_changes_nothing(sierra_set, answer):
     answer['value'] = wx.ID_CANCEL
     radio = sierra_set.radio
