@@ -1326,10 +1326,12 @@ def test_handle_follows_selection(memedit):
     assert handle.IsShown()
     assert handle.GetRect().Contains(_corner(memedit, 6, 'freq'))
 
-    # Cursor alone or whole rows: no handle
+    # Cursor alone: the handle is at the cursor cell, as in spreadsheets
     _cursor(memedit, 2, 'freq')
     wx.SafeYield()
-    assert not handle.IsShown()
+    assert handle.IsShown()
+    assert handle.GetRect().Contains(_corner(memedit, 2, 'freq'))
+    # Whole rows: no handle
     grid.SelectRow(2)
     wx.SafeYield()
     assert not handle.IsShown()
@@ -1387,6 +1389,36 @@ def test_handle_drag_fills(memedit):
         146000000, 146025000, 146050000, 146075000, 146100000, 145650000]
     assert len(memedit._undo_queue) == 1
     assert memedit._undo_queue[0].name == 'Fill 3 cells'
+
+
+def test_handle_on_cursor_cell_copies_it(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 7)})
+    _show(memedit)
+    # A plain click: only the cursor, no selected block
+    _cursor(memedit, 2, 'name')
+    wx.SafeYield()
+    assert memedit.selected_cells() == []
+    handle = memedit._fill_handle
+    assert handle.IsShown()
+    assert handle.GetRect().Contains(_corner(memedit, 2, 'name'))
+    _mouse(handle, wx.wxEVT_LEFT_DOWN, handle.GetPosition().y + 3)
+    _mouse(handle, wx.wxEVT_MOTION, _row_y(memedit, 4))
+    assert handle.preview_rows() == (3, 4)
+    _mouse(handle, wx.wxEVT_LEFT_UP, _row_y(memedit, 4))
+    assert _names(memedit, range(1, 6)) == ['M1', 'M2', 'M2', 'M2', 'M5']
+    assert memedit._undo_queue[0].name == 'Fill 2 cells'
+
+
+def test_fill_to_from_cursor_cell_continues_name(memedit):
+    _seeded(memedit, {1: 'CH01', 2: 'M2', 3: 'M3'})
+    _cursor(memedit, 1, 'name')
+    memedit.fill_to(3)
+    assert _names(memedit, range(1, 4)) == ['CH01', 'CH01', 'CH01']
+    # Whole rows selected: the handle does not belong to them
+    memedit._grid.SelectRow(1)
+    queued = len(memedit._undo_queue)
+    assert memedit.fill_to(3) is None
+    assert len(memedit._undo_queue) == queued
 
 
 def test_handle_drag_cancelled(memedit):

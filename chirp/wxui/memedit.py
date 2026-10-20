@@ -1382,15 +1382,12 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._fill_handle.update_later()
 
     def _fill_block(self):
-        """The (top, left, bottom, right) cells around the selected ones,
-        for the fill handle; None with whole rows or nothing selected.
-
-        Whole rows are memories: they are dragged from the row numbers,
-        and filling every column of the rows below would be a surprise.
+        """The (top, left, bottom, right) cells the fill handle belongs
+        to (see _fill_cells); None with whole rows selected.
         """
-        if not self._cells_only():
+        cells = self._fill_cells()
+        if not cells:
             return None
-        cells = self.selected_cells()
         rows = [row for row, col in cells]
         cols = [col for row, col in cells]
         return min(rows), min(cols), max(rows), max(cols)
@@ -3200,12 +3197,14 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
     def fill_to(self, last_row):
         """Continue the selected cells down to `last_row` (fill handle).
 
-        Each column goes on with the series of its selected cells (see
-        grid_fill.continue_series) over the visible rows after the
-        selection. As in fill_down(), an empty value clears, except in
-        empty memories. Returns the BulkResult, or None if nothing to do.
+        Without a selection, the cursor cell is continued (see
+        _fill_cells); whole rows are not. Each column goes on with the
+        series of its selected cells (see grid_fill.continue_series)
+        over the visible rows after the selection. As in fill_down(), an
+        empty value clears, except in empty memories. Returns the
+        BulkResult, or None if nothing to do.
         """
-        cells = self.selected_cells()
+        cells = self._fill_cells()
         if not cells:
             return None
         bottom = max(row for row, col in cells)
@@ -3228,6 +3227,26 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         if not edits:
             return None
         return self.bulk_edit(_('Fill %i cells') % len(edits), edits)
+
+    def _fill_cells(self):
+        """The cells the fill handle continues, as selected_cells().
+
+        The selected cells, or the cursor cell alone after a plain
+        click, as in spreadsheets; none with whole rows selected.
+        Whole rows are memories: they are dragged from the row numbers,
+        and filling every column of the rows below would be a surprise.
+        """
+        if self.selected_rows():
+            return []
+        cells = self.selected_cells()
+        if cells:
+            return cells
+        row = self._grid.GetGridCursorRow()
+        col = self._grid.GetGridCursorCol()
+        if (row < 0 or col < 0 or not self._grid.IsRowShown(row) or
+                not self._grid.IsColShown(col)):
+            return []
+        return [(row, col)]
 
     def _cells_only(self):
         """True if some cells are selected but no whole row."""
