@@ -12,6 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 IMAGES = os.path.join(ROOT, 'tests', 'images')
 TEAM = 'IT Team Sierra - impostazioni UV-5R'
+TEAM_9R = 'IT Team Sierra - impostazioni UV-9R'
 
 # The UV-5R driver warns on every memory it writes (set_raw with str)
 pytestmark = pytest.mark.filterwarnings('ignore::DeprecationWarning')
@@ -31,9 +32,24 @@ def uv5r_radio():
 @pytest.fixture
 def sierra_radio(uv5r_radio):
     """The UV-5R test image holding only the IT Team Sierra preset"""
+    return load_sierra(uv5r_radio)
+
+
+@pytest.fixture
+def uv9r_sierra():
+    """A UV-9R with the IT Team Sierra preset (the UV-9G test image has
+    the same memory layout)"""
+    from chirp import memmap
+    from chirp.drivers import baofeng_wp970i
+    image = directory.get_radio_by_image(
+        os.path.join(IMAGES, 'Baofeng_UV-9G.img'))
+    return load_sierra(baofeng_wp970i.UV9R(memmap.MemoryMapBytes(
+        image.get_mmap().get_byte_compatible().get_packed())))
+
+
+def load_sierra(radio):
     from chirp import import_logic
     from chirp.drivers import generic_csv
-    radio = uv5r_radio
     lo, hi = radio.get_features().memory_bounds
     for number in range(lo, hi + 1):
         radio.erase_memory(number)
@@ -52,9 +68,9 @@ def sierra_radio(uv5r_radio):
     return radio
 
 
-def team():
+def team(name=TEAM):
     return settings_profile.load(os.path.join(
-        settings_profile.PROFILES_DIR, TEAM + '.json'))
+        settings_profile.PROFILES_DIR, name + '.json'))
 
 
 def profile(settings=None, memories=None):
@@ -295,3 +311,38 @@ def test_fits(uv5r_radio):
     other = directory.get_radio_by_image(
         os.path.join(IMAGES, 'Baofeng_BF-A58S.img'))
     assert not settings_profile.fits(team, other)
+
+
+def test_uv9r_profile(uv9r_sierra):
+    profile = team(TEAM_9R)
+    assert profile.radios == ['Baofeng UV-9R']
+    assert settings_profile.fits(profile, uv9r_sierra)
+    before = values(uv9r_sierra)
+    plan = settings_profile.plan(profile, uv9r_sierra)
+    assert plan.problems == []
+    settings_profile.apply(plan, uv9r_sierra)
+    after = values(uv9r_sierra)
+    assert after['settings.squelch'] == '3'
+    assert after['settings.timeout'] == '60 sec'
+    assert after['settings.voice'] == 'Off'
+    assert after['settings.fmradio'] == 'False'
+    assert after['settings.workmode'] == 'Channel'
+    assert after['wmchannel.mrcha'] == str(
+        memory_named(uv9r_sierra, 'SIERRA1').number)
+    assert after['wmchannel.mrchb'] == str(
+        memory_named(uv9r_sierra, 'PMR 01').number)
+    assert (after['vfo.a.txpower3'], after['vfo.b.widenarr']) == (
+        'Low', 'Narrow')
+    # Firmware and power-on texts, limits and VFO frequencies untouched
+    for key in ('limits.uhf.upper', 'limits.vhf.lower', 'vfo.a.freq',
+                'poweron_msg.line1', 'firmware_msg.line1'):
+        assert after[key] == before[key], key
+    assert extras(memory_named(uv9r_sierra, 'SIERR10'))['bcl'] == 'True'
+    assert extras(memory_named(uv9r_sierra, 'PMR 01'))['pttid'] == 'Off'
+    again = settings_profile.plan(profile, uv9r_sierra)
+    assert again.changes == []
+
+
+def test_shipped_profiles_one_per_radio():
+    names = [p.name for p in settings_profile.shipped_profiles()]
+    assert names == [TEAM, TEAM_9R]
