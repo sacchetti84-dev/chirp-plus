@@ -55,6 +55,7 @@ from chirp.wxui import freqcheck
 from chirp.wxui import memedit
 from chirp.wxui import memmap_view
 from chirp.wxui import portdetect
+from chirp.wxui import profiles
 from chirp.wxui import printing
 from chirp.wxui import query_sources
 from chirp.wxui import radioinfo
@@ -1146,6 +1147,10 @@ class ChirpMain(wx.Frame):
         self.Bind(wx.EVT_MENU, self._menu_memmap, memmap_item)
         radio_menu.Append(memmap_item)
 
+        profile_item = profiles.add_menu(self, radio_menu,
+                                         self._menu_settings_profile)
+        self._profile_menu_item = profile_item.GetId()
+
         self._batch_menu_item = wx.NewId()
         batch_item = wx.MenuItem(radio_menu, self._batch_menu_item,
                                  _('Program several radios...'))
@@ -1723,6 +1728,7 @@ class ChirpMain(wx.Frame):
             (self._freqcheck_menu_item, can_close),
             (self._pocket_menu_item, is_memedit),
             (self._memmap_menu_item, can_upload),
+            (self._profile_menu_item, can_upload),
             (self._find_next_item, is_memedit),
             (wx.ID_FIND, is_memedit),
             (wx.ID_PRINT, is_memedit),
@@ -2256,6 +2262,16 @@ class ChirpMain(wx.Frame):
         console.log('file', _('Pocket card for %s') % os.path.basename(
             self.current_editorset.filename))
         printer.PreviewText(page)
+
+    def _menu_settings_profile(self, profile):
+        """Radio > Apply settings profile; None means "From file..." """
+        if not self._require_editorset():
+            return
+        if profile is None:
+            profile = profiles.choose_file(self)
+            if profile is None:
+                return
+        profiles.apply_profile(self, self.current_editorset, profile)
 
     def _menu_memmap(self, event):
         if not self._require_editorset():

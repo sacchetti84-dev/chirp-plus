@@ -42,7 +42,7 @@ class ChangesDialog(wx.Dialog):
     """
     def __init__(self, parent, changes, title, action_label,
                  action_tone='tx', command=None, columns=None,
-                 question=True):
+                 question=True, note=None):
         super().__init__(parent, title=title,
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         self.changes = changes
@@ -81,6 +81,11 @@ class ChangesDialog(wx.Dialog):
         summary.SetForegroundColour(theme.tone(tone))
         theme.keep(summary, fg=True)
         vbox.Add(summary, border=12, flag=wx.LEFT | wx.RIGHT | wx.BOTTOM)
+        if note:
+            hint = wx.StaticText(self, label=note)
+            hint.SetForegroundColour(theme.tone('dim'))
+            theme.keep(hint, fg=True)
+            vbox.Add(hint, border=12, flag=wx.LEFT | wx.RIGHT | wx.BOTTOM)
 
         self.list = wx.ListCtrl(self, style=wx.LC_REPORT | wx.BORDER_SIMPLE)
         theme.keep(self.list, fg=True)

@@ -13,6 +13,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
 IMAGES = os.path.join(ROOT, 'tests', 'images')
 TEAM = 'IT Team Sierra - impostazioni UV-5R'
 
+# The UV-5R driver warns on every memory it writes (set_raw with str)
+pytestmark = pytest.mark.filterwarnings('ignore::DeprecationWarning')
+
 
 @pytest.fixture(scope='module', autouse=True)
 def drivers():
