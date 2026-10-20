@@ -82,7 +82,10 @@ class FillHandle(wx.Window):
         self._preview = []
         for _side in range(4):
             line = wx.Window(parent, style=wx.BORDER_NONE)
-            line.SetBackgroundColour(colour())
+            # Painted, not erased: in the dark mode of Windows a plain
+            # background color comes out black
+            line.SetBackgroundStyle(wx.BG_STYLE_PAINT)
+            line.Bind(wx.EVT_PAINT, self._on_paint_line)
             line.Hide()
             self._preview.append(line)
 
@@ -161,6 +164,11 @@ class FillHandle(wx.Window):
         dc.SetPen(wx.Pen(self._grid.GetDefaultCellBackgroundColour()))
         dc.SetBrush(wx.Brush(colour()))
         dc.DrawRectangle(0, 0, SIZE, SIZE)
+
+    def _on_paint_line(self, event):
+        dc = wx.PaintDC(event.GetEventObject())
+        dc.SetBackground(wx.Brush(colour()))
+        dc.Clear()
 
     def _on_left_down(self, event):
         block = self._block()
