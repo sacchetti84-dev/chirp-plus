@@ -1242,9 +1242,12 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             # Ctrl+D fills down, as in spreadsheets
             self.fill_down()
         elif (event.GetKeyCode() in (wx.WXK_DELETE, wx.WXK_NUMPAD_DELETE) and
-              event.GetModifiers() == wx.MOD_NONE and self._cells_only()):
-            # Delete empties the selected cells; with rows selected it
-            # does what it always did (deleting memories is Ctrl+Backspace)
+              event.GetModifiers() == wx.MOD_NONE and
+              not self.selected_rows()):
+            # Delete empties the selected cells, or the cursor cell; with
+            # rows selected it does what it always did. Edit > Delete
+            # (Ctrl+Backspace) deletes memories, or clears the cells
+            # when cells are selected.
             self.clear_cells()
         else:
             event.Skip()
@@ -1383,9 +1386,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
     def _fill_block(self):
         """The (top, left, bottom, right) cells the fill handle belongs
-        to (see _fill_cells); None with whole rows selected.
+        to (see _active_cells); None with whole rows selected.
         """
-        cells = self._fill_cells()
+        cells = self._active_cells()
         if not cells:
             return None
         rows = [row for row, col in cells]
@@ -2466,13 +2469,17 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                   insert_item)
         menu.Append(insert_item)
 
+        # The menu of memories: Cut and Copy act on the cursor row even
+        # when it is not selected
         cut_item = wx.MenuItem(menu, wx.NewId(), _('Cut'))
-        self.Bind(wx.EVT_MENU, lambda e: self.cb_copy(cut=True), cut_item)
+        self.Bind(wx.EVT_MENU, lambda e: self.cb_copy(cut=True, rows=True),
+                  cut_item)
         menu.Append(cut_item)
         cut_item.Enable(self.editable)
 
         copy_item = wx.MenuItem(menu, wx.NewId(), _('Copy'))
-        self.Bind(wx.EVT_MENU, lambda e: self.cb_copy(cut=False), copy_item)
+        self.Bind(wx.EVT_MENU, lambda e: self.cb_copy(cut=False, rows=True),
+                  copy_item)
         menu.Append(copy_item)
 
         copy_item = wx.MenuItem(menu, wx.NewId(), _('Copy portable'))
@@ -2751,8 +2758,14 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._grid.SetFocus()
         self._update_menu()
 
-    def cb_copy_getdata(self, cut=False, portable=False):
-        if not portable and self._cells_only():
+    def cb_copy_getdata(self, cut=False, portable=False, rows=False):
+        """The clipboard data for the cells or memories to copy.
+
+        Cells, the selected ones or the cursor cell alone, give their
+        text; whole rows selected (or `rows`, for the cursor row) give
+        memories. With `cut` what is copied is cleared or erased.
+        """
+        if not portable and not rows and self._active_cells():
             # Cells, not channels: only their text, as a spreadsheet has it
             data = wx.TextDataObject(self.copy_cells_text())
             if cut:
@@ -2805,8 +2818,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
         return data
 
-    def cb_copy(self, cut=False, portable=False):
-        self.cb_copy_data(self.cb_copy_getdata(cut=cut, portable=portable))
+    def cb_copy(self, cut=False, portable=False, rows=False):
+        self.cb_copy_data(self.cb_copy_getdata(cut=cut, portable=portable,
+                                               rows=rows))
 
     def memedit_import_all(self, source_radio):
         if self.is_sorted:
@@ -3206,13 +3220,13 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         """Continue the selected cells down to `last_row` (fill handle).
 
         Without a selection, the cursor cell is continued (see
-        _fill_cells); whole rows are not. Each column goes on with the
+        _active_cells); whole rows are not. Each column goes on with the
         series of its selected cells (see grid_fill.continue_series)
         over the visible rows after the selection. As in fill_down(), an
         empty value clears, except in empty memories. Returns the
         BulkResult, or None if nothing to do.
         """
-        cells = self._fill_cells()
+        cells = self._active_cells()
         if not cells:
             return None
         bottom = max(row for row, col in cells)
@@ -3236,13 +3250,15 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             return None
         return self.bulk_edit(_('Fill %i cells') % len(edits), edits)
 
-    def _fill_cells(self):
-        """The cells the fill handle continues, as selected_cells().
+    def _active_cells(self):
+        """The cells that copy, cut, clear and the fill handle act on,
+        as selected_cells().
 
         The selected cells, or the cursor cell alone after a plain
         click, as in spreadsheets; none with whole rows selected.
-        Whole rows are memories: they are dragged from the row numbers,
-        and filling every column of the rows below would be a surprise.
+        Whole rows are memories: they are copied and dragged from the
+        row numbers, and filling every column of the rows below would
+        be a surprise.
         """
         if self.selected_rows():
             return []
@@ -3261,12 +3277,12 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         return not self.selected_rows() and bool(self.selected_cells())
 
     def copy_cells_text(self):
-        """The text shown in the selected cells, tab-separated.
+        """The text shown in the _active_cells(), tab-separated.
 
         One line per row, as spreadsheets copy and paste them.
         """
         rows = {}
-        for row, col in self.selected_cells():
+        for row, col in self._active_cells():
             rows.setdefault(row, []).append(col)
         return ''.join(
             '\t'.join(tsv_cell(self._grid.GetCellValue(row, col))
@@ -3275,9 +3291,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
     @common.error_proof()
     def clear_cells(self):
-        """Empty the selected cells of the memories that are not empty."""
+        """Empty the _active_cells() of the memories that are not empty."""
         edits = []
-        for row, col in self.selected_cells():
+        for row, col in self._active_cells():
             mem = self._memory_cache.get(row)
             if mem is not None and not mem.empty:
                 edits.append(cellops.CellEdit(row, col, None))

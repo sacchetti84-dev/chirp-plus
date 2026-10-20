@@ -81,20 +81,29 @@ calcolo, con la validazione della radio e i colori del tema.
   prima riga selezionata nelle altre.
 - **Ctrl+Invio**: mentre si scrive in una cella, conferma il valore in
   tutte le celle selezionate.
-- **Canc** svuota le celle selezionate: nome e commento diventano vuoti;
-  modo tono, toni, codici e polarità DTCS, modo incrociato, duplex e skip
-  tornano al valore di un canale nuovo (duplex vuoto azzera anche
-  l'offset); le celle dei canali vuoti vengono ignorate. Frequenza, modo, passo e potenza non hanno
-  un valore vuoto e vengono saltati: per cancellare un canale resta Elimina
-  sulla riga. Con righe intere selezionate Canc fa quello che faceva prima.
-- **Copia e incolla celle** (Ctrl+C, Ctrl+V, Ctrl+X): la copia mette negli
-  appunti il testo delle celle separato da tabulazioni, che Excel incolla
-  direttamente; l'incolla accetta le tabelle copiate da Excel a partire
-  dalla prima cella selezionata, salta la riga delle intestazioni e accetta
-  la virgola decimale (`145,600` = 145.600). Una cella vuota lascia il
-  valore che c'era; un valore solo va in tutte le celle selezionate. Prima
-  di sovrascrivere celle non vuote chiede conferma una volta. Con righe
-  intere selezionate copia e incolla di canali restano quelli di prima.
+- **Canc** svuota le celle selezionate, o la sola cella attiva dopo un
+  clic: nome e commento diventano vuoti; modo tono, toni, codici e
+  polarità DTCS, modo incrociato, duplex e skip tornano al valore di un
+  canale nuovo (duplex vuoto azzera anche l'offset); le celle dei canali
+  vuoti vengono ignorate. Frequenza, modo, passo e potenza non hanno un
+  valore vuoto e vengono saltati. Con righe intere selezionate Canc fa
+  quello che faceva prima.
+- **Modifica > Elimina (Ctrl+Backspace)**: con celle selezionate le svuota
+  come Canc; altrimenti elimina i canali selezionati, o quello della cella
+  attiva, come prima. Anche Elimina nel menu della riga cancella il canale.
+- **Copia e incolla celle** (Ctrl+C, Ctrl+V, Ctrl+X): agiscono sulle celle
+  selezionate o, dopo un semplice clic, sulla sola cella attiva. La copia
+  mette negli appunti il testo delle celle separato da tabulazioni, che
+  Excel incolla direttamente; Ctrl+X svuota solo quelle celle. L'incolla
+  accetta le tabelle copiate da Excel a partire dalla prima cella
+  selezionata (o dalla cella attiva), salta la riga delle intestazioni e
+  accetta la virgola decimale (`145,600` = 145.600). Una cella vuota lascia
+  il valore che c'era; un valore solo va in tutte le celle selezionate.
+  Prima di sovrascrivere celle non vuote chiede conferma una volta. I
+  canali interi si copiano e si tagliano selezionando il numero di riga
+  (o dal menu della riga): copia e incolla di canali restano quelli di
+  prima, e un canale copiato così si incolla intero nella riga della
+  cella attiva.
 - **Menu col tasto destro** su una selezione: Copia celle, Incolla, Riempi
   in basso, Serie…, Svuota celle.
 - **Serie…**: valore iniziale (dalla prima cella), passo (frequenze in MHz,
@@ -103,8 +112,11 @@ calcolo, con la validazione della radio e i colori del tema.
 - **Un solo passo di annulla** per ogni operazione (es. "Riempi 12 celle");
   le celle che la radio rifiuta non fermano il resto e compaiono in **un
   solo riepilogo** alla fine. Nelle operazioni multiple non ci sono
-  domande: duplex `+`/`-` senza offset prende l'offset del piano di banda,
-  i casi che richiederebbero una scelta vengono saltati e annotati.
+  domande: duplex `+`/`-` senza offset prende l'offset del piano di banda;
+  un duplex `off` resta `off` (la trasmissione resta spenta) qualunque sia
+  l'offset, e un offset zero su simplex resta simplex; i casi che
+  richiederebbero una scelta vengono saltati e annotati. Una cella
+  rifiutata non lascia modifiche a metà nel canale.
 - **Viste filtrate e ordinate**: si scrive solo nelle righe visibili (le
   nascoste non vengono toccate) e nell'ordine a schermo, ogni riga legata
   alla sua memoria. Le schede in sola lettura permettono solo la copia;

@@ -1107,6 +1107,88 @@ def test_cut_cells_is_copy_and_clear(memedit, monkeypatch):
     assert memedit._undo_queue[0].name == 'Clear 2 cells'
 
 
+def _press(memedit, code, modifiers=wx.MOD_NONE):
+    """Ctrl+C/X/V as the main window menu does them; other keys go to
+    the grid."""
+    if modifiers == wx.MOD_CONTROL and code in (ord('C'), ord('X')):
+        memedit.cb_copy(cut=code == ord('X'))
+    elif modifiers == wx.MOD_CONTROL and code == ord('V'):
+        memedit.cb_paste()
+    else:
+        return _key(memedit._grid.GetGridWindow(), code, modifiers)
+
+
+def test_copy_clicked_cell_is_that_cell(memedit, monkeypatch):
+    _seeded(memedit, {1: 'A', 2: 'B'})
+    copied = _clipboard_out(memedit, monkeypatch)
+    _cursor(memedit, 1, 'name')
+    _press(memedit, ord('C'), wx.MOD_CONTROL)
+    data, = copied
+    assert _formats(data) == [wx.DF_UNICODETEXT]
+    assert data.GetText() == 'A\n'
+
+    # Pasted on another clicked cell, it changes only that cell
+    _clipboard_in(monkeypatch, data)
+    monkeypatch.setattr(wx, 'MessageDialog', Dialogs(answer=wx.ID_YES))
+    before = memedit._radio.get_memory(2)
+    _cursor(memedit, 2, 'name')
+    _press(memedit, ord('V'), wx.MOD_CONTROL)
+    after = memedit._radio.get_memory(2)
+    assert after.name == 'A'
+    assert (after.freq, after.mode) == (before.freq, before.mode)
+    assert memedit._undo_queue[0].name == 'Paste 1 cells'
+
+
+def test_cut_clicked_cell_clears_only_it(memedit, monkeypatch):
+    _seeded(memedit, {1: 'A'})
+    copied = _clipboard_out(memedit, monkeypatch)
+    _cursor(memedit, 1, 'name')
+    _press(memedit, ord('X'), wx.MOD_CONTROL)
+    data, = copied
+    assert data.GetText() == 'A\n'
+    mem = memedit._radio.get_memory(1)
+    assert not mem.empty
+    assert (mem.name, mem.freq) == ('', 145525000)
+    assert memedit._undo_queue[0].name == 'Clear 1 cells'
+
+
+def test_delete_key_clears_clicked_cell(memedit):
+    _seeded(memedit, {1: 'A'})
+    _cursor(memedit, 1, 'name')
+    assert _press(memedit, wx.WXK_DELETE)
+    mem = memedit._radio.get_memory(1)
+    assert not mem.empty
+    assert mem.name == ''
+    assert memedit._undo_queue[0].name == 'Clear 1 cells'
+
+
+def test_row_commands_on_clicked_cell_unchanged(memedit, monkeypatch):
+    # Edit > Delete (Ctrl+Backspace) and the menu of the row still act
+    # on the memory of the cursor
+    _seeded(memedit, {1: 'A', 2: 'B'})
+    _cursor(memedit, 1, 'name')
+    memedit.cb_delete()
+    assert memedit._radio.get_memory(1).empty
+
+    copied = _clipboard_out(memedit, monkeypatch)
+    _cursor(memedit, 0, 'freq')
+    items = _menu(memedit, monkeypatch, 2, 'name', click='Copy')
+    assert 'Properties' in [label for label, enabled in items]
+    data, = copied
+    native = data.GetObject(wx.DataFormat(common.CHIRP_DATA_MEMORY))
+    assert isinstance(native, wx.CustomDataObject)
+
+    # A CHIRP copy of whole memories still pastes them at the cursor row
+    _clipboard_in(monkeypatch, native)
+    _cursor(memedit, 3, 'comment')
+    memedit.cb_paste()
+    assert _names(memedit, [3]) == ['B']
+    assert memedit._undo_queue[0].name == 'Paste memories'
+
+    _menu(memedit, monkeypatch, 2, 'name', click='Cut')
+    assert memedit._radio.get_memory(2).empty
+
+
 def test_row_copy_paste_unchanged(memedit, monkeypatch):
     copied = _clipboard_out(memedit, monkeypatch)
     memedit._grid.SelectRow(59)
@@ -1275,8 +1357,10 @@ def _menu(memedit, monkeypatch, row, name, click=None):
         for item in menu.GetMenuItems():
             items.append((item.GetItemLabelText(), item.IsEnabled()))
             if item.GetItemLabelText() == click:
-                menu.ProcessEvent(wx.CommandEvent(wx.wxEVT_MENU,
-                                                  item.GetId()))
+                # The cell menu binds its items, the row menu the editor
+                event = wx.CommandEvent(wx.wxEVT_MENU, item.GetId())
+                if not menu.ProcessEvent(event):
+                    memedit.ProcessEvent(event)
     monkeypatch.setattr(memedit, 'PopupMenu', popup)
     monkeypatch.setattr(builtins, 'ngettext',
                         lambda one, many, n: one if n == 1 else many,
