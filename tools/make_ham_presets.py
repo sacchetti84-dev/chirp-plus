@@ -10,6 +10,9 @@ Writes:
                                    simplex radioamatori", for a single import
   IT LPD e PMR446.csv              the 69 LPD and 16 PMR446 channels, at
                                    their legal power (licence free bands)
+  IT Team Sierra.csv               SIERRA 1-10 (2 m simplex, one DCS each)
+                                   plus PMR446 and LPD receive only, 95
+                                   channels for a 128 memory handheld
 
 Sources (checked October 2026): the Italian repeater channel plan of the
 ministry circular as reported by ARI sections, and the AMSAT "FM
@@ -51,12 +54,22 @@ SATELLITES = [
 ]
 
 
+# Team channels: 2 m simplex on the 12.5 kHz "half" channels, which few
+# stations scan, away from 145.200 (ISS 145.194), 145.375 (digital voice
+# calling, Reggio Emilia activity) and 145.500 (FM calling). Each has its
+# own DCS so the team hears only itself; the codes are only an example.
+SIERRA = [(145.2125, '114'), (145.2375, '131'), (145.2625, '155'),
+          (145.2875, '205'), (145.3125, '243'), (145.4125, '265'),
+          (145.4375, '311'), (145.4625, '346'), (145.4875, '411'),
+          (145.5375, '445')]
+
+
 def row(name, freq, comment, duplex='', offset=0.0, tone='', rtone=88.5,
-        mode='NFM', step=12.5, power='5.0W'):
+        mode='NFM', step=12.5, power='5.0W', dtcs='023'):
     return {'Name': name, 'Frequency': '%.6f' % freq, 'Duplex': duplex,
             'Offset': '%.6f' % offset, 'Tone': tone,
             'rToneFreq': '%.1f' % rtone, 'cToneFreq': '88.5',
-            'DtcsCode': '023', 'DtcsPolarity': 'NN', 'RxDtcsCode': '023',
+            'DtcsCode': dtcs, 'DtcsPolarity': 'NN', 'RxDtcsCode': dtcs,
             'CrossMode': 'Tone->Tone', 'Mode': mode, 'TStep': '%.2f' % step,
             'Skip': '', 'Power': power, 'Comment': comment}
 
@@ -139,6 +152,38 @@ def lpd_pmr():
     return rows
 
 
+def team_sierra():
+    """SIERRA 1-10 to talk, the PMR446 and LPD channels to listen only.
+
+    A UV-5R or UV-9R is not an approved PMR446/LPD radio, so those
+    channels are receive only (Duplex off): the team hears the teams on
+    licence free radios, and answers them with an approved radio.
+    """
+    rows = []
+    for i, (freq, dcs) in enumerate(SIERRA, 1):
+        rows.append(row(
+            'SIERRA%i' % i if i < 10 else 'SIERR%i' % i, freq,
+            '[2m] Canale di squadra SIERRA %i, simplex %.4f MHz, DCS %s '
+            '(stesso codice su tutte le radio; sceglietene uno vostro) - '
+            'serve licenza di radioamatore' % (i, freq, dcs),
+            tone='DTCS', dtcs=dcs))
+    for i in range(16):
+        freq = 446.00625 + i * 0.0125
+        rows.append(row(
+            'PMR %02i' % (i + 1), freq,
+            '[PMR446] Canale %i, %.5f MHz, solo ascolto: per trasmettere '
+            'qui serve una radio PMR446 omologata' % (i + 1, freq),
+            duplex='off', step=6.25, power='0.5W'))
+    for i in range(69):
+        freq = 433.075 + i * 0.025
+        rows.append(row(
+            'LPD %02i' % (i + 1), freq,
+            '[LPD] Canale %i, %.3f MHz, solo ascolto: per trasmettere qui '
+            'serve una radio LPD omologata' % (i + 1, freq),
+            duplex='off', mode='FM', step=25.0, power='0.01W'))
+    return rows
+
+
 def read_calling():
     with open(os.path.join(STOCK, CALLING), encoding='utf-8',
               newline='') as f:
@@ -168,6 +213,7 @@ def presets():
     files['IT Radioamatori tutto in uno.csv'] = everything
     # Not in the all-in-one list: 85 more channels would not fit 128
     files['IT LPD e PMR446.csv'] = lpd_pmr()
+    files['IT Team Sierra.csv'] = team_sierra()
     return {name: render(rows) for name, rows in files.items()}
 
 

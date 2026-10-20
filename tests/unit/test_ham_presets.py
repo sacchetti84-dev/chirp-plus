@@ -83,6 +83,29 @@ class TestHamPresets(unittest.TestCase):
             self.assertLessEqual(freq_check.watts(m.power),
                                  band.max_watts * 1.05, m.name)
 
+    def test_team_sierra(self):
+        mems = self.memories('IT Team Sierra.csv')
+        sierra = mems[:10]
+        self.assertEqual(['SIERRA%i' % i for i in range(1, 10)] + ['SIERR10'],
+                         [m.name for m in sierra])
+        self.assertEqual((145212500, 145537500),
+                         (sierra[0].freq, sierra[-1].freq))
+        for m in sierra:
+            self.assertEqual(('', 'DTCS', 'NFM'),
+                             (m.duplex, m.tmode, m.mode), m.name)
+            self.assertEqual(m.dtcs, m.rx_dtcs, m.name)
+            self.assertEqual(freq_check.LICENSE,
+                             freq_check.band_for(m.freq).use, m.name)
+            self.assertNotIn(m.freq, (145375000, 145500000), m.name)
+        self.assertEqual(10, len({m.dtcs for m in sierra}))
+        # Licence free channels: listen only on a non-approved handheld
+        others = mems[10:]
+        self.assertEqual(16 + 69, len(others))
+        self.assertTrue(all(m.duplex == 'off' for m in others))
+        self.assertEqual(len(mems), len({m.name for m in mems}))
+        self.assertLessEqual(len(mems), 128)
+        self.assertTrue(all(len(m.name) <= 7 for m in mems))
+
     def test_presets_transmit_only_in_amateur_bands(self):
         for name in self.files:
             for m in self.memories(name):

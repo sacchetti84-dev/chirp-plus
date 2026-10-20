@@ -148,6 +148,18 @@ calcolo, con la validazione della radio e i colori del tema.
     omologati: la UV-9R non lo è e scende al minimo a 1 W, perciò il
     controllo frequenze li segnala. Non sta nel "tutto in uno" (non ci
     starebbe nelle 128 memorie).
+  - "IT Team Sierra": 95 canali per una squadra con radio UV-5R/UV-9R.
+    SIERRA1…SIERRA9 e SIERR10 (7 caratteri al massimo) sono simplex in 2 m
+    sui canali "a metà" da 12,5 kHz, poco ascoltati, lontano da 145,200
+    (ISS), 145,375 (chiamata voce digitale, attività a Reggio Emilia) e
+    145,500 (chiamata FM); ognuno ha un DCS diverso (114, 131, 155, 205,
+    243, 265, 311, 346, 411, 445: è un esempio, sceglietene di vostri), a
+    piena potenza, con licenza di radioamatore. Seguono PMR 1-16 e LPD
+    1-69 in **solo ascolto** (Duplex "off"): si sentono i team con radio
+    senza licenza, e si risponde con una radio PMR446/LPD omologata. In 2 m
+    le radio PMR e LPD commerciali non arrivano, quindi chi le usa non vi
+    sente. Prima di usarle, lasciate le frequenze in scansione qualche giorno
+    nella vostra zona e sostituite quelle occupate.
 
   Le liste generate vengono da `tools/make_ham_presets.py`: per aggiornare i
   satelliti (la tabella AMSAT cambia) si modifica lo script e lo si rilancia.

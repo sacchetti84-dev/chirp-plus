@@ -217,6 +217,7 @@ and the channel comments are in Italian.
 | IT Satelliti FM radioamatori | 16 | SO-50 (with the timer arming channel), ISS, AO-123, PO-101, AO-91: split with CTCSS and three Doppler steps |
 | IT Radioamatori tutto in uno | 72 | all of the above together, fits the 128 memories of a UV-9R |
 | IT LPD e PMR446 | 85 | 69 LPD and 16 PMR446 channels at their legal power |
+| IT Team Sierra | 95 | SIERRA 1–10 team channels (2 m simplex on little-used 12.5 kHz channels, one DCS code each, amateur license needed), plus PMR446 1–16 and LPD 1–69 receive only to hear licence-free teams |
 
 > [!NOTE]
 > Transmitting on 2 m and 70 cm needs an amateur radio license. LPD and
