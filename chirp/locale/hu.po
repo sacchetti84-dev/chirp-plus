@@ -4263,3 +4263,73 @@ msgstr "A CHIRP nem hivatalos, módosított változata, alapja: %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "A CHIRP Plus oldala és forráskódja"
+
+msgid "Some cells were not changed"
+msgstr "Néhány cella nem változott"
+
+msgid "Writing memories"
+msgstr "Memóriák írása"
+
+msgid "Fill %i cells"
+msgstr "%i cella kitöltése"
+
+msgid "Paste %i cells"
+msgstr "%i cella beillesztése"
+
+msgid "Clear %i cells"
+msgstr "%i cella ürítése"
+
+msgid "%i values did not fit"
+msgstr "%i érték nem fért el a táblázatban"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "A beillesztett értékek felülírják a nem üres cellákat"
+
+msgid "Overwrite cells?"
+msgstr "Felülírja a cellákat?"
+
+msgid "Copy cells"
+msgstr "Cellák másolása"
+
+msgid "Fill down"
+msgstr "Kitöltés lefelé"
+
+msgid "Series..."
+msgstr "Sorozat..."
+
+msgid "Clear cells"
+msgstr "Cellák ürítése"
+
+msgid "Series in %i cells"
+msgstr "Sorozat %i cellában"
+
+msgid "Series"
+msgstr "Sorozat"
+
+msgid "Step"
+msgstr "Lépés"
+
+msgid "Preview"
+msgstr "Előnézet"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Értékek %i cellához, az elsőtől lefelé. A frekvenciák MHz-ben lépnek (0.025 "
+"= 25 kHz); a számozott nevek, például a CH01, egész számokkal lépnek."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Húzza lefelé a kijelölt cellák folytatásához"
+
+msgid "%s has no empty value"
+msgstr "A(z) %s mezőnek nincs üres értéke"
+
+msgid "%s cannot be changed on this memory"
+msgstr "A(z) %s mező ebben a memóriában nem módosítható"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Olyan döntést igényel, amelyet a tömeges szerkesztés nem hozhat meg"
+
+msgid "Invalid value for %s: %r"
+msgstr "Érvénytelen érték a(z) %s mezőben: %r"

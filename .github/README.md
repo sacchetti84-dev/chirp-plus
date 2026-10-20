@@ -48,6 +48,7 @@ adds tools for people who use radios in Italy.
 | 🔌 | **Automatic cable detection**: the chip is recognized, the port is chosen, counterfeit cables are flagged | download and upload dialogs |
 | 📡 | **Detect radio**: asks the radio which model it is, without reading or writing its memory | Radio > Detect radio and download (Alt+R) |
 | 🛡️ | **Safe upload**: compares with the radio before writing, verifies afterwards | upload dialog |
+| 🧮 | **Spreadsheet-like editing**: select blocks of cells, drag the fill handle, Ctrl+D, copy and paste to and from Excel | the memory grid, right-click on the cells |
 | 📻 | **Batch programming**: the same image into several radios, one after the other | Radio > Program several radios |
 | 💾 | **Backups** of every download and every upload, with a compare view | File > Backups |
 | ✅ | **Frequency check** against the Italian rules | Radio > Check frequencies |
@@ -110,6 +111,23 @@ look is still one click away, in View > Look:
 </tr>
 </table>
 
+### Edit the channels like a spreadsheet
+
+<p align="center">
+  <img src="screenshots/spreadsheet.png" width="860" alt="Memory grid: frequency and name of four 70 cm repeaters selected, the fill handle at the corner dragged down over four empty channels, outlined in orange">
+</p>
+
+Select a block of cells and work on it as in Excel: drag the small square
+at its corner down to copy the values or continue a series (145.500,
+145.525 → 145.550…, CH01, CH02 → CH03…), press **Ctrl+D** to fill down,
+**Ctrl+Enter** to write what you typed in every selected cell, **Delete**
+to empty them. Copied cells paste straight into Excel, and tables copied
+from Excel paste into the grid, decimal commas included. Right-click opens
+*Series…* for a series with a chosen step. Each operation is one undo
+step, the radio still checks every value, and one summary lists the cells
+it refused. Filtered and sorted views only write to the rows you see.
+Formulas and filling to the right are not supported.
+
 ### Safe upload
 
 Before writing, CHIRP Plus reads the radio and shows **what will change**,
@@ -163,7 +181,7 @@ shift, to keep with the radio.
 
 ### 18 languages
 
-All the new texts (191 of them) are translated into the 17 CHIRP
+All the new texts (213 of them) are translated into the 17 CHIRP
 languages, plus English as the source. Each language uses the terms its
 official translation already used. The app follows the Windows language.
 
@@ -220,7 +238,7 @@ On a real **UV-9R** with a CH340 cable on COM5:
 - import of every preset: frequencies, shifts, splits and tones stay
   intact.
 
-811 automated tests pass as well.
+911 automated tests pass as well.
 
 ## Development
 

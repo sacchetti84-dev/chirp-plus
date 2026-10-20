@@ -3721,3 +3721,74 @@ msgstr "Inoffizielle geänderte Version von CHIRP, basierend auf %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Webseite und Quellcode von CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Einige Zellen wurden nicht geändert"
+
+msgid "Writing memories"
+msgstr "Speicher werden geschrieben"
+
+msgid "Fill %i cells"
+msgstr "%i Zellen füllen"
+
+msgid "Paste %i cells"
+msgstr "%i Zellen einfügen"
+
+msgid "Clear %i cells"
+msgstr "%i Zellen leeren"
+
+msgid "%i values did not fit"
+msgstr "%i Werte passten nicht in die Tabelle"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Eingefügte Werte werden Zellen überschreiben, die nicht leer sind"
+
+msgid "Overwrite cells?"
+msgstr "Zellen überschreiben?"
+
+msgid "Copy cells"
+msgstr "Zellen kopieren"
+
+msgid "Fill down"
+msgstr "Nach unten ausfüllen"
+
+msgid "Series..."
+msgstr "Reihe..."
+
+msgid "Clear cells"
+msgstr "Zellen leeren"
+
+msgid "Series in %i cells"
+msgstr "Reihe in %i Zellen"
+
+msgid "Series"
+msgstr "Reihe"
+
+msgid "Step"
+msgstr "Schritt"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Werte für %i Zellen, von der ersten nach unten. Frequenzen steigen in MHz "
+"(0.025 sind 25 kHz); nummerierte Namen wie CH01 steigen in ganzen Zahlen."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Nach unten ziehen, um die ausgewählten Zellen fortzusetzen"
+
+msgid "%s has no empty value"
+msgstr "%s hat keinen leeren Wert"
+
+msgid "%s cannot be changed on this memory"
+msgstr "%s kann in diesem Speicher nicht geändert werden"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr ""
+"Erfordert eine Auswahl, die die Mehrfachbearbeitung nicht treffen kann"
+
+msgid "Invalid value for %s: %r"
+msgstr "Ungültiger Wert für %s: %r"

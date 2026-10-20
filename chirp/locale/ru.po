@@ -4666,3 +4666,74 @@ msgstr "Неофициальная изменённая версия CHIRP на 
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Страница и исходный код CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Некоторые ячейки таблицы не изменены"
+
+msgid "Writing memories"
+msgstr "Запись ячеек памяти"
+
+msgid "Fill %i cells"
+msgstr "Заполнить ячейки таблицы: %i"
+
+msgid "Paste %i cells"
+msgstr "Вставить ячейки таблицы: %i"
+
+msgid "Clear %i cells"
+msgstr "Очистить ячейки таблицы: %i"
+
+msgid "%i values did not fit"
+msgstr "Значения, не поместившиеся в таблицу: %i"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Вставленные значения перезапишут непустые ячейки таблицы"
+
+msgid "Overwrite cells?"
+msgstr "Перезаписать ячейки таблицы?"
+
+msgid "Copy cells"
+msgstr "Копировать ячейки таблицы"
+
+msgid "Fill down"
+msgstr "Заполнить вниз"
+
+msgid "Series..."
+msgstr "Прогрессия..."
+
+msgid "Clear cells"
+msgstr "Очистить ячейки таблицы"
+
+msgid "Series in %i cells"
+msgstr "Прогрессия в ячейках таблицы: %i"
+
+msgid "Series"
+msgstr "Прогрессия"
+
+msgid "Step"
+msgstr "Шаг"
+
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Значения для ячеек таблицы (%i), от первой вниз. Частоты меняются в МГц "
+"(0.025 = 25 кГц); нумерованные имена, например CH01, меняются на целые "
+"числа."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Потяните вниз, чтобы продолжить выбранные ячейки таблицы"
+
+msgid "%s has no empty value"
+msgstr "У поля %s нет пустого значения"
+
+msgid "%s cannot be changed on this memory"
+msgstr "Поле %s нельзя изменить в этой ячейке памяти"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Нужен выбор, который массовое изменение сделать не может"
+
+msgid "Invalid value for %s: %r"
+msgstr "Неверное значение для %s: %r"

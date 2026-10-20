@@ -4287,3 +4287,73 @@ msgstr "Neoficiální upravená verze CHIRP, založená na %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Stránka a zdrojový kód CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Některé buňky nebyly změněny"
+
+msgid "Writing memories"
+msgstr "Zápis pamětí"
+
+msgid "Fill %i cells"
+msgstr "Vyplnit buňky: %i"
+
+msgid "Paste %i cells"
+msgstr "Vložit buňky: %i"
+
+msgid "Clear %i cells"
+msgstr "Vymazat buňky: %i"
+
+msgid "%i values did not fit"
+msgstr "Hodnoty, které se nevešly: %i"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Vložené hodnoty přepíší buňky, které nejsou prázdné"
+
+msgid "Overwrite cells?"
+msgstr "Přepsat buňky?"
+
+msgid "Copy cells"
+msgstr "Kopírovat buňky"
+
+msgid "Fill down"
+msgstr "Vyplnit dolů"
+
+msgid "Series..."
+msgstr "Řada..."
+
+msgid "Clear cells"
+msgstr "Vymazat buňky"
+
+msgid "Series in %i cells"
+msgstr "Řada v buňkách: %i"
+
+msgid "Series"
+msgstr "Řada"
+
+msgid "Step"
+msgstr "Krok"
+
+msgid "Preview"
+msgstr "Náhled"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Hodnoty pro buňky (%i), od první dolů. Frekvence se mění po MHz (0.025 je 25"
+" kHz); číslované názvy jako CH01 se mění po celých číslech."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Táhněte dolů pro pokračování vybraných buněk"
+
+msgid "%s has no empty value"
+msgstr "%s nemá prázdnou hodnotu"
+
+msgid "%s cannot be changed on this memory"
+msgstr "%s nelze v této paměti změnit"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Vyžaduje volbu, kterou hromadná úprava nemůže provést"
+
+msgid "Invalid value for %s: %r"
+msgstr "Neplatná hodnota pro %s: %r"

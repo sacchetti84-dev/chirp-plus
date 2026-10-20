@@ -126,6 +126,8 @@ class Shooter:
         self.before = before
         self.style = style
         self.name = None
+        # What the next dialog answers; None is Cancel
+        self.answer = None
 
     def fake_show_modal(self, dialog):
         import wx
@@ -135,7 +137,8 @@ class Shooter:
             grab(dialog, self.name)
             self.name = None
         dialog.Hide()
-        return wx.ID_CANCEL
+        answer, self.answer = self.answer, None
+        return wx.ID_CANCEL if answer is None else answer
 
     def menu(self, name, handler, *args, **kwargs):
         self.name = name
@@ -144,6 +147,62 @@ class Shooter:
         except Exception as e:
             print('FAILED %s: %s' % (name, e), flush=True)
         settle(0.3)
+
+    def spreadsheet(self, main):
+        """The 70 cm repeaters RU0-RU3 selected (frequency and name),
+        with the fill handle dragged down over four emptied channels."""
+        import wx
+        editor = main.current_editorset.current_editor
+        grid = editor._grid
+        cols = [c.name for c in editor._col_defs]
+        freq, name = cols.index('freq'), cols.index('name')
+        rows = {grid.GetCellValue(r, name): r
+                for r in range(grid.GetNumberRows())}
+        top = rows['RU0']
+        radio = main.current_editorset.radio
+        numbers = [editor.row2mem(row) for row in range(top + 4, top + 8)]
+        kept = [radio.get_memory(number) for number in numbers]
+        for number in numbers:
+            radio.erase_memory(number)
+        editor.refresh()
+        settle(1)
+        grid.MakeCellVisible(top + 12, freq)
+        grid.MakeCellVisible(top - 4, freq)
+        grid.ClearSelection()
+        grid.SetGridCursor(top, freq)
+        grid.SelectBlock(top, freq, top + 3, name)
+        settle(0.5)
+        handle = editor._fill_handle
+        handle.update()
+
+        def mouse(kind, y):
+            event = wx.MouseEvent(kind)
+            event.SetPosition(wx.Point(3, y - handle.GetPosition().y))
+            event.SetEventObject(handle)
+            handle.GetEventHandler().ProcessEvent(event)
+
+        last = grid.CellToRect(top + 7, freq)
+        _x, y = grid.CalcScrolledPosition(
+            last.GetLeft(), last.GetTop() + last.GetHeight() // 2)
+        mouse(wx.wxEVT_LEFT_DOWN, handle.GetPosition().y + 3)
+        mouse(wx.wxEVT_MOTION, y)
+        # No real mouse holds the capture: raising the window for the
+        # picture would end the drag
+        if handle.HasCapture():
+            handle.ReleaseMouse()
+        print('fill preview over rows', handle.preview_rows(), flush=True)
+        grab(main, 'spreadsheet')
+        # Esc: the drag ends without writing anything
+        key = wx.KeyEvent(wx.wxEVT_KEY_DOWN)
+        key.SetKeyCode(wx.WXK_ESCAPE)
+        key.SetEventObject(handle)
+        handle.GetEventHandler().ProcessEvent(key)
+        # The other pictures show the demo as it is
+        for mem in kept:
+            radio.set_memory(mem)
+        grid.ClearSelection()
+        editor.refresh()
+        settle(1)
 
     def run(self):
         import wx
@@ -160,6 +219,9 @@ class Shooter:
             os._exit(0)
 
         grab(main, 'welcome')
+        # Anything but OK in the About window closes CHIRP, as declining
+        # the license does
+        self.answer = wx.ID_OK
         self.menu('about', main._menu_about, None)
         main.open_file(self.demo)
         settle(2)
@@ -170,6 +232,7 @@ class Shooter:
         grid.SetGridCursor(56, 0)
         settle(0.5)
         grab(main, 'memories')
+        self.spreadsheet(main)
 
         # Two channels a careless edit could produce, so the check has
         # something to say beyond the notes

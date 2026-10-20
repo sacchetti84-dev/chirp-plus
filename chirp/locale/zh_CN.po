@@ -4699,3 +4699,71 @@ msgstr "CHIRP 的非官方修改版, 基于 %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "CHIRP Plus 主页和源代码"
+
+msgid "Some cells were not changed"
+msgstr "部分单元格未更改"
+
+msgid "Writing memories"
+msgstr "正在写入存储"
+
+msgid "Fill %i cells"
+msgstr "填充 %i 个单元格"
+
+msgid "Paste %i cells"
+msgstr "粘贴 %i 个单元格"
+
+msgid "Clear %i cells"
+msgstr "清除 %i 个单元格"
+
+msgid "%i values did not fit"
+msgstr "有 %i 个值超出表格范围"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "粘贴的值将覆盖非空单元格"
+
+msgid "Overwrite cells?"
+msgstr "要覆盖单元格吗？"
+
+msgid "Copy cells"
+msgstr "复制单元格"
+
+msgid "Fill down"
+msgstr "向下填充"
+
+msgid "Series..."
+msgstr "序列..."
+
+msgid "Clear cells"
+msgstr "清除单元格"
+
+msgid "Series in %i cells"
+msgstr "在 %i 个单元格中填充序列"
+
+msgid "Series"
+msgstr "序列"
+
+msgid "Step"
+msgstr "步长"
+
+msgid "Preview"
+msgstr "预览"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr "%i 个单元格的值，从第一个开始向下。频率以 MHz 为单位递增（0.025 即 25 kHz）；CH01 这类带编号的名称按整数递增。"
+
+msgid "Drag down to continue the selected cells"
+msgstr "向下拖动以延续所选单元格"
+
+msgid "%s has no empty value"
+msgstr "%s 没有空值"
+
+msgid "%s cannot be changed on this memory"
+msgstr "此存储上的 %s 无法更改"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "需要一个批量编辑无法做出的选择"
+
+msgid "Invalid value for %s: %r"
+msgstr "%s 的值无效：%r"

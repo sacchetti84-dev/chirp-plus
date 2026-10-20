@@ -4594,3 +4594,74 @@ msgstr "CHIRP'in resmi olmayan değiştirilmiş sürümü, temeli: %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "CHIRP Plus sayfası ve kaynak kodu"
+
+msgid "Some cells were not changed"
+msgstr "Bazı hücreler değiştirilmedi"
+
+msgid "Writing memories"
+msgstr "Kayıtlar yazılıyor"
+
+msgid "Fill %i cells"
+msgstr "%i hücreyi doldur"
+
+msgid "Paste %i cells"
+msgstr "%i hücreyi yapıştır"
+
+msgid "Clear %i cells"
+msgstr "%i hücreyi temizle"
+
+msgid "%i values did not fit"
+msgstr "%i değer tabloya sığmadı"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Yapıştırılan değerler boş olmayan hücrelerin üzerine yazılacak"
+
+msgid "Overwrite cells?"
+msgstr "Hücrelerin üzerine yazılsın mı?"
+
+msgid "Copy cells"
+msgstr "Hücreleri kopyala"
+
+msgid "Fill down"
+msgstr "Aşağı doldur"
+
+msgid "Series..."
+msgstr "Seri..."
+
+msgid "Clear cells"
+msgstr "Hücreleri temizle"
+
+msgid "Series in %i cells"
+msgstr "%i hücrede seri"
+
+msgid "Series"
+msgstr "Seri"
+
+msgid "Step"
+msgstr "Adım"
+
+msgid "Preview"
+msgstr "Önizleme"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"%i hücre için değerler, ilkinden aşağıya doğru. Frekanslar MHz cinsinden "
+"artar (0.025, 25 kHz demektir); CH01 gibi numaralı adlar tam sayılarla "
+"artar."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Seçili hücreleri sürdürmek için aşağı sürükleyin"
+
+msgid "%s has no empty value"
+msgstr "%s alanının boş değeri yok"
+
+msgid "%s cannot be changed on this memory"
+msgstr "%s alanı bu kayıtta değiştirilemez"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Toplu düzenlemenin yapamayacağı bir seçim gerektiriyor"
+
+msgid "Invalid value for %s: %r"
+msgstr "%s için geçersiz değer: %r"

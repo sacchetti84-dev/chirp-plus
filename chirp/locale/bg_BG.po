@@ -3794,3 +3794,73 @@ msgstr "Неофициална променена версия на CHIRP, ба�
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Страница и изходен код на CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Някои клетки не бяха променени"
+
+msgid "Writing memories"
+msgstr "Записване на записите"
+
+msgid "Fill %i cells"
+msgstr "Попълване на клетки: %i"
+
+msgid "Paste %i cells"
+msgstr "Поставяне на клетки: %i"
+
+msgid "Clear %i cells"
+msgstr "Изчистване на клетки: %i"
+
+msgid "%i values did not fit"
+msgstr "Стойности, които не се побраха: %i"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Поставените стойности ще презапишат клетки, които не са празни"
+
+msgid "Overwrite cells?"
+msgstr "Презаписване на клетки?"
+
+msgid "Copy cells"
+msgstr "Копиране на клетки"
+
+msgid "Fill down"
+msgstr "Попълване надолу"
+
+msgid "Series..."
+msgstr "Поредица..."
+
+msgid "Clear cells"
+msgstr "Изчистване на клетки"
+
+msgid "Series in %i cells"
+msgstr "Поредица в клетки: %i"
+
+msgid "Series"
+msgstr "Поредица"
+
+msgid "Step"
+msgstr "Стъпка"
+
+msgid "Preview"
+msgstr "Преглед"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Стойности за клетки (%i), от първата надолу. Честотите се променят в МХц "
+"(0.025 е 25 кХц); номерираните имена като CH01 се променят с цели числа."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Плъзнете надолу, за да продължите избраните клетки"
+
+msgid "%s has no empty value"
+msgstr "Полето %s няма празна стойност"
+
+msgid "%s cannot be changed on this memory"
+msgstr "Полето %s не може да се промени в този запис"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Изисква избор, който груповата редакция не може да направи"
+
+msgid "Invalid value for %s: %r"
+msgstr "Недействителна стойност за %s: %r"

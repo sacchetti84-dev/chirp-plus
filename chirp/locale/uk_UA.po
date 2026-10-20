@@ -4103,3 +4103,73 @@ msgstr "Неофіційна змінена версія CHIRP на основі
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Сторінка та вихідний код CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Деякі клітинки не змінено"
+
+msgid "Writing memories"
+msgstr "Запис пам'яті"
+
+msgid "Fill %i cells"
+msgstr "Заповнити клітинки: %i"
+
+msgid "Paste %i cells"
+msgstr "Вставити клітинки: %i"
+
+msgid "Clear %i cells"
+msgstr "Очистити клітинки: %i"
+
+msgid "%i values did not fit"
+msgstr "Значення, що не вмістилися в таблицю: %i"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Вставлені значення перезапишуть непорожні клітинки"
+
+msgid "Overwrite cells?"
+msgstr "Перезаписати клітинки?"
+
+msgid "Copy cells"
+msgstr "Копіювати клітинки"
+
+msgid "Fill down"
+msgstr "Заповнити вниз"
+
+msgid "Series..."
+msgstr "Прогресія..."
+
+msgid "Clear cells"
+msgstr "Очистити клітинки"
+
+msgid "Series in %i cells"
+msgstr "Прогресія в клітинках: %i"
+
+msgid "Series"
+msgstr "Прогресія"
+
+msgid "Step"
+msgstr "Крок"
+
+msgid "Preview"
+msgstr "Попередній перегляд"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Значення для клітинок (%i), від першої вниз. Частоти змінюються в МГц (0.025"
+" = 25 кГц); пронумеровані назви, як-от CH01, змінюються на цілі числа."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Потягніть вниз, щоб продовжити вибрані клітинки"
+
+msgid "%s has no empty value"
+msgstr "Поле %s не має порожнього значення"
+
+msgid "%s cannot be changed on this memory"
+msgstr "Поле %s не можна змінити в цій пам'яті"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Потрібен вибір, який масове редагування зробити не може"
+
+msgid "Invalid value for %s: %r"
+msgstr "Неприпустиме значення для %s: %r"

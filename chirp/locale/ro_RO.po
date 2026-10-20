@@ -4320,3 +4320,74 @@ msgstr "Versiune modificată neoficială a CHIRP, bazată pe %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Pagina și codul sursă CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Unele celule nu au fost modificate"
+
+msgid "Writing memories"
+msgstr "Se scriu memoriile"
+
+msgid "Fill %i cells"
+msgstr "Completează celule: %i"
+
+msgid "Paste %i cells"
+msgstr "Lipește celule: %i"
+
+msgid "Clear %i cells"
+msgstr "Golește celule: %i"
+
+msgid "%i values did not fit"
+msgstr "Valori care nu au încăput: %i"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Valorile lipite vor suprascrie celule care nu sunt goale"
+
+msgid "Overwrite cells?"
+msgstr "Suprascrii celulele?"
+
+msgid "Copy cells"
+msgstr "Copiază celulele"
+
+msgid "Fill down"
+msgstr "Completează în jos"
+
+msgid "Series..."
+msgstr "Serie..."
+
+msgid "Clear cells"
+msgstr "Golește celulele"
+
+msgid "Series in %i cells"
+msgstr "Serie în celule: %i"
+
+msgid "Series"
+msgstr "Serie"
+
+msgid "Step"
+msgstr "Pas"
+
+msgid "Preview"
+msgstr "Previzualizare"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Valori pentru celule (%i), de la prima în jos. Frecvențele cresc în MHz "
+"(0.025 înseamnă 25 kHz); numele numerotate precum CH01 cresc cu numere "
+"întregi."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Trage în jos pentru a continua celulele selectate"
+
+msgid "%s has no empty value"
+msgstr "Câmpul %s nu are o valoare goală"
+
+msgid "%s cannot be changed on this memory"
+msgstr "Câmpul %s nu poate fi modificat în această memorie"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Necesită o alegere pe care editarea în masă nu o poate face"
+
+msgid "Invalid value for %s: %r"
+msgstr "Valoare invalidă pentru %s: %r"

@@ -59,6 +59,60 @@ funzioni dell'originale, più queste modifiche.
 - Radio > Programma più radio: stessa immagine su più radio, una dopo
   l'altra (pulsante o Invio), con verifica, esito per radio e totali.
 
+## Modifica come in Excel (`chirp/grid_fill.py`, `chirp/wxui/cellops.py`, `fillhandle.py`, `seriesdialog.py`)
+La griglia delle memorie di qualsiasi radio si usa come un foglio di
+calcolo, con la validazione della radio e i colori del tema.
+- **Selezione a celle**: clic e trascinamento selezionano un rettangolo,
+  Maiusc+frecce lo allarga, Ctrl+clic aggiunge celle. Il clic sul numero di
+  riga seleziona la riga intera, come prima; i canali si trascinano solo dal
+  numero di riga. Un rettangolo che copre tutte le colonne visibili vale
+  come righe intere, quindi i comandi sui canali (elimina, sposta, ordina,
+  copia di canali) funzionano come prima.
+- **Maniglia di riempimento**: il quadratino nell'angolo in basso a destra
+  della selezione (o della sola cella attiva dopo un clic). Trascinato in
+  giù incornicia le celle che verranno scritte (in arancio nell'aspetto
+  terminale, il colore della scrittura) e al rilascio
+  continua la selezione: un valore solo viene copiato, le frequenze
+  avanzano con lo stesso passo (`145.500`, `145.525` → `145.550`…), i nomi
+  numerati pure, con gli zeri iniziali (`CH01`, `CH02` → `CH03`);
+  altrimenti il blocco selezionato si ripete. Esc annulla il trascinamento;
+  si ferma all'ultima riga della griglia.
+- **Ctrl+D** (Riempi in basso): per ogni colonna copia il valore della
+  prima riga selezionata nelle altre.
+- **Ctrl+Invio**: mentre si scrive in una cella, conferma il valore in
+  tutte le celle selezionate.
+- **Canc** svuota le celle selezionate: nome e commento diventano vuoti;
+  modo tono, toni, codici e polarità DTCS, modo incrociato, duplex e skip
+  tornano al valore di un canale nuovo (duplex vuoto azzera anche
+  l'offset); le celle dei canali vuoti vengono ignorate. Frequenza, modo, passo e potenza non hanno
+  un valore vuoto e vengono saltati: per cancellare un canale resta Elimina
+  sulla riga. Con righe intere selezionate Canc fa quello che faceva prima.
+- **Copia e incolla celle** (Ctrl+C, Ctrl+V, Ctrl+X): la copia mette negli
+  appunti il testo delle celle separato da tabulazioni, che Excel incolla
+  direttamente; l'incolla accetta le tabelle copiate da Excel a partire
+  dalla prima cella selezionata, salta la riga delle intestazioni e accetta
+  la virgola decimale (`145,600` = 145.600). Una cella vuota lascia il
+  valore che c'era; un valore solo va in tutte le celle selezionate. Prima
+  di sovrascrivere celle non vuote chiede conferma una volta. Con righe
+  intere selezionate copia e incolla di canali restano quelli di prima.
+- **Menu col tasto destro** su una selezione: Copia celle, Incolla, Riempi
+  in basso, Serie…, Svuota celle.
+- **Serie…**: valore iniziale (dalla prima cella), passo (frequenze in MHz,
+  per esempio 0.025 per 25 kHz; nomi con incremento intero) e anteprima;
+  scrive su tutte le celle selezionate della colonna.
+- **Un solo passo di annulla** per ogni operazione (es. "Riempi 12 celle");
+  le celle che la radio rifiuta non fermano il resto e compaiono in **un
+  solo riepilogo** alla fine. Nelle operazioni multiple non ci sono
+  domande: duplex `+`/`-` senza offset prende l'offset del piano di banda,
+  i casi che richiederebbero una scelta vengono saltati e annotati.
+- **Viste filtrate e ordinate**: si scrive solo nelle righe visibili (le
+  nascoste non vengono toccate) e nell'ordine a schermo, ogni riga legata
+  alla sua memoria. Le schede in sola lettura permettono solo la copia;
+  con la radio in diretta, oltre 20 celle compare un avanzamento
+  annullabile.
+- **Limiti**: niente formule, niente maniglia orizzontale (trascinare verso
+  destra), né riempimento verso l'alto.
+
 ## Altri strumenti
 - **Backup** (File > Backup…): elenco dei backup automatici, apertura,
   confronto con la scheda aperta.
@@ -94,7 +148,7 @@ funzioni dell'originale, più queste modifiche.
 - **Import/export Excel** (`.xlsx` lettura/scrittura, `.xls` lettura).
 
 ## Lingue
-Tutti i testi nuovi di CHIRP Plus (191 stringhe) sono tradotti nelle 17
+Tutti i testi nuovi di CHIRP Plus (213 stringhe) sono tradotti nelle 17
 lingue di CHIRP più l'inglese di partenza, con la terminologia che ogni
 traduzione ufficiale già usa (per esempio "станция" in russo, "無線機" in
 giapponese). Le traduzioni stanno in `tools/translations/<lingua>.json`

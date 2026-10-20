@@ -4132,3 +4132,73 @@ msgstr "Onofficiële aangepaste versie van CHIRP, gebaseerd op %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Website en broncode van CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Sommige cellen zijn niet gewijzigd"
+
+msgid "Writing memories"
+msgstr "Kanalen schrijven"
+
+msgid "Fill %i cells"
+msgstr "%i cellen vullen"
+
+msgid "Paste %i cells"
+msgstr "%i cellen plakken"
+
+msgid "Clear %i cells"
+msgstr "%i cellen wissen"
+
+msgid "%i values did not fit"
+msgstr "%i waarden pasten niet in de tabel"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Geplakte waarden overschrijven cellen die niet leeg zijn"
+
+msgid "Overwrite cells?"
+msgstr "Cellen overschrijven?"
+
+msgid "Copy cells"
+msgstr "Cellen kopiëren"
+
+msgid "Fill down"
+msgstr "Omlaag vullen"
+
+msgid "Series..."
+msgstr "Reeks..."
+
+msgid "Clear cells"
+msgstr "Cellen wissen"
+
+msgid "Series in %i cells"
+msgstr "Reeks in %i cellen"
+
+msgid "Series"
+msgstr "Reeks"
+
+msgid "Step"
+msgstr "Stap"
+
+msgid "Preview"
+msgstr "Voorbeeld"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Waarden voor %i cellen, van de eerste omlaag. Frequenties stappen in MHz "
+"(0.025 is 25 kHz); genummerde namen zoals CH01 stappen met hele getallen."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Sleep omlaag om de geselecteerde cellen voort te zetten"
+
+msgid "%s has no empty value"
+msgstr "%s heeft geen lege waarde"
+
+msgid "%s cannot be changed on this memory"
+msgstr "%s kan op dit kanaal niet worden gewijzigd"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Vereist een keuze die het bewerken van meerdere cellen niet kan maken"
+
+msgid "Invalid value for %s: %r"
+msgstr "Ongeldige waarde voor %s: %r"

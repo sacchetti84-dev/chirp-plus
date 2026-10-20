@@ -4103,3 +4103,74 @@ msgstr "Nieoficjalna zmodyfikowana wersja CHIRP, oparta na %s"
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Strona i kod źródłowy CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Niektóre komórki nie zostały zmienione"
+
+msgid "Writing memories"
+msgstr "Zapisywanie pamięci"
+
+msgid "Fill %i cells"
+msgstr "Wypełnij komórki: %i"
+
+msgid "Paste %i cells"
+msgstr "Wklej komórki: %i"
+
+msgid "Clear %i cells"
+msgstr "Wyczyść komórki: %i"
+
+msgid "%i values did not fit"
+msgstr "Wartości, które się nie zmieściły: %i"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr "Wklejone wartości nadpiszą komórki, które nie są puste"
+
+msgid "Overwrite cells?"
+msgstr "Nadpisać komórki?"
+
+msgid "Copy cells"
+msgstr "Kopiuj komórki"
+
+msgid "Fill down"
+msgstr "Wypełnij w dół"
+
+msgid "Series..."
+msgstr "Seria..."
+
+msgid "Clear cells"
+msgstr "Wyczyść komórki"
+
+msgid "Series in %i cells"
+msgstr "Seria w komórkach: %i"
+
+msgid "Series"
+msgstr "Seria"
+
+msgid "Step"
+msgstr "Krok"
+
+msgid "Preview"
+msgstr "Podgląd"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Wartości dla komórek (%i), od pierwszej w dół. Częstotliwości zmieniają się "
+"w MHz (0.025 to 25 kHz); numerowane nazwy, takie jak CH01, zmieniają się o "
+"liczby całkowite."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Przeciągnij w dół, aby kontynuować zaznaczone komórki"
+
+msgid "%s has no empty value"
+msgstr "%s nie ma pustej wartości"
+
+msgid "%s cannot be changed on this memory"
+msgstr "Nie można zmienić %s w tej pamięci"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Wymaga wyboru, którego edycja zbiorcza nie może dokonać"
+
+msgid "Invalid value for %s: %r"
+msgstr "Niewłaściwa wartość dla %s: %r"

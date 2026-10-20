@@ -3763,3 +3763,75 @@ msgstr "Ανεπίσημη τροποποιημένη έκδοση του CHIRP,
 
 msgid "CHIRP Plus home page and source code"
 msgstr "Σελίδα και πηγαίος κώδικας του CHIRP Plus"
+
+msgid "Some cells were not changed"
+msgstr "Ορισμένα κελιά δεν άλλαξαν"
+
+msgid "Writing memories"
+msgstr "Εγγραφή μνημών"
+
+msgid "Fill %i cells"
+msgstr "Συμπλήρωση %i κελιών"
+
+msgid "Paste %i cells"
+msgstr "Επικόλληση %i κελιών"
+
+msgid "Clear %i cells"
+msgstr "Εκκαθάριση %i κελιών"
+
+msgid "%i values did not fit"
+msgstr "%i τιμές δεν χώρεσαν στον πίνακα"
+
+msgid "Pasted values will overwrite cells that are not empty"
+msgstr ""
+"Οι τιμές που επικολλήθηκαν θα αντικαταστήσουν κελιά που δεν είναι κενά"
+
+msgid "Overwrite cells?"
+msgstr "Αντικατάσταση κελιών;"
+
+msgid "Copy cells"
+msgstr "Αντιγραφή κελιών"
+
+msgid "Fill down"
+msgstr "Συμπλήρωση προς τα κάτω"
+
+msgid "Series..."
+msgstr "Σειρά..."
+
+msgid "Clear cells"
+msgstr "Εκκαθάριση κελιών"
+
+msgid "Series in %i cells"
+msgstr "Σειρά σε %i κελιά"
+
+msgid "Series"
+msgstr "Σειρά"
+
+msgid "Step"
+msgstr "Βήμα"
+
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+msgid ""
+"Values for %i cells, from the first one down. Frequencies step in MHz (0.025"
+" is 25 kHz); numbered names such as CH01 step by whole numbers."
+msgstr ""
+"Τιμές για %i κελιά, από το πρώτο προς τα κάτω. Οι συχνότητες αλλάζουν σε MHz"
+" (0.025 είναι 25 kHz)· τα αριθμημένα ονόματα όπως CH01 αλλάζουν κατά "
+"ακέραιους αριθμούς."
+
+msgid "Drag down to continue the selected cells"
+msgstr "Σύρετε προς τα κάτω για να συνεχίσετε τα επιλεγμένα κελιά"
+
+msgid "%s has no empty value"
+msgstr "Το πεδίο %s δεν έχει κενή τιμή"
+
+msgid "%s cannot be changed on this memory"
+msgstr "Το πεδίο %s δεν μπορεί να αλλάξει σε αυτή τη μνήμη"
+
+msgid "Needs a choice the bulk edit cannot make"
+msgstr "Απαιτεί μια επιλογή που η μαζική επεξεργασία δεν μπορεί να κάνει"
+
+msgid "Invalid value for %s: %r"
+msgstr "Μη έγκυρη τιμή για %s: %r"
