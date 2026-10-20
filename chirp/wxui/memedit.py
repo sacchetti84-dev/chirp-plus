@@ -777,6 +777,11 @@ def title_case_special(string):
                     for word in string.split(' '))
 
 
+# CHIRP Plus: the extra fields (BCL, PTT-ID...) are grid columns unless
+# View > Show extra fields is turned off
+EXPAND_EXTRA_DEFAULT = True
+
+
 def get_column_for_extra(radio, setting):
     value = setting.value
     field = 'extra.%s' % setting.get_name()
@@ -1534,9 +1539,10 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         goto = common.EditorMenuItem(cls, '_goto', _('Goto...'))
         goto.SetAccel(wx.AcceleratorEntry(wx.MOD_CONTROL, ord('G')))
 
+        # CHIRP Plus: on by default, every channel detail is a column
         expand_extra = common.EditorMenuItemToggle(
             cls, '_set_expand_extra', ('expand_extra', 'state'),
-            _('Show extra fields'))
+            _('Show extra fields'), default=EXPAND_EXTRA_DEFAULT)
 
         hide_empty = common.EditorMenuItemToggle(
             cls, '_set_hide_empty', ('hide_empty', 'memedit'),
@@ -1703,7 +1709,8 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                         setting.value.__class__.__name__)
 
     def _expand_extra(self, memory):
-        if not CONF.get_bool('expand_extra', 'state'):
+        if not CONF.get_bool('expand_extra', 'state',
+                             EXPAND_EXTRA_DEFAULT):
             return
         for setting in memory.extra:
             if setting.get_name() not in self._extra_cols:
@@ -1922,7 +1929,8 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             self._grid.DeleteCols(index)
 
     def refresh(self):
-        if not CONF.get_bool('expand_extra', 'state'):
+        if not CONF.get_bool('expand_extra', 'state',
+                             EXPAND_EXTRA_DEFAULT):
             self._purge_extra_cols()
 
         lower, upper = self._features.memory_bounds
