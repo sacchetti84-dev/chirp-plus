@@ -66,7 +66,7 @@ modelli, applicazione a radio in diretta (live).
   },
   "memories": [
     {"names": "*", "extra": {"pttid": "Off"}},
-    {"names": "SIERRA*", "extra": {"bcl": true}}
+    {"names": "SIERR*", "extra": {"bcl": true}}
   ]
 }
 ```
@@ -136,7 +136,7 @@ modelli, applicazione a radio in diretta (live).
 `workmode Channel`, `wmchannel.mrcha @SIERRA1`,
 `wmchannel.mrchb @PMR 01`, `vfoa.txpower Low`, `vfob.txpower Low`,
 `vfoa.widenarr Narrow`, `vfob.widenarr Narrow`, `ani.aniid Off`,
-`dtmfst OFF`. Canali: `*` → `pttid Off`; `SIERRA*` → `bcl true`.
+`dtmfst OFF`. Canali: `*` → `pttid Off`; `SIERR*` → `bcl true` (copre anche SIERR10).
 
 ### 5. Lingue, documentazione, build
 
