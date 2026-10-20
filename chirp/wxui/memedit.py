@@ -43,6 +43,7 @@ from chirp.wxui import cellops
 from chirp.wxui import config
 from chirp.wxui import common
 from chirp.wxui import developer
+from chirp.wxui import fillhandle
 from chirp.wxui import memquery
 from chirp.wxui import seriesdialog
 from chirp.wxui import theme
@@ -55,6 +56,10 @@ WX_GTK = 'gtk' in wx.version().lower()
 TX_WORKFLOW_ID = wx.NewId()
 # Grid.GetSelectedBlocks() only exists from wxPython 4.1
 HAS_SELECTED_BLOCKS = hasattr(wx.grid.Grid, 'GetSelectedBlocks')
+# Renamed in wxPython 4.1
+EVT_GRID_RANGE_SELECTED = getattr(wx.grid, 'EVT_GRID_RANGE_SELECTED',
+                                  getattr(wx.grid, 'EVT_GRID_RANGE_SELECT',
+                                          None))
 # A memory as 'Copy portable' writes it: [146.520000/+0.600/100.0]
 PORTABLE_MEMORY = re.compile(r'^\[\d{1,4}\.\d{2,6}[^\t]*\]$')
 
@@ -1015,6 +1020,10 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         self._grid.SetFocus()
         theme.style_grid(self._grid)
         self._default_cell_bg_color = self._grid.GetCellBackgroundColour(0, 0)
+        # The square at the corner of the selected cells (see fill_to)
+        self._fill_handle = fillhandle.FillHandle(
+            self._grid, self.fill_to, block=self._fill_block,
+            editable=lambda: self.editable)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         if sys.platform != 'linux':
@@ -1072,6 +1081,12 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         corner_label = self._grid.GetGridCornerLabelWindow()
         corner_label.Bind(wx.EVT_LEFT_DOWN, self._sort_column)
         self._dragging_rows = None
+        # The fill handle follows the selection wherever the grid moves it
+        for event in (EVT_GRID_RANGE_SELECTED, wx.grid.EVT_GRID_SELECT_CELL,
+                      wx.EVT_SCROLLWIN, wx.grid.EVT_GRID_COL_SIZE):
+            if event is not None:
+                self._grid.Bind(event, self._move_fill_handle)
+        self._grid.GetGridWindow().Bind(wx.EVT_SIZE, self._move_fill_handle)
 
         self._dc = wx.ScreenDC()
         self.set_cell_attrs()
@@ -1195,6 +1210,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 self._grid.HideRow(row)
         LOG.debug('Showing %i/%i rows', visible, num_rows)
         self._filter_query.help.Hide()
+        self._fill_handle.update_later()
 
     def _keyboard_overrides(self, event):
         if event.GetKeyCode() in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
@@ -1302,7 +1318,9 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
 
             def GetCol(self_):
                 return col
-        self._memory_rclick(_FakeGridEvent())
+        # Selecting rows from their numbers leaves the cursor where it
+        # was: the menu is for the selection, not the cursor cell
+        self._memory_rclick(_FakeGridEvent(), keep_selection=True)
 
     def _row_click(self, event):
         # In order to override the drag-to-multi-select behavior of the base
@@ -1358,6 +1376,24 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             # a later fill or clear would then write to
             return
         event.Skip()
+
+    def _move_fill_handle(self, event):
+        event.Skip()
+        self._fill_handle.update_later()
+
+    def _fill_block(self):
+        """The (top, left, bottom, right) cells around the selected ones,
+        for the fill handle; None with whole rows or nothing selected.
+
+        Whole rows are memories: they are dragged from the row numbers,
+        and filling every column of the rows below would be a surprise.
+        """
+        if not self._cells_only():
+            return None
+        cells = self.selected_cells()
+        rows = [row for row, col in cells]
+        cols = [col for row, col in cells]
+        return min(rows), min(cols), max(rows), max(cols)
 
     def _rowheader_mouseover(self, event):
         x, y = self._grid.CalcUnscrolledPosition(event.GetX(), event.GetY())
@@ -1445,6 +1481,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                     # No SetFitMode() support on wxPython 4.0.7
                     pass
         wx.CallAfter(self._grid.AutoSizeColumns, setAsMin=False)
+        self._fill_handle.update_later()
 
     @classmethod
     def get_menu_items(cls):
@@ -1690,6 +1727,8 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 self._grid.ShowRow(row)
         else:
             self._grid.ShowRow(row)
+        # Rows shown or hidden move the corner of the selection
+        self._fill_handle.update_later()
 
         if memory.extra:
             self._expand_extra(memory)
@@ -2391,10 +2430,19 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
     def _arrange_memories(self, rows, event):
         self._do_sort_memories(rows, False, 'empty')
 
-    def _memory_rclick(self, event):
+    def _memory_rclick(self, event, keep_selection=False):
         if event.GetRow() == -1:
             # This is a right-click on a column header
             return
+        cell = (event.GetRow(), event.GetCol())
+        if (not keep_selection and event.GetCol() != -1 and
+                cell not in self.selected_cells()):
+            # Like a spreadsheet, a click outside the selection moves it
+            # to the clicked cell, so the menu never acts on cells the
+            # user is not pointing at. With nothing selected, that is
+            # the menu of the clicked memory.
+            self._grid.ClearSelection()
+            self._grid.SetGridCursor(*cell)
         if self._cells_only() and event.GetCol() != -1:
             # The row numbers keep the menu of the memories
             self._cell_menu()
@@ -2694,6 +2742,7 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
         wx.CallAfter(self._grid.AutoSizeColumns, setAsMin=False)
         wx.CallAfter(self._grid.AutoSizeRows, setAsMin=False)
         wx.CallAfter(self._grid.SetRowLabelSize, wx.grid.GRID_AUTOSIZE)
+        self._fill_handle.update_later()
 
     def selected(self):
         self._grid.SetFocus()
@@ -3147,6 +3196,38 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 edits.append(cellops.CellEdit(row, col, text))
         if edits:
             self.bulk_edit(_('Fill %i cells') % len(edits), edits)
+
+    def fill_to(self, last_row):
+        """Continue the selected cells down to `last_row` (fill handle).
+
+        Each column goes on with the series of its selected cells (see
+        grid_fill.continue_series) over the visible rows after the
+        selection. As in fill_down(), an empty value clears, except in
+        empty memories. Returns the BulkResult, or None if nothing to do.
+        """
+        cells = self.selected_cells()
+        if not cells:
+            return None
+        bottom = max(row for row, col in cells)
+        targets = [row for row in self.visible_rows()
+                   if bottom < row <= last_row]
+        if not targets:
+            return None
+        rows_by_col = {}
+        for row, col in cells:
+            rows_by_col.setdefault(col, []).append(row)
+        edits = []
+        for col, rows in sorted(rows_by_col.items()):
+            values = [self._grid.GetCellValue(row, col) for row in rows]
+            series = grid_fill.continue_series(values, len(targets))
+            for row, text in zip(targets, series):
+                mem = self._memory_cache.get(row)
+                if not text and (mem is None or mem.empty):
+                    continue
+                edits.append(cellops.CellEdit(row, col, text or None))
+        if not edits:
+            return None
+        return self.bulk_edit(_('Fill %i cells') % len(edits), edits)
 
     def _cells_only(self):
         """True if some cells are selected but no whole row."""

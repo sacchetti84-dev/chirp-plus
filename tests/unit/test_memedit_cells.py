@@ -1201,3 +1201,232 @@ def test_cell_menu_series(memedit, monkeypatch):
     assert _names(memedit, range(1, 5)) == ['M1', 'M2', 'M3', 'M4']
     assert memedit._undo_queue[0].name == 'Series in 4 cells'
     assert len(memedit._undo_queue) == 1
+
+
+def test_right_click_outside_selection_moves_it(memedit, monkeypatch):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 6)})
+    name = _col_index(memedit, 'name')
+    freq = _col_index(memedit, 'freq')
+    # Inside the selection: it stays, and the menu is for its cells
+    _select(memedit, 1, 3, 'name')
+    items = _menu(memedit, monkeypatch, 2, 'name')
+    assert [label for label, enabled in items] == CELL_MENU
+    assert memedit.selected_cells() == [(1, name), (2, name), (3, name)]
+    # Outside: the cursor moves to the clicked cell, the selection goes,
+    # and the menu is the one of that memory
+    items = _menu(memedit, monkeypatch, 5, 'freq')
+    assert memedit.selected_cells() == []
+    assert (memedit._grid.GetGridCursorRow(),
+            memedit._grid.GetGridCursorCol()) == (5, freq)
+    assert 'Properties' in [label for label, enabled in items]
+    # Whole rows: a click in them keeps them, a click elsewhere does not
+    memedit._grid.SelectRow(2)
+    _menu(memedit, monkeypatch, 2, 'name')
+    assert memedit.selected_rows() == [2]
+    _menu(memedit, monkeypatch, 4, 'name')
+    assert memedit.selected_rows() == []
+    assert memedit._grid.GetGridCursorRow() == 4
+    # The menu key opens the menu of the selection wherever the cursor is
+    memedit._grid.SelectRow(2)
+    memedit._grid.SetGridCursor(0, name)
+    shown = []
+    monkeypatch.setattr(memedit, 'PopupMenu',
+                        lambda menu: shown.append(menu))
+    memedit._show_context_menu_at_cursor()
+    assert shown
+    assert memedit.selected_rows() == [2]
+
+
+# Fill handle
+
+def _show(memedit):
+    frame = memedit.GetTopLevelParent()
+    frame.SetSize((1000, 700))
+    frame.Show()
+    frame.Layout()
+    wx.SafeYield()
+
+
+def _freqs(memedit, numbers):
+    return [memedit._radio.get_memory(n).freq for n in numbers]
+
+
+def _set_freqs(memedit, freqs):
+    for number, freq in freqs.items():
+        mem = memedit._radio.get_memory(number)
+        mem.freq = freq
+        memedit._radio.set_memory(mem)
+    memedit.refresh()
+    wx.SafeYield()
+
+
+def test_fill_to_continues_frequency_series(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 7)})
+    _set_freqs(memedit, {1: 146000000, 2: 146025000})
+    _select(memedit, 1, 2, 'freq')
+    queued = len(memedit._undo_queue)
+    memedit.fill_to(5)
+    assert _freqs(memedit, range(1, 7)) == [
+        146000000, 146025000, 146050000, 146075000, 146100000, 145650000]
+    assert _names(memedit, range(1, 6)) == ['M1', 'M2', 'M3', 'M4', 'M5']
+    freq = _col_index(memedit, 'freq')
+    assert memedit._grid.GetCellValue(5, freq) == '146.100000'
+    assert len(memedit._undo_queue) == queued + 1
+    assert memedit._undo_queue[0].name == 'Fill 3 cells'
+    memedit._undo(None)
+    assert _freqs(memedit, range(3, 6)) == [145575000, 145600000, 145625000]
+
+
+def test_fill_to_skips_hidden_rows(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 7)})
+    _set_freqs(memedit, {1: 146000000, 2: 146025000})
+    memedit._grid.HideRow(4)
+    _select(memedit, 1, 2, 'freq')
+    memedit.fill_to(6)
+    # The series goes on over the rows that are shown
+    assert _freqs(memedit, [3, 5, 6]) == [146050000, 146075000, 146100000]
+    assert _freqs(memedit, [4]) == [145600000]
+    assert memedit._undo_queue[0].name == 'Fill 3 cells'
+
+
+def test_fill_to_copies_single_value(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 6)})
+    _select(memedit, 1, 1, 'name')
+    memedit.fill_to(3)
+    assert _names(memedit, range(1, 5)) == ['M1', 'M1', 'M1', 'M4']
+    assert memedit._undo_queue[0].name == 'Fill 2 cells'
+    # Nothing after the selection: nothing to do
+    queued = len(memedit._undo_queue)
+    memedit.fill_to(1)
+    assert len(memedit._undo_queue) == queued
+
+
+def _corner(memedit, row, name):
+    grid = memedit._grid
+    rect = grid.CellToRect(row, _col_index(memedit, name))
+    return grid.CalcScrolledPosition(rect.GetRight(), rect.GetBottom())
+
+
+def test_handle_follows_selection(memedit):
+    _show(memedit)
+    handle = memedit._fill_handle
+    grid = memedit._grid
+    grid.ClearSelection()
+    grid.SelectBlock(1, _col_index(memedit, 'freq'),
+                     3, _col_index(memedit, 'name'))
+    # update() runs after the selection event
+    wx.SafeYield()
+    assert handle.IsShown()
+    assert tuple(handle.GetSize()) == (7, 7)
+    assert handle.GetParent() is grid.GetGridWindow()
+    assert handle.GetRect().Contains(_corner(memedit, 3, 'name'))
+
+    _select(memedit, 4, 6, 'freq')
+    wx.SafeYield()
+    assert handle.IsShown()
+    assert handle.GetRect().Contains(_corner(memedit, 6, 'freq'))
+
+    # Cursor alone or whole rows: no handle
+    _cursor(memedit, 2, 'freq')
+    wx.SafeYield()
+    assert not handle.IsShown()
+    grid.SelectRow(2)
+    wx.SafeYield()
+    assert not handle.IsShown()
+
+    # Corner scrolled out of view: no handle
+    _select(memedit, 1, 2, 'freq')
+    wx.SafeYield()
+    assert handle.IsShown()
+    grid.MakeCellVisible(120, _col_index(memedit, 'freq'))
+    handle.update()
+    assert not handle.IsShown()
+
+
+def test_handle_hidden_when_read_only(memedit, monkeypatch):
+    monkeypatch.setattr(memedit_mod.ChirpMemEdit, 'editable',
+                        property(lambda self: False))
+    _show(memedit)
+    _select(memedit, 1, 3, 'freq')
+    wx.SafeYield()
+    memedit._fill_handle.update()
+    assert not memedit._fill_handle.IsShown()
+
+
+def _mouse(handle, kind, grid_y):
+    """A mouse event on the handle at height `grid_y` of the grid window."""
+    event = wx.MouseEvent(kind)
+    event.SetPosition(wx.Point(3, grid_y - handle.GetPosition().y))
+    event.SetEventObject(handle)
+    handle.GetEventHandler().ProcessEvent(event)
+
+
+def _row_y(memedit, row):
+    rect = memedit._grid.CellToRect(row, _col_index(memedit, 'freq'))
+    return memedit._grid.CalcScrolledPosition(
+        rect.GetLeft(), rect.GetTop() + rect.GetHeight() // 2)[1]
+
+
+def test_handle_drag_fills(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 7)})
+    _set_freqs(memedit, {1: 146000000, 2: 146025000})
+    _show(memedit)
+    _select(memedit, 1, 2, 'freq')
+    wx.SafeYield()
+    handle = memedit._fill_handle
+    assert handle.IsShown()
+    start = handle.GetPosition().y + 3
+    _mouse(handle, wx.wxEVT_LEFT_DOWN, start)
+    _mouse(handle, wx.wxEVT_MOTION, _row_y(memedit, 4))
+    assert handle.preview_rows() == (3, 4)
+    _mouse(handle, wx.wxEVT_MOTION, _row_y(memedit, 5))
+    assert handle.preview_rows() == (3, 5)
+    _mouse(handle, wx.wxEVT_LEFT_UP, _row_y(memedit, 5))
+    assert handle.preview_rows() is None
+    assert _freqs(memedit, range(1, 7)) == [
+        146000000, 146025000, 146050000, 146075000, 146100000, 145650000]
+    assert len(memedit._undo_queue) == 1
+    assert memedit._undo_queue[0].name == 'Fill 3 cells'
+
+
+def test_handle_drag_cancelled(memedit):
+    _seeded(memedit, {n: 'M%i' % n for n in range(1, 7)})
+    _show(memedit)
+    _select(memedit, 1, 2, 'name')
+    wx.SafeYield()
+    handle = memedit._fill_handle
+    start = handle.GetPosition().y + 3
+    # Esc while dragging
+    _mouse(handle, wx.wxEVT_LEFT_DOWN, start)
+    _mouse(handle, wx.wxEVT_MOTION, _row_y(memedit, 5))
+    assert handle.preview_rows() == (3, 5)
+    _key(handle, wx.WXK_ESCAPE)
+    assert handle.preview_rows() is None
+    _mouse(handle, wx.wxEVT_LEFT_UP, _row_y(memedit, 5))
+    # Released inside the selection
+    _mouse(handle, wx.wxEVT_LEFT_DOWN, start)
+    _mouse(handle, wx.wxEVT_MOTION, _row_y(memedit, 1))
+    assert handle.preview_rows() is None
+    _mouse(handle, wx.wxEVT_LEFT_UP, _row_y(memedit, 1))
+    assert _names(memedit, range(1, 7)) == ['M%i' % n for n in range(1, 7)]
+    assert not memedit._undo_queue
+
+
+def test_handle_drag_stops_at_last_row(memedit):
+    _show(memedit)
+    grid = memedit._grid
+    last = grid.GetNumberRows() - 1
+    grid.MakeCellVisible(last, _col_index(memedit, 'name'))
+    _select(memedit, last - 2, last - 1, 'name')
+    wx.SafeYield()
+    handle = memedit._fill_handle
+    assert handle.IsShown()
+    filled = []
+    handle._on_fill = filled.append
+    _mouse(handle, wx.wxEVT_LEFT_DOWN, handle.GetPosition().y + 3)
+    _mouse(handle, wx.wxEVT_MOTION,
+           grid.GetGridWindow().GetClientSize().height + 200)
+    assert handle.preview_rows() == (last, last)
+    _mouse(handle, wx.wxEVT_LEFT_UP,
+           grid.GetGridWindow().GetClientSize().height + 200)
+    assert filled == [last]
