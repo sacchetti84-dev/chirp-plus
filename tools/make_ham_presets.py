@@ -11,7 +11,7 @@ Writes:
   IT LPD e PMR446.csv              the 69 LPD and 16 PMR446 channels, at
                                    their legal power (licence free bands)
   IT Team Sierra.csv               SIERRA 1-10 (2 m simplex, one DCS each)
-                                   plus PMR446 and LPD receive only, 95
+                                   plus the PMR446 and LPD channels, 95
                                    channels for a 128 memory handheld
 
 Sources (checked October 2026): the Italian repeater channel plan of the
@@ -153,11 +153,12 @@ def lpd_pmr():
 
 
 def team_sierra():
-    """SIERRA 1-10 to talk, the PMR446 and LPD channels to listen only.
+    """SIERRA 1-10 for the team, then the standard PMR446 and LPD channels.
 
-    A UV-5R or UV-9R is not an approved PMR446/LPD radio, so those
-    channels are receive only (Duplex off): the team hears the teams on
-    licence free radios, and answers them with an approved radio.
+    The standard channels transmit too, at the lowest power, to answer
+    teams on licence free radios. A UV-5R or UV-9R is not an approved
+    PMR446/LPD radio and cannot go below about 1 W: the comment says so,
+    as in "IT LPD e PMR446".
     """
     rows = []
     for i, (freq, dcs) in enumerate(SIERRA, 1):
@@ -167,20 +168,9 @@ def team_sierra():
             '(stesso codice su tutte le radio; sceglietene uno vostro) - '
             'serve licenza di radioamatore' % (i, freq, dcs),
             tone='DTCS', dtcs=dcs))
-    for i in range(16):
-        freq = 446.00625 + i * 0.0125
-        rows.append(row(
-            'PMR %02i' % (i + 1), freq,
-            '[PMR446] Canale %i, %.5f MHz, solo ascolto: per trasmettere '
-            'qui serve una radio PMR446 omologata' % (i + 1, freq),
-            duplex='off', step=6.25, power='0.5W'))
-    for i in range(69):
-        freq = 433.075 + i * 0.025
-        rows.append(row(
-            'LPD %02i' % (i + 1), freq,
-            '[LPD] Canale %i, %.3f MHz, solo ascolto: per trasmettere qui '
-            'serve una radio LPD omologata' % (i + 1, freq),
-            duplex='off', mode='FM', step=25.0, power='0.01W'))
+    standard = lpd_pmr()
+    rows.extend(r for r in standard if r['Name'].startswith('PMR'))
+    rows.extend(r for r in standard if r['Name'].startswith('LPD'))
     return rows
 
 

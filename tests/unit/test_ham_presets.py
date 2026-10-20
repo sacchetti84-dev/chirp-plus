@@ -98,10 +98,13 @@ class TestHamPresets(unittest.TestCase):
                              freq_check.band_for(m.freq).use, m.name)
             self.assertNotIn(m.freq, (145375000, 145500000), m.name)
         self.assertEqual(10, len({m.dtcs for m in sierra}))
-        # Licence free channels: listen only on a non-approved handheld
+        # Licence free channels: simplex, so the team can also answer
+        # teams on standard PMR446/LPD channels, at the lowest power
         others = mems[10:]
         self.assertEqual(16 + 69, len(others))
-        self.assertTrue(all(m.duplex == 'off' for m in others))
+        self.assertTrue(all(m.duplex == '' for m in others))
+        self.assertEqual({'0.5W', '0.01W'}, {str(m.power) for m in others})
+        self.assertTrue(all('omologat' in m.comment for m in others))
         self.assertEqual(len(mems), len({m.name for m in mems}))
         self.assertLessEqual(len(mems), 128)
         self.assertTrue(all(len(m.name) <= 7 for m in mems))

@@ -109,11 +109,22 @@ def test_every_profile_setting_applied(sierra_radio):
     assert after['tdr'] == 'True'
     assert after['tdrab'] == 'A'
     assert after['fmradio'] == 'False'
-    assert after['limits_old.uhf.enable'] == 'False'
+    # UHF TX stays on: the standard PMR446/LPD channels transmit
+    assert after['limits_old.uhf.enable'] == 'True'
     assert after['workmode'] == 'Channel'
     assert (after['mdfa'], after['mdfb']) == ('Name', 'Name')
     assert (after['vfoa.widenarr'], after['vfob.txpower']) == (
         'Narrow', 'Low')
+
+
+def test_profile_turns_uhf_tx_back_on(sierra_radio):
+    # A radio set up with plus.5 had UHF TX off: the standard PMR446/LPD
+    # channels must be able to transmit again
+    settings_profile.apply(settings_profile.plan(profile(
+        {'limits_old.uhf.enable': False}), sierra_radio), sierra_radio)
+    settings_profile.apply(settings_profile.plan(team(), sierra_radio),
+                           sierra_radio)
+    assert values(sierra_radio)['limits_old.uhf.enable'] == 'True'
 
 
 def test_at_name_resolves_memory_number(sierra_radio):
