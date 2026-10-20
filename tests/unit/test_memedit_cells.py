@@ -832,6 +832,89 @@ def test_paste_explicit_offset_wins_over_band(memedit):
     assert (mem.freq, mem.duplex, mem.offset) == (145600000, '-', 7600000)
 
 
+def _seed_duplex(memedit, rows):
+    """Store {number: (freq, duplex, offset)} in the radio and refresh."""
+    radio = memedit._radio
+    for number, (freq, duplex, offset) in rows.items():
+        mem = chirp_common.Memory(number=number)
+        mem.freq = freq
+        mem.duplex = duplex
+        mem.offset = offset
+        mem.name = 'M%i' % number
+        mem.mode = 'FM'
+        mem.power = radio.get_features().valid_power_levels[0]
+        assert radio.validate_memory(mem) == []
+        radio.set_memory(mem)
+    memedit.refresh()
+    wx.SafeYield()
+
+
+def _duplexes(memedit, numbers):
+    return [(memedit._radio.get_memory(n).duplex,
+             memedit._radio.get_memory(n).offset) for n in numbers]
+
+
+def test_paste_duplex_off_from_excel_keeps_tx_off(memedit, monkeypatch):
+    # The Duplex and Offset columns of a CHIRP CSV opened in Excel. In
+    # IARU R1 145.600 has a -600 kHz shift, the marine 156.800 none:
+    # neither may turn transmit back on
+    dialogs = Dialogs(answer=wx.ID_YES)
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    _seed_duplex(memedit, {1: (145600000, 'off', 0),
+                           2: (156800000, 'off', 0)})
+    _cursor(memedit, 1, 'duplex')
+    result = memedit.paste_table('off\t0.000000\r\noff\t0.000000\r\n')
+    assert result.problems == []
+    assert _duplexes(memedit, [1, 2]) == [('off', 0), ('off', 0)]
+    assert [d[0] for d in dialogs.shown] == ['Overwrite cells?']
+
+
+def test_paste_duplex_off_with_offset_on_repeater(memedit, monkeypatch):
+    monkeypatch.setattr(wx, 'MessageDialog', Dialogs(answer=wx.ID_YES))
+    _seed_duplex(memedit, {1: (145600000, '-', 600000)})
+    _cursor(memedit, 1, 'duplex')
+    result = memedit.paste_table('off\t0.600000\n')
+    assert result.problems == []
+    mem, = result.changed
+    assert (mem.duplex, mem.offset) == ('off', 600000)
+    # The UV-5R keeps no offset with transmit off
+    assert memedit._radio.get_memory(1).duplex == 'off'
+
+
+def test_noninteractive_offset_on_simplex(memedit):
+    apply = memedit.apply_cell_value
+    offset = memedit._col_def_by_name('offset')
+    # A zero offset on simplex is simplex
+    mem = memedit.memory_for_row(0)
+    mem.freq = 156800000
+    mem.duplex = ''
+    out = apply(mem, offset, '0.000000', interactive=False)
+    assert (out.duplex, out.offset) == ('', 0)
+    # 'off' stays off whatever the offset
+    mem = memedit.memory_for_row(0)
+    mem.freq = 145600000
+    mem.duplex = 'off'
+    out = apply(mem, offset, '0.600000', interactive=False)
+    assert (out.duplex, out.offset) == ('off', 600000)
+
+
+def test_rejected_cell_in_saved_row_changes_nothing(memedit, monkeypatch):
+    # 146.000 has no shift in IARU R1: the offset cannot be used, the
+    # name in the same row is still stored, the offset is not
+    dialogs = Dialogs()
+    monkeypatch.setattr(wx, 'MessageDialog', dialogs)
+    _seed_duplex(memedit, {1: (146000000, '', 0)})
+    edits = [cellops.CellEdit(1, _col_index(memedit, 'name'), 'NEW'),
+             cellops.CellEdit(1, _col_index(memedit, 'offset'), '0.600000')]
+    result = memedit.bulk_edit('Test', edits)
+    assert len(result.problems) == 1
+    # What is stored, before the radio has its say
+    mem, = result.changed
+    assert (mem.name, mem.duplex, mem.offset) == ('NEW', '', 0)
+    mem = memedit._radio.get_memory(1)
+    assert (mem.name, mem.duplex, mem.offset) == ('NEW', '', 0)
+
+
 def test_paste_header_row_skipped(memedit):
     _cursor(memedit, 2, 'freq')
     memedit.paste_table('Frequency\tName\n145.600000\tHDR\n')

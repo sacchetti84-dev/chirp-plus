@@ -104,7 +104,8 @@ def apply_edits(editor, edits):
 
     Edits are grouped by row, rows in the order they first appear; in
     each row the frequency goes first, then the other columns in grid
-    order. A rejected cell is reported and the others go on; a row where
+    order. A rejected cell is reported, changes nothing, and the others
+    go on; a row where
     no edit applied is left out and not validated. If the resulting
     memory has validation errors the whole row is dropped; warnings are
     reported and the memory is kept.
@@ -129,7 +130,8 @@ def apply_edits(editor, edits):
         for edit in ordered:
             col_def = editor.column(edit.col)
             try:
-                mem = _apply_one(editor, mem, col_def, edit.text)
+                # On a copy: a rejected cell leaves nothing behind
+                mem = _apply_one(editor, mem.dupe(), col_def, edit.text)
                 applied = True
             except CellRejected as e:
                 problems.append(('%s %s' % (label, col_def.name), str(e)))

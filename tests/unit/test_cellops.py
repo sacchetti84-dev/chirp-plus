@@ -13,7 +13,7 @@ class Col:
 
 
 class FakeEditor:
-    """Columns in grid order: name, rtone, freq, comment, WARN."""
+    """Columns in grid order: name, rtone, freq, comment, WARN, duplex."""
 
     def __init__(self, rows=(1, 2, 3)):
         self.memories = {}
@@ -22,7 +22,8 @@ class FakeEditor:
             mem.freq = 145000000
             self.memories[row] = mem
         self.columns = [Col(n) for n in
-                        ('name', 'rtone', 'freq', 'comment', 'WARN')]
+                        ('name', 'rtone', 'freq', 'comment', 'WARN',
+                         'duplex')]
         self.calls = []
 
     def memory_for_row(self, row):
@@ -36,6 +37,10 @@ class FakeEditor:
         self.calls.append((mem.number, col_def.name, text))
         if text == 'BAD':
             raise cellops.CellRejected('bad value')
+        if text == 'HALF':
+            # Changes the memory, then gives up
+            mem.tmode = 'Tone'
+            raise cellops.CellRejected('half done')
         if col_def.name == 'WARN':
             mem.comment = 'WARN'
             return mem
@@ -226,3 +231,32 @@ def test_row_with_only_rejected_edits_is_left_alone():
     ])
     assert result.changed == []
     assert [p[0] for p in result.problems] == ['2 freq', '2 name']
+
+
+def test_rejected_cell_leaves_no_partial_change():
+    editor = FakeEditor()
+    result = cellops.apply_edits(editor, [
+        cellops.CellEdit(1, 0, 'HALF'),
+        cellops.CellEdit(1, 3, 'note'),
+    ])
+    assert result.problems == [('1 name', 'half done')]
+    mem, = result.changed
+    assert mem.comment == 'note'
+    assert mem.tmode == ''
+    # The editor's own memory is not touched either
+    assert editor.memories[1].tmode == ''
+
+
+def test_clearing_duplex_with_immutable_offset_changes_nothing():
+    editor = FakeEditor()
+    mem = editor.memories[1]
+    mem.duplex = '-'
+    mem.offset = 600000
+    mem.immutable = ['offset']
+    result = cellops.apply_edits(editor, [
+        cellops.CellEdit(1, 5, None),
+        cellops.CellEdit(1, 3, 'note'),
+    ])
+    assert [p[0] for p in result.problems] == ['1 duplex']
+    mem, = result.changed
+    assert (mem.duplex, mem.offset, mem.comment) == ('-', 600000, 'note')

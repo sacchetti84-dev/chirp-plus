@@ -2228,11 +2228,13 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                                         not mem.offset):
                 self._set_memory_defaults(mem, 'offset')
 
+        # Without prompts, 'off' stays off and a zero offset on simplex is
+        # simplex; only a real offset on simplex takes the band duplex.
         if col_def.name == 'offset' and mem.duplex in ('', 'off'):
             if interactive:
                 if not self._resolve_offset(mem):
                     raise cellops.CellRejected('')
-            else:
+            elif mem.duplex == '' and mem.offset:
                 self._set_memory_defaults(mem, 'duplex')
                 if mem.duplex == '':
                     raise cellops.CellRejected(needs_choice)
