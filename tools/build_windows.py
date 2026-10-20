@@ -80,6 +80,16 @@ PRIMO USO
 Se il cavo non viene trovato serve il suo driver (CH340, PL2303, FTDI o
 CP210x, dal sito del produttore).
 
+RADIO DELLA SQUADRA (UV-5R e UV-9R)
+1. Scarica la radio (punto 2 sopra).
+2. File > Apri la configurazione predefinita > "IT Team Sierra" e
+   importa i canali: SIERRA1-SIERR10 in 2 m, poi PMR 1-16 e LPD 1-69.
+3. Radio > Applica profilo impostazioni > il profilo della tua radio:
+   controlla l'elenco di cosa cambia e premi Applica.
+4. Carica sulla radio.
+Tutti i dettagli dei canali (BCL, PTT-ID...) sono colonne della tabella;
+Visualizza > Mostra campi aggiuntivi li nasconde.
+
 COLORI
 verde = ok, giallo = attenzione, rosso = errore, blu = legge la radio,
 arancio = scrive la radio, bianco = file, magenta = toni.
