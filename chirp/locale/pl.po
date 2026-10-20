@@ -4237,3 +4237,12 @@ msgstr "Z profilem"
 
 msgid "Profile %s"
 msgstr "Profil %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" musi być listą nazw"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" musi być listą {\"names\": tekst, \"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "to radio nie ma ustawień"

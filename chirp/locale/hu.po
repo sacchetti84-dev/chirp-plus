@@ -4397,3 +4397,14 @@ msgstr "A profillal"
 
 msgid "Profile %s"
 msgstr "Profil: %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: a \"radios\" nevek listája kell legyen"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr ""
+"%s: a \"memories\" {\"names\": szöveg, \"extra\": {...}} elemek listája kell"
+" legyen"
+
+msgid "this radio has no settings"
+msgstr "ennek a rádiónak nincsenek beállításai"

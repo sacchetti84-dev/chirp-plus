@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "Instellingen kunnen niet ongedaan worden gemaakt: open de back-up van de download om terug te gaan.",
  "Now": "Nu",
  "With the profile": "Met het profiel",
- "Profile %s": "Profiel %s"
+ "Profile %s": "Profiel %s",
+ "%s: \"radios\" must be a list of names": "%s: \"radios\" moet een lijst met namen zijn",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" moet een lijst van {\"names\": tekst, \"extra\": {...}} zijn",
+ "this radio has no settings": "deze radio heeft geen instellingen"
 }

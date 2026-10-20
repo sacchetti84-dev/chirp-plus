@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "Setările nu pot fi anulate: pentru a reveni, deschideți copia de siguranță a descărcării.",
  "Now": "Acum",
  "With the profile": "Cu profilul",
- "Profile %s": "Profil %s"
+ "Profile %s": "Profil %s",
+ "%s: \"radios\" must be a list of names": "%s: \"radios\" trebuie să fie o listă de nume",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" trebuie să fie o listă de {\"names\": text, \"extra\": {...}}",
+ "this radio has no settings": "această stație nu are setări"
 }

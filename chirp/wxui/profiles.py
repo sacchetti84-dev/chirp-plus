@@ -103,7 +103,11 @@ def apply_profile(parent, editorset, profile):
         if answer != wx.ID_YES:
             return False
 
-    plan = settings_profile.plan(profile, radio)
+    try:
+        plan = settings_profile.plan(profile, radio)
+    except settings_profile.ProfileError as e:
+        wx.MessageBox(str(e), title, wx.ICON_ERROR, parent=parent)
+        return False
     if not plan.changes:
         wx.MessageBox(_('The radio already has these settings.'), title,
                       wx.ICON_INFORMATION, parent=parent)
@@ -132,6 +136,9 @@ def apply_profile(parent, editorset, profile):
             radio.set_memory(mem)
     for _t, editor in editorset.iter_editors(settingsedit.ChirpSettingsEdit):
         editor.refresh()
+        if editorset.current_editor is editor:
+            # The tab on screen would stay blank until shown again
+            editor.selected()
     target = edit or editorset
     wx.PostEvent(target, common.EditorChanged(target.GetId()))
     console.log('file', _('Applied profile %s') % profile.name)

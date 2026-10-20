@@ -202,6 +202,43 @@ def test_shipped_profile_is_valid_for_uv5r(uv5r_radio):
         'wmchannel.mrcha', 'wmchannel.mrchb']
 
 
+def test_apply_writes_only_changed_settings(sierra_radio):
+    # Real radios carry out-of-range bytes; settings the profile does not
+    # set must be neither validated nor rewritten
+    obj = sierra_radio._memobj
+    obj.settings.pttlt = 0xFF
+    obj.poweron_msg.line1.set_raw(b'\xff' * 7)
+    before = sierra_radio.get_mmap().get_packed()[0x1828:0x1838]
+    plan = settings_profile.plan(team(), sierra_radio)
+    settings_profile.apply(plan, sierra_radio)
+    assert values(sierra_radio)['squelch'] == '3'
+    assert int(obj.settings.pttlt) == 0xFF
+    assert sierra_radio.get_mmap().get_packed()[0x1828:0x1838] == before
+
+
+def test_plan_without_settings_is_a_profile_error(sierra_radio,
+                                                  monkeypatch):
+    monkeypatch.setattr(sierra_radio, 'get_settings', lambda: None)
+    with pytest.raises(settings_profile.ProfileError):
+        settings_profile.plan(team(), sierra_radio)
+
+
+@pytest.mark.parametrize('doc', [
+    {'name': 'x', 'settings': {}, 'radios': None},
+    {'name': 'x', 'settings': {}, 'radios': 'Baofeng UV-5R'},
+    {'name': 'x', 'settings': {}, 'memories': {'names': '*'}},
+    {'name': 'x', 'settings': {}, 'memories': ['*']},
+    {'name': 'x', 'settings': {}, 'memories': [{'names': '*',
+                                                'extra': ['bcl']}]},
+    {'name': 'x', 'settings': {}, 'memories': [{'names': 5,
+                                                'extra': {}}]},
+])
+def test_load_rejects_bad_shapes(tmp_path, doc):
+    with pytest.raises(settings_profile.ProfileError) as e:
+        settings_profile.load(write(tmp_path, json.dumps(doc)))
+    assert 'profile.json' in str(e.value)
+
+
 def write(tmp_path, text, encoding='utf-8'):
     path = tmp_path / 'profile.json'
     path.write_bytes(text.encode(encoding))

@@ -2263,6 +2263,7 @@ class ChirpMain(wx.Frame):
             self.current_editorset.filename))
         printer.PreviewText(page)
 
+    @common.error_proof()
     def _menu_settings_profile(self, profile):
         """Radio > Apply settings profile; None means "From file..." """
         if not self._require_editorset():

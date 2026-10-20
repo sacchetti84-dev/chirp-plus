@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "Настройките не могат да се отменят: за да се върнете, отворете резервното копие от изтеглянето.",
  "Now": "Сега",
  "With the profile": "С профила",
- "Profile %s": "Профил %s"
+ "Profile %s": "Профил %s",
+ "%s: \"radios\" must be a list of names": "%s: \"radios\" трябва да е списък с имена",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" трябва да е списък от {\"names\": текст, \"extra\": {...}}",
+ "this radio has no settings": "това радио няма настройки"
 }

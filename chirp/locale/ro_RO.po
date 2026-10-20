@@ -4455,3 +4455,12 @@ msgstr "Cu profilul"
 
 msgid "Profile %s"
 msgstr "Profil %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" trebuie să fie o listă de nume"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" trebuie să fie o listă de {\"names\": text, \"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "această stație nu are setări"

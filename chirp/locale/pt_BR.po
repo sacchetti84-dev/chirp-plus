@@ -4718,3 +4718,12 @@ msgstr "Com o perfil"
 
 msgid "Profile %s"
 msgstr "Perfil %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" deve ser uma lista de nomes"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" deve ser uma lista de {\"names\": texto, \"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "este rádio não tem configurações"

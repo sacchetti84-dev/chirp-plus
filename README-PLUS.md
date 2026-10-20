@@ -171,8 +171,9 @@ calcolo, con la validazione della radio e i colori del tema.
     niente PTT-ID; nei canali PTT-ID Off su tutti e BCL On sui SIERR*.
     Uso: scarica la radio → importa "IT Team Sierra" → **Radio > Applica
     profilo impostazioni** → controlla l'elenco "Ora / Con il profilo" →
-    Applica → carica (o Programma più radio). Non tocca firmware, messaggi
-    di avvio, limiti di frequenza, codici DTMF e VFO di ogni radio; le voci
+    Applica → carica (o Programma più radio). Scrive solo le voci che
+    cambia: non tocca firmware, messaggi di avvio, gamme di frequenza (solo
+    l'interruttore TX UHF), codici DTMF e frequenze VFO di ogni radio; le voci
     che una radio non ha sono saltate ed elencate. Le impostazioni non si
     annullano con Ctrl+Z (i canali sì): per tornare indietro si riapre il
     backup del download. "Da file…" applica un profilo JSON vostro (formato

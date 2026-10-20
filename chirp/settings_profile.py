@@ -63,9 +63,21 @@ def load(path):
             or not isinstance(doc.get('settings'), dict)):
         raise ProfileError(_('%s: a profile needs a "name" and '
                              '"settings"') % where)
-    return Profile(name=doc['name'], radios=list(doc.get('radios', [])),
+    radios = doc.get('radios', [])
+    memories = doc.get('memories', [])
+    if (not isinstance(radios, list)
+            or not all(isinstance(r, str) for r in radios)):
+        raise ProfileError(_('%s: "radios" must be a list of names') % where)
+    if (not isinstance(memories, list)
+            or not all(isinstance(r, dict)
+                       and isinstance(r.get('names', '*'), str)
+                       and isinstance(r.get('extra', {}), dict)
+                       for r in memories)):
+        raise ProfileError(_('%s: "memories" must be a list of '
+                             '{"names": text, "extra": {...}}') % where)
+    return Profile(name=doc['name'], radios=list(radios),
                    settings=dict(doc['settings']),
-                   memories=list(doc.get('memories', [])), path=path)
+                   memories=list(memories), path=path)
 
 
 def shipped_profiles():
@@ -82,7 +94,7 @@ def fits(profile, radio):
 
 @dataclasses.dataclass
 class Plan:
-    settings_tree: object          # a fresh radio.get_settings(), changed
+    settings_tree: object          # radio.get_settings(), only the changed
     changes: list                  # radio_compare.Change, what will change
     memories: list                 # changed copies of memories
     problems: list                 # (profile key, reason)
@@ -97,6 +109,16 @@ def _index(group, found=None):
         else:
             _index(element, found)
     return found
+
+
+def _keep_only(group, keep):
+    """Drop from @group every setting not in @keep (a set of ids)"""
+    for element in group.values():
+        if isinstance(element, settings.RadioSetting):
+            if id(element) not in keep:
+                del group[element]
+        else:
+            _keep_only(element, keep)
 
 
 def _clean_name(name):
@@ -146,9 +168,11 @@ def _set(setting, wanted, mems):
 def plan(profile, radio):
     """What applying @profile to @radio would change, without changing it"""
     tree = radio.get_settings()
+    if not tree:
+        raise ProfileError(_('this radio has no settings'))
     index = _index(tree)
     mems = _memories(radio)
-    changes, problems = [], []
+    changes, problems, changed = [], [], set()
 
     for key, wanted in profile.settings.items():
         name = next((n for n in key.split('|') if n in index), None)
@@ -158,11 +182,12 @@ def plan(profile, radio):
         setting = index[name]
         before = str(setting.value)
         try:
-            changed = _set(setting, wanted, mems)
+            is_changed = _set(setting, wanted, mems)
         except ValueError as e:
             problems.append((key, str(e)))
             continue
-        if changed:
+        if is_changed:
+            changed.add(id(setting))
             changes.append(radio_compare.Change(
                 radio_compare.CHANGED, 'setting', setting.get_shortname(),
                 before, str(setting.value)))
@@ -193,6 +218,11 @@ def plan(profile, radio):
                 radio_compare.CHANGED, 'memory', str(mem.number),
                 ', '.join('%s: %s' % (c, b) for c, b, _a in diffs),
                 ', '.join('%s: %s' % (c, a) for c, _b, a in diffs)))
+    # Only what the profile changes goes back to the radio: rewriting the
+    # rest would re-encode (or choke on) bytes the profile never meant
+    # to touch
+    for group in tree:
+        _keep_only(group, changed)
     return Plan(tree, changes, changed_mems, problems)
 
 

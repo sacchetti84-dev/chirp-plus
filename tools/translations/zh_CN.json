@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "设置无法撤销: 要恢复, 请打开下载时的备份。",
  "Now": "当前",
  "With the profile": "应用配置后",
- "Profile %s": "配置 %s"
+ "Profile %s": "配置 %s",
+ "%s: \"radios\" must be a list of names": "%s：\"radios\" 必须是名称列表",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s：\"memories\" 必须是 {\"names\": 文本, \"extra\": {...}} 的列表",
+ "this radio has no settings": "此电台没有设置"
 }

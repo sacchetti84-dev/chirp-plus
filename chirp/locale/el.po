@@ -3899,3 +3899,14 @@ msgstr "Με το προφίλ"
 
 msgid "Profile %s"
 msgstr "Προφίλ %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: το \"radios\" πρέπει να είναι λίστα ονομάτων"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr ""
+"%s: το \"memories\" πρέπει να είναι λίστα από {\"names\": κείμενο, "
+"\"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "αυτός ο πομποδέκτης δεν έχει ρυθμίσεις"

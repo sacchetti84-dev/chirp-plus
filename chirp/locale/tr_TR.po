@@ -4727,3 +4727,12 @@ msgstr "Profille"
 
 msgid "Profile %s"
 msgstr "Profil %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" bir ad listesi olmalı"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" bir {\"names\": metin, \"extra\": {...}} listesi olmalı"
+
+msgid "this radio has no settings"
+msgstr "bu telsizin ayarı yok"

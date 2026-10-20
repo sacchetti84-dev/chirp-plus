@@ -3928,3 +3928,12 @@ msgstr "С профила"
 
 msgid "Profile %s"
 msgstr "Профил %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" трябва да е списък с имена"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" трябва да е списък от {\"names\": текст, \"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "това радио няма настройки"

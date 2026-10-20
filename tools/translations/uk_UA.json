@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "Налаштування не можна скасувати: щоб повернутися, відкрийте резервну копію копіювання.",
  "Now": "Зараз",
  "With the profile": "З профілем",
- "Profile %s": "Профіль %s"
+ "Profile %s": "Профіль %s",
+ "%s: \"radios\" must be a list of names": "%s: \"radios\" має бути списком назв",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" має бути списком {\"names\": текст, \"extra\": {...}}",
+ "this radio has no settings": "ця рація не має налаштувань"
 }

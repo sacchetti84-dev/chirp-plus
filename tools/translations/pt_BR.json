@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "As configurações não podem ser desfeitas: para voltar, abra o backup do download.",
  "Now": "Agora",
  "With the profile": "Com o perfil",
- "Profile %s": "Perfil %s"
+ "Profile %s": "Perfil %s",
+ "%s: \"radios\" must be a list of names": "%s: \"radios\" deve ser uma lista de nomes",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" deve ser uma lista de {\"names\": texto, \"extra\": {...}}",
+ "this radio has no settings": "este rádio não tem configurações"
 }

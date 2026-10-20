@@ -4356,3 +4356,12 @@ msgstr "プロファイル適用後"
 
 msgid "Profile %s"
 msgstr "プロファイル %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" は名前のリストである必要があります"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" は {\"names\": テキスト, \"extra\": {...}} のリストである必要があります"
+
+msgid "this radio has no settings"
+msgstr "この無線機には設定がありません"

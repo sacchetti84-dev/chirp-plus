@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "設定は元に戻せません: 戻すにはダウンロード時のバックアップを開いてください。",
  "Now": "現在",
  "With the profile": "プロファイル適用後",
- "Profile %s": "プロファイル %s"
+ "Profile %s": "プロファイル %s",
+ "%s: \"radios\" must be a list of names": "%s: \"radios\" は名前のリストである必要があります",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" は {\"names\": テキスト, \"extra\": {...}} のリストである必要があります",
+ "this radio has no settings": "この無線機には設定がありません"
 }

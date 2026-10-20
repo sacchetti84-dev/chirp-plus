@@ -4801,3 +4801,12 @@ msgstr "С профилем"
 
 msgid "Profile %s"
 msgstr "Профиль %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" должен быть списком названий"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" должен быть списком {\"names\": текст, \"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "у этой рации нет настроек"

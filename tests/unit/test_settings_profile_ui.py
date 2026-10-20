@@ -162,6 +162,32 @@ def test_refresh_before_settings_tab_was_ever_shown(sierra_set):
     assert editor._group_control.GetPageCount() > 0
 
 
+def test_current_settings_tab_reloads(sierra_set, answer, monkeypatch):
+    # The "Getting settings" wait dialog is a real ProgressDialog
+    monkeypatch.setattr(settingsedit.ChirpSettingsEdit, 'start_wait_dialog',
+                        lambda self, msg: None)
+    monkeypatch.setattr(settingsedit.ChirpSettingsEdit, 'stop_wait_dialog',
+                        lambda self: None)
+    editor = next(e for _t, e in sierra_set.iter_editors(
+        settingsedit.ChirpSettingsEdit))
+    sierra_set.select_editor(name='Settings')
+    for i in range(20):
+        wx.SafeYield()
+    assert editor._group_control.GetPageCount() > 0
+    assert profiles.apply_profile(sierra_set, sierra_set, team())
+    for i in range(20):
+        wx.SafeYield()
+    assert editor._group_control.GetPageCount() > 0
+
+
+def test_radio_without_settings_shows_message(sierra_set, answer, boxes,
+                                              monkeypatch):
+    monkeypatch.setattr(sierra_set.radio, 'get_settings', lambda: None)
+    assert not profiles.apply_profile(sierra_set, sierra_set, team())
+    assert len(boxes) == 1
+    assert answer['shown'] == 0
+
+
 def test_cancel_changes_nothing(sierra_set, answer):
     answer['value'] = wx.ID_CANCEL
     radio = sierra_set.radio

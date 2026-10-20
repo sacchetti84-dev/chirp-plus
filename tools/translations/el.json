@@ -230,5 +230,8 @@
  "Settings cannot be undone: to go back, open the backup of the download.": "Οι ρυθμίσεις δεν αναιρούνται: για επιστροφή, ανοίξτε το αντίγραφο ασφαλείας της λήψης.",
  "Now": "Τώρα",
  "With the profile": "Με το προφίλ",
- "Profile %s": "Προφίλ %s"
+ "Profile %s": "Προφίλ %s",
+ "%s: \"radios\" must be a list of names": "%s: το \"radios\" πρέπει να είναι λίστα ονομάτων",
+ "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: το \"memories\" πρέπει να είναι λίστα από {\"names\": κείμενο, \"extra\": {...}}",
+ "this radio has no settings": "αυτός ο πομποδέκτης δεν έχει ρυθμίσεις"
 }

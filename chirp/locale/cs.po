@@ -4419,3 +4419,12 @@ msgstr "S profilem"
 
 msgid "Profile %s"
 msgstr "Profil %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s: \"radios\" musí být seznam názvů"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s: \"memories\" musí být seznam {\"names\": text, \"extra\": {...}}"
+
+msgid "this radio has no settings"
+msgstr "tato radiostanice nemá nastavení"

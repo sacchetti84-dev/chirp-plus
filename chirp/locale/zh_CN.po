@@ -4827,3 +4827,12 @@ msgstr "应用配置后"
 
 msgid "Profile %s"
 msgstr "配置 %s"
+
+msgid "%s: \"radios\" must be a list of names"
+msgstr "%s：\"radios\" 必须是名称列表"
+
+msgid "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}"
+msgstr "%s：\"memories\" 必须是 {\"names\": 文本, \"extra\": {...}} 的列表"
+
+msgid "this radio has no settings"
+msgstr "此电台没有设置"
