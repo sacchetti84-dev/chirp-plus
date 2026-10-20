@@ -24,6 +24,7 @@ def tree(src, dest, skip=('.xcf', '.pyc')):
 
 datas = (tree('chirp/share', 'chirp/share') +
          tree('chirp/stock_configs', 'chirp/stock_configs') +
+         tree('chirp/settings_profiles', 'chirp/settings_profiles') +
          tree('chirp/locale', 'chirp/locale', skip=('.py', '~')) +
          # Standard wx strings (OK/Cancel buttons and so on)
          collect_data_files('wx', includes=['locale/**/*.mo']))

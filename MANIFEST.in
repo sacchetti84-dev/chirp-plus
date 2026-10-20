@@ -6,6 +6,7 @@ include chirp/share/icons/*
 include chirp/share/*.ico
 include chirp/share/*.1
 include chirp/stock_configs/*
+include chirp/settings_profiles/*
 include chirp/locale/*/LC_MESSAGES/*.mo
 exclude chirp/locale/*
 include COPYING
