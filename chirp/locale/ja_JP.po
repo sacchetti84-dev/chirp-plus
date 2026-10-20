@@ -4365,3 +4365,19 @@ msgstr "%s: \"memories\" は {\"names\": テキスト, \"extra\": {...}} のリ�
 
 msgid "this radio has no settings"
 msgstr "この無線機には設定がありません"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" にはチャンネル名が必要です"
+
+msgid "this setting has several values"
+msgstr "この設定には複数の値があります"
+
+msgid "%i settings were not changed"
+msgstr "%i 件の設定は変更されませんでした"
+
+msgid "These will be skipped:"
+msgstr "次の項目はスキップされます:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "イメージ内の %(memories)i チャンネルと %(settings)i 件の設定が変わります。"

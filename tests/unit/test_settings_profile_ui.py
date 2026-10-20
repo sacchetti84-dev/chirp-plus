@@ -13,7 +13,9 @@ from tests.unit.test_memedit_cells import (  # noqa: F401
 import wx  # noqa: E402
 
 from chirp import directory  # noqa: E402
+from chirp import chirp_common  # noqa: E402
 from chirp import import_logic  # noqa: E402
+from chirp import settings  # noqa: E402
 from chirp import settings_profile  # noqa: E402
 from chirp.drivers import generic_csv  # noqa: E402
 from chirp.wxui import changes  # noqa: E402
@@ -60,7 +62,7 @@ def setting(radio, name):
 
     def walk(group):
         for element in group:
-            if isinstance(element, profiles.settings.RadioSetting):
+            if isinstance(element, settings.RadioSetting):
                 found[element.get_name()] = str(element.value)
             else:
                 walk(element)
@@ -231,3 +233,150 @@ def test_other_model_asks_first(frame, monkeypatch, answer):
     assert not profiles.apply_profile(eset, eset, team())
     assert asked and 'Baofeng UV-5R' in asked[0]
     assert answer['shown'] == 0
+
+
+@pytest.fixture
+def dialog_args(monkeypatch):
+    """The keyword arguments of the changes dialog (answers OK)"""
+    seen = {}
+    init = changes.ChangesDialog.__init__
+
+    def spy(self, *a, **k):
+        seen.update(k, args=a)
+        init(self, *a, **k)
+    monkeypatch.setattr(changes.ChangesDialog, '__init__', spy)
+    monkeypatch.setattr(changes.ChangesDialog, 'ShowModal',
+                        lambda self: wx.ID_OK)
+    return seen
+
+
+@pytest.fixture
+def warnings_shown(monkeypatch):
+    """(message, title, details) of every problems dialog"""
+    shown = []
+
+    class Dialog:
+        def __init__(self, parent, text, title, *a, **k):
+            self.text, self.title = text, title
+
+        def SetExtendedMessage(self, details):
+            shown.append((self.text, self.title, details))
+
+        def ShowModal(self):
+            return wx.ID_OK
+
+        def Destroy(self):
+            pass
+    monkeypatch.setattr(wx, 'MessageDialog', Dialog)
+    return shown
+
+
+def broken_team():
+    profile = team()
+    profile.settings = dict(profile.settings, nope=1, squelch=99)
+    return profile
+
+
+def test_problems_are_shown_before_confirming(sierra_set, dialog_args,
+                                              warnings_shown):
+    assert profiles.apply_profile(sierra_set, sierra_set, broken_team())
+    assert '[nope]' in dialog_args['note']
+    assert '[squelch]' in dialog_args['note']
+
+
+def test_dialog_does_not_look_like_an_upload(sierra_set, dialog_args,
+                                             warnings_shown):
+    assert profiles.apply_profile(sierra_set, sierra_set, team())
+    assert dialog_args['action_icon'] != 'upload'
+    assert 'image' in dialog_args['summary']
+    assert 'in the radio' not in dialog_args['summary']
+
+
+def test_problems_dialog_title_and_count(sierra_set, dialog_args,
+                                         warnings_shown):
+    assert profiles.apply_profile(sierra_set, sierra_set, broken_team())
+    [(text, title, details)] = warnings_shown
+    assert title == 'Settings profile'
+    assert text == '2 settings were not changed'
+    assert '[nope]' in details
+
+
+def test_channel_changes_undo_in_one_step(sierra_set, answer):
+    radio = sierra_set.radio
+    edit = the_memedit(sierra_set)
+    number = next(n for n in range(128)
+                  if radio.get_memory(n).name.strip() == 'SIERRA1')
+    assert profiles.apply_profile(sierra_set, sierra_set, team())
+    extra = {x.get_name(): str(x.value)
+             for x in radio.get_memory(number).extra}
+    assert extra['bcl'] == 'True'
+    edit._undo(None)
+    extra = {x.get_name(): str(x.value)
+             for x in radio.get_memory(number).extra}
+    assert extra['bcl'] == 'False'
+
+
+def test_live_radio_is_refused(boxes, answer):
+    class Live(chirp_common.LiveRadio):
+        VENDOR, MODEL = 'Baofeng', 'UV-5R'
+
+        def __init__(self):
+            pass
+
+    class EditorSet:
+        radio = Live()
+    assert not profiles.apply_profile(None, EditorSet(), team())
+    assert len(boxes) == 1
+    assert answer['shown'] == 0
+
+
+def test_other_model_yes_goes_on(frame, monkeypatch, answer):
+    directory.import_drivers()
+    eset = editorset_for(frame, directory.get_radio_by_image(
+        os.path.join(IMAGES, 'Baofeng_BF-A58S.img')))
+
+    class Yes:
+        def __init__(self, *a, **k):
+            pass
+
+        def ShowModal(self):
+            return wx.ID_YES
+
+        def SetExtendedMessage(self, text):
+            pass
+
+        def Destroy(self):
+            pass
+    monkeypatch.setattr(wx, 'MessageDialog', Yes)
+    profiles.apply_profile(eset, eset, team())
+    assert answer['shown'] == 1
+
+
+def test_choose_file(frame, tmp_path, monkeypatch, boxes):
+    good = tmp_path / 'good.json'
+    good.write_text('{"name": "Mine", "settings": {}}', encoding='utf-8')
+    broken = tmp_path / 'broken.json'
+    broken.write_text('{', encoding='utf-8')
+    picked = {}
+
+    class Picker:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            pass
+
+        def ShowModal(self):
+            return wx.ID_OK
+
+        def GetPath(self):
+            return picked['path']
+    monkeypatch.setattr(wx, 'FileDialog', Picker)
+    picked['path'] = str(good)
+    assert profiles.choose_file(frame).name == 'Mine'
+    picked['path'] = str(broken)
+    assert profiles.choose_file(frame) is None
+    assert len(boxes) == 1 and 'broken.json' in boxes[0]

@@ -4464,3 +4464,19 @@ msgstr "%s: \"memories\" trebuie să fie o listă de {\"names\": text, \"extra\"
 
 msgid "this radio has no settings"
 msgstr "această stație nu are setări"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" are nevoie de numele unui canal"
+
+msgid "this setting has several values"
+msgstr "această setare are mai multe valori"
+
+msgid "%i settings were not changed"
+msgstr "%i setări nu au fost schimbate"
+
+msgid "These will be skipped:"
+msgstr "Vor fi sărite:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "În imagine se vor schimba %(memories)i canale și %(settings)i setări."

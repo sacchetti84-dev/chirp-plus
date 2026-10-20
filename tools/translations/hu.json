@@ -233,5 +233,10 @@
  "Profile %s": "Profil: %s",
  "%s: \"radios\" must be a list of names": "%s: a \"radios\" nevek listája kell legyen",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: a \"memories\" {\"names\": szöveg, \"extra\": {...}} elemek listája kell legyen",
- "this radio has no settings": "ennek a rádiónak nincsenek beállításai"
+ "this radio has no settings": "ennek a rádiónak nincsenek beállításai",
+ "\"@\" needs the name of a channel": "a \"@\" után csatornanév kell",
+ "this setting has several values": "ennek a beállításnak több értéke van",
+ "%i settings were not changed": "%i beállítás nem változott",
+ "These will be skipped:": "Ezek kimaradnak:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "%(memories)i csatorna és %(settings)i beállítás változik a képfájlban."
 }

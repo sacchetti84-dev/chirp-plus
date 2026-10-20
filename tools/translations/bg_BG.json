@@ -233,5 +233,10 @@
  "Profile %s": "Профил %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" трябва да е списък с имена",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" трябва да е списък от {\"names\": текст, \"extra\": {...}}",
- "this radio has no settings": "това радио няма настройки"
+ "this radio has no settings": "това радио няма настройки",
+ "\"@\" needs the name of a channel": "\"@\" изисква име на канал",
+ "this setting has several values": "тази настройка има няколко стойности",
+ "%i settings were not changed": "%i настройки не бяха променени",
+ "These will be skipped:": "Ще бъдат пропуснати:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "%(memories)i канала и %(settings)i настройки ще се променят в образа."
 }

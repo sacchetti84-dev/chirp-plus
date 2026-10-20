@@ -233,5 +233,10 @@
  "Profile %s": "Profil %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" musí být seznam názvů",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" musí být seznam {\"names\": text, \"extra\": {...}}",
- "this radio has no settings": "tato radiostanice nemá nastavení"
+ "this radio has no settings": "tato radiostanice nemá nastavení",
+ "\"@\" needs the name of a channel": "\"@\" potřebuje název kanálu",
+ "this setting has several values": "toto nastavení má více hodnot",
+ "%i settings were not changed": "%i nastavení nebylo změněno",
+ "These will be skipped:": "Tyto budou přeskočeny:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "V obrazu se změní %(memories)i kanálů a %(settings)i nastavení."
 }

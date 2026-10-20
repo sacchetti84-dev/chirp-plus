@@ -233,5 +233,10 @@
  "Profile %s": "配置 %s",
  "%s: \"radios\" must be a list of names": "%s：\"radios\" 必须是名称列表",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s：\"memories\" 必须是 {\"names\": 文本, \"extra\": {...}} 的列表",
- "this radio has no settings": "此电台没有设置"
+ "this radio has no settings": "此电台没有设置",
+ "\"@\" needs the name of a channel": "\"@\" 需要一个信道名称",
+ "this setting has several values": "此设置有多个值",
+ "%i settings were not changed": "%i 项设置未更改",
+ "These will be skipped:": "以下项将被跳过：",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "映像中将更改 %(memories)i 个信道和 %(settings)i 项设置。"
 }

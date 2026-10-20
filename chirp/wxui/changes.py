@@ -42,7 +42,8 @@ class ChangesDialog(wx.Dialog):
     """
     def __init__(self, parent, changes, title, action_label,
                  action_tone='tx', command=None, columns=None,
-                 question=True, note=None):
+                 question=True, note=None, action_icon='upload',
+                 summary=None):
         super().__init__(parent, title=title,
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         self.changes = changes
@@ -58,7 +59,10 @@ class ChangesDialog(wx.Dialog):
         vbox.Add(header, border=12, flag=wx.ALL)
 
         counts = radio_compare.summary(changes)
-        if changes and question:
+        if changes and summary:
+            text = summary
+            tone = 'warn'
+        elif changes and question:
             text = _('%(memories)i channels and %(settings)i settings will '
                      'change in the radio.') % {
                          'memories': counts['memory'],
@@ -115,7 +119,7 @@ class ChangesDialog(wx.Dialog):
         ok = self.FindWindow(wx.ID_OK)
         ok.SetLabel(action_label)
         if question:
-            ok.SetBitmap(theme.icon('upload', 16, action_tone))
+            ok.SetBitmap(theme.icon(action_icon, 16, action_tone))
         theme.style_dialog(self)
         if theme.enabled():
             ok.SetForegroundColour(theme.colour(action_tone))

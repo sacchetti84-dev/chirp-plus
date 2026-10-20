@@ -233,5 +233,10 @@
  "Profile %s": "Profil %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" trebuie să fie o listă de nume",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" trebuie să fie o listă de {\"names\": text, \"extra\": {...}}",
- "this radio has no settings": "această stație nu are setări"
+ "this radio has no settings": "această stație nu are setări",
+ "\"@\" needs the name of a channel": "\"@\" are nevoie de numele unui canal",
+ "this setting has several values": "această setare are mai multe valori",
+ "%i settings were not changed": "%i setări nu au fost schimbate",
+ "These will be skipped:": "Vor fi sărite:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "În imagine se vor schimba %(memories)i canale și %(settings)i setări."
 }

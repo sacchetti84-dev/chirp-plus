@@ -4794,3 +4794,20 @@ msgstr "%s : \"memories\" doit être une liste de {\"names\": texte, \"extra\": 
 
 msgid "this radio has no settings"
 msgstr "cette radio n'a pas de réglages"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" demande le nom d'un canal"
+
+msgid "this setting has several values"
+msgstr "ce réglage a plusieurs valeurs"
+
+msgid "%i settings were not changed"
+msgstr "%i réglages n'ont pas été modifiés"
+
+msgid "These will be skipped:"
+msgstr "Ceux-ci seront ignorés :"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr ""
+"%(memories)i canaux et %(settings)i réglages vont changer dans l'image."

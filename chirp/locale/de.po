@@ -3865,3 +3865,20 @@ msgstr "%s: \"memories\" muss eine Liste von {\"names\": Text, \"extra\": {...}}
 
 msgid "this radio has no settings"
 msgstr "dieses Funkgerät hat keine Einstellungen"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" braucht den Namen eines Kanals"
+
+msgid "this setting has several values"
+msgstr "diese Einstellung hat mehrere Werte"
+
+msgid "%i settings were not changed"
+msgstr "%i Einstellungen wurden nicht geändert"
+
+msgid "These will be skipped:"
+msgstr "Diese werden übersprungen:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr ""
+"%(memories)i Kanäle und %(settings)i Einstellungen ändern sich im Abbild."

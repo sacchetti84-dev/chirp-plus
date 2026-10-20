@@ -233,5 +233,10 @@
  "Profile %s": "プロファイル %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" は名前のリストである必要があります",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" は {\"names\": テキスト, \"extra\": {...}} のリストである必要があります",
- "this radio has no settings": "この無線機には設定がありません"
+ "this radio has no settings": "この無線機には設定がありません",
+ "\"@\" needs the name of a channel": "\"@\" にはチャンネル名が必要です",
+ "this setting has several values": "この設定には複数の値があります",
+ "%i settings were not changed": "%i 件の設定は変更されませんでした",
+ "These will be skipped:": "次の項目はスキップされます:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "イメージ内の %(memories)i チャンネルと %(settings)i 件の設定が変わります。"
 }

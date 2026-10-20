@@ -4408,3 +4408,20 @@ msgstr ""
 
 msgid "this radio has no settings"
 msgstr "ennek a rádiónak nincsenek beállításai"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "a \"@\" után csatornanév kell"
+
+msgid "this setting has several values"
+msgstr "ennek a beállításnak több értéke van"
+
+msgid "%i settings were not changed"
+msgstr "%i beállítás nem változott"
+
+msgid "These will be skipped:"
+msgstr "Ezek kimaradnak:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr ""
+"%(memories)i csatorna és %(settings)i beállítás változik a képfájlban."

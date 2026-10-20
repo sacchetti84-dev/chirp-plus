@@ -233,5 +233,10 @@
  "Profile %s": "Profil %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" bir ad listesi olmalı",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" bir {\"names\": metin, \"extra\": {...}} listesi olmalı",
- "this radio has no settings": "bu telsizin ayarı yok"
+ "this radio has no settings": "bu telsizin ayarı yok",
+ "\"@\" needs the name of a channel": "\"@\" bir kanal adı gerektirir",
+ "this setting has several values": "bu ayarın birden çok değeri var",
+ "%i settings were not changed": "%i ayar değiştirilmedi",
+ "These will be skipped:": "Bunlar atlanacak:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "Görüntüde %(memories)i kanal ve %(settings)i ayar değişecek."
 }

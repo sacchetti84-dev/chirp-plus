@@ -233,5 +233,10 @@
  "Profile %s": "Προφίλ %s",
  "%s: \"radios\" must be a list of names": "%s: το \"radios\" πρέπει να είναι λίστα ονομάτων",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: το \"memories\" πρέπει να είναι λίστα από {\"names\": κείμενο, \"extra\": {...}}",
- "this radio has no settings": "αυτός ο πομποδέκτης δεν έχει ρυθμίσεις"
+ "this radio has no settings": "αυτός ο πομποδέκτης δεν έχει ρυθμίσεις",
+ "\"@\" needs the name of a channel": "το \"@\" χρειάζεται όνομα καναλιού",
+ "this setting has several values": "αυτή η ρύθμιση έχει πολλές τιμές",
+ "%i settings were not changed": "%i ρυθμίσεις δεν άλλαξαν",
+ "These will be skipped:": "Θα παραλειφθούν:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "%(memories)i κανάλια και %(settings)i ρυθμίσεις θα αλλάξουν στην εικόνα."
 }

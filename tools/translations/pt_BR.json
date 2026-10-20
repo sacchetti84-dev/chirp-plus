@@ -233,5 +233,10 @@
  "Profile %s": "Perfil %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" deve ser uma lista de nomes",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" deve ser uma lista de {\"names\": texto, \"extra\": {...}}",
- "this radio has no settings": "este rádio não tem configurações"
+ "this radio has no settings": "este rádio não tem configurações",
+ "\"@\" needs the name of a channel": "\"@\" precisa do nome de um canal",
+ "this setting has several values": "esta configuração tem vários valores",
+ "%i settings were not changed": "%i configurações não foram alteradas",
+ "These will be skipped:": "Serão ignoradas:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "%(memories)i canais e %(settings)i configurações vão mudar na imagem."
 }

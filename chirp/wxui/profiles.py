@@ -20,7 +20,7 @@ import logging
 import wx
 
 from chirp import chirp_common
-from chirp import settings  # noqa: F401 (used by the tests through here)
+from chirp import radio_compare
 from chirp import settings_profile
 from chirp.wxui import changes as changes_dialog
 from chirp.wxui import common
@@ -37,11 +37,7 @@ def add_menu(frame, parent_menu, callback):
     @callback gets the Profile, or None for "From file...".
     """
     sub = wx.Menu()
-    try:
-        shipped = settings_profile.shipped_profiles()
-    except settings_profile.ProfileError as e:
-        LOG.error('Unable to load the shipped profiles: %s', e)
-        shipped = []
+    shipped = settings_profile.shipped_profiles()
     for profile in shipped:
         item = sub.Append(wx.ID_ANY, profile.name)
         frame.Bind(wx.EVT_MENU, lambda e, p=profile: callback(p), item)
@@ -68,14 +64,18 @@ def choose_file(parent):
         return None
 
 
+def _problem_lines(problems, limit):
+    lines = ['[%s]: %s' % (key, reason) for key, reason in problems[:limit]]
+    if len(problems) > limit:
+        lines.append(_('...and %i more') % (len(problems) - limit))
+    return lines
+
+
 def _show_problems(parent, problems):
-    lines = ['[%s]: %s' % (key, reason) for key, reason in problems[:19]]
-    if len(problems) > 19:
-        lines.append(_('...and %i more') % (len(problems) - 19))
-    d = wx.MessageDialog(parent, _('Some settings were not changed'),
-                         _('Some settings were not changed'),
+    d = wx.MessageDialog(parent, _('%i settings were not changed') %
+                         len(problems), _('Settings profile'),
                          wx.OK | wx.ICON_WARNING)
-    d.SetExtendedMessage('\n'.join(lines))
+    d.SetExtendedMessage('\n'.join(_problem_lines(problems, 19)))
     d.ShowModal()
     d.Destroy()
 
@@ -115,12 +115,22 @@ def apply_profile(parent, editorset, profile):
             _show_problems(parent, plan.problems)
         return False
 
+    note = _('Settings cannot be undone: to go back, open the backup of the '
+             'download.')
+    if plan.problems:
+        # Seen before deciding, not only after
+        note = '\n'.join([note, _('These will be skipped:')] +
+                         _problem_lines(plan.problems, 5))
+    counts = radio_compare.summary(plan.changes)
     with changes_dialog.ChangesDialog(
             parent, plan.changes, title, _('Apply'), action_tone='file',
             command='profile "%s"' % profile.name,
-            columns=(_('Now'), _('With the profile')),
-            note=_('Settings cannot be undone: to go back, open the backup '
-                   'of the download.')) as d:
+            columns=(_('Now'), _('With the profile')), note=note,
+            action_icon='circle-check',
+            summary=_('%(memories)i channels and %(settings)i settings will '
+                      'change in the image.') % {
+                          'memories': counts['memory'],
+                          'settings': counts['setting']}) as d:
         if d.ShowModal() != wx.ID_OK:
             return False
 

@@ -4275,3 +4275,20 @@ msgstr "%s: \"memories\" moet een lijst van {\"names\": tekst, \"extra\": {...}}
 
 msgid "this radio has no settings"
 msgstr "deze radio heeft geen instellingen"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" heeft de naam van een kanaal nodig"
+
+msgid "this setting has several values"
+msgstr "deze instelling heeft meerdere waarden"
+
+msgid "%i settings were not changed"
+msgstr "%i instellingen zijn niet gewijzigd"
+
+msgid "These will be skipped:"
+msgstr "Deze worden overgeslagen:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr ""
+"%(memories)i kanalen en %(settings)i instellingen veranderen in het image."

@@ -4836,3 +4836,19 @@ msgstr "%s：\"memories\" 必须是 {\"names\": 文本, \"extra\": {...}} 的列
 
 msgid "this radio has no settings"
 msgstr "此电台没有设置"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" 需要一个信道名称"
+
+msgid "this setting has several values"
+msgstr "此设置有多个值"
+
+msgid "%i settings were not changed"
+msgstr "%i 项设置未更改"
+
+msgid "These will be skipped:"
+msgstr "以下项将被跳过："
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "映像中将更改 %(memories)i 个信道和 %(settings)i 项设置。"

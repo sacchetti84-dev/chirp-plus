@@ -3910,3 +3910,20 @@ msgstr ""
 
 msgid "this radio has no settings"
 msgstr "αυτός ο πομποδέκτης δεν έχει ρυθμίσεις"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "το \"@\" χρειάζεται όνομα καναλιού"
+
+msgid "this setting has several values"
+msgstr "αυτή η ρύθμιση έχει πολλές τιμές"
+
+msgid "%i settings were not changed"
+msgstr "%i ρυθμίσεις δεν άλλαξαν"
+
+msgid "These will be skipped:"
+msgstr "Θα παραλειφθούν:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr ""
+"%(memories)i κανάλια και %(settings)i ρυθμίσεις θα αλλάξουν στην εικόνα."

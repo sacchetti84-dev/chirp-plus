@@ -4736,3 +4736,19 @@ msgstr "%s: \"memories\" bir {\"names\": metin, \"extra\": {...}} listesi olmal�
 
 msgid "this radio has no settings"
 msgstr "bu telsizin ayarı yok"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" bir kanal adı gerektirir"
+
+msgid "this setting has several values"
+msgstr "bu ayarın birden çok değeri var"
+
+msgid "%i settings were not changed"
+msgstr "%i ayar değiştirilmedi"
+
+msgid "These will be skipped:"
+msgstr "Bunlar atlanacak:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "Görüntüde %(memories)i kanal ve %(settings)i ayar değişecek."

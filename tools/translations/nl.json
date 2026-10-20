@@ -233,5 +233,10 @@
  "Profile %s": "Profiel %s",
  "%s: \"radios\" must be a list of names": "%s: \"radios\" moet een lijst met namen zijn",
  "%s: \"memories\" must be a list of {\"names\": text, \"extra\": {...}}": "%s: \"memories\" moet een lijst van {\"names\": tekst, \"extra\": {...}} zijn",
- "this radio has no settings": "deze radio heeft geen instellingen"
+ "this radio has no settings": "deze radio heeft geen instellingen",
+ "\"@\" needs the name of a channel": "\"@\" heeft de naam van een kanaal nodig",
+ "this setting has several values": "deze instelling heeft meerdere waarden",
+ "%i settings were not changed": "%i instellingen zijn niet gewijzigd",
+ "These will be skipped:": "Deze worden overgeslagen:",
+ "%(memories)i channels and %(settings)i settings will change in the image.": "%(memories)i kanalen en %(settings)i instellingen veranderen in het image."
 }

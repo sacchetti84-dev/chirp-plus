@@ -4810,3 +4810,19 @@ msgstr "%s: \"memories\" должен быть списком {\"names\": тек
 
 msgid "this radio has no settings"
 msgstr "у этой рации нет настроек"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "после \"@\" нужно имя канала"
+
+msgid "this setting has several values"
+msgstr "у этой настройки несколько значений"
+
+msgid "%i settings were not changed"
+msgstr "Не изменено настроек: %i"
+
+msgid "These will be skipped:"
+msgstr "Будут пропущены:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "В образе изменится каналов: %(memories)i, настроек: %(settings)i."

@@ -29,11 +29,13 @@ import dataclasses
 import fnmatch
 import glob
 import json
+import logging
 import os
 
 from chirp import radio_compare
 from chirp import settings
 
+LOG = logging.getLogger(__name__)
 PROFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             'settings_profiles')
 
@@ -81,9 +83,16 @@ def load(path):
 
 
 def shipped_profiles():
-    """The profiles that come with CHIRP Plus, sorted by name"""
-    profiles = [load(path) for path in
-                glob.glob(os.path.join(PROFILES_DIR, '*.json'))]
+    """The profiles that come with CHIRP Plus, sorted by name.
+
+    A broken file is logged and left out, the others are still offered.
+    """
+    profiles = []
+    for path in glob.glob(os.path.join(PROFILES_DIR, '*.json')):
+        try:
+            profiles.append(load(path))
+        except ProfileError as e:
+            LOG.error('Skipping shipped profile: %s', e)
     return sorted(profiles, key=lambda p: p.name)
 
 
@@ -137,6 +146,8 @@ def _convert(value_obj, wanted, mems):
         if not isinstance(value_obj, settings.RadioSettingValueInteger):
             raise ValueError(_('"@" names a channel, only for numbers'))
         name = _clean_name(wanted[1:])
+        if not name:
+            raise ValueError(_('"@" needs the name of a channel'))
         for mem in mems:
             if _clean_name(mem.name) == name:
                 return mem.number
@@ -158,6 +169,9 @@ def _set(setting, wanted, mems):
     old = setting.value.get_value()
     if old == new:
         return False
+    if (isinstance(setting.value, settings.RadioSettingValueString)
+            and old.rstrip() == new.rstrip()):
+        return False                # the radio pads text with spaces
     try:
         setting.value.set_value(new)
     except settings.InvalidValueError as e:
@@ -180,6 +194,9 @@ def plan(profile, radio):
             problems.append((key, _('this radio has no such setting')))
             continue
         setting = index[name]
+        if len(setting) != 1:
+            problems.append((key, _('this setting has several values')))
+            continue
         before = str(setting.value)
         try:
             is_changed = _set(setting, wanted, mems)

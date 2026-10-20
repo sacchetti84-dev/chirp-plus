@@ -3937,3 +3937,19 @@ msgstr "%s: \"memories\" трябва да е списък от {\"names\": те
 
 msgid "this radio has no settings"
 msgstr "това радио няма настройки"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" изисква име на канал"
+
+msgid "this setting has several values"
+msgstr "тази настройка има няколко стойности"
+
+msgid "%i settings were not changed"
+msgstr "%i настройки не бяха променени"
+
+msgid "These will be skipped:"
+msgstr "Ще бъдат пропуснати:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "%(memories)i канала и %(settings)i настройки ще се променят в образа."

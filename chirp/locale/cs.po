@@ -4428,3 +4428,19 @@ msgstr "%s: \"memories\" musí být seznam {\"names\": text, \"extra\": {...}}"
 
 msgid "this radio has no settings"
 msgstr "tato radiostanice nemá nastavení"
+
+msgid "\"@\" needs the name of a channel"
+msgstr "\"@\" potřebuje název kanálu"
+
+msgid "this setting has several values"
+msgstr "toto nastavení má více hodnot"
+
+msgid "%i settings were not changed"
+msgstr "%i nastavení nebylo změněno"
+
+msgid "These will be skipped:"
+msgstr "Tyto budou přeskočeny:"
+
+msgid ""
+"%(memories)i channels and %(settings)i settings will change in the image."
+msgstr "V obrazu se změní %(memories)i kanálů a %(settings)i nastavení."

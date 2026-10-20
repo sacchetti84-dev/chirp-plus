@@ -346,3 +346,49 @@ def test_uv9r_profile(uv9r_sierra):
 def test_shipped_profiles_one_per_radio():
     names = [p.name for p in settings_profile.shipped_profiles()]
     assert names == [TEAM, TEAM_9R]
+
+
+def test_text_settings_are_idempotent(uv9r_sierra):
+    # Text settings come back padded to their length: same text, no change
+    p = profile({'poweron_msg.line1': 'SIERRA'})
+    settings_profile.apply(settings_profile.plan(p, uv9r_sierra),
+                           uv9r_sierra)
+    assert values(uv9r_sierra)['poweron_msg.line1'].rstrip() == 'SIERRA'
+    assert settings_profile.plan(p, uv9r_sierra).changes == []
+
+
+@pytest.mark.parametrize('wanted', ['@', '@   '])
+def test_empty_at_name_is_a_problem(sierra_radio, wanted):
+    # A channel without a name must not be what '@' points to
+    mem = sierra_radio.get_memory(0)
+    mem.number, mem.name = 100, ''
+    sierra_radio.set_memory(mem)
+    plan = settings_profile.plan(profile({'wmchannel.mrcha': wanted}),
+                                 sierra_radio)
+    assert [p[0] for p in plan.problems] == ['wmchannel.mrcha']
+    assert plan.changes == []
+
+
+def test_multi_valued_setting_is_a_problem(sierra_radio, monkeypatch):
+    group = settings.RadioSettingGroup('top', 'Top')
+    group.append(settings.RadioSetting(
+        'pair', 'Pair', settings.RadioSettingValueInteger(0, 9, 1),
+        settings.RadioSettingValueInteger(0, 9, 2)))
+    group.append(settings.RadioSetting(
+        'one', 'One', settings.RadioSettingValueInteger(0, 9, 1)))
+    root = settings.RadioSettings(group)
+    monkeypatch.setattr(sierra_radio, 'get_settings', lambda: root)
+    # A text value used to reach set_value() on the list of values
+    plan = settings_profile.plan(profile({'pair': '3', 'one': 4}),
+                                 sierra_radio)
+    assert [p[0] for p in plan.problems] == ['pair']
+    assert [c.where for c in plan.changes if c.what == 'setting'] == ['One']
+
+
+def test_broken_file_does_not_hide_the_other_profiles(tmp_path,
+                                                      monkeypatch):
+    (tmp_path / 'good.json').write_text(
+        json.dumps({'name': 'Good', 'settings': {}}), encoding='utf-8')
+    (tmp_path / 'broken.json').write_text('{', encoding='utf-8')
+    monkeypatch.setattr(settings_profile, 'PROFILES_DIR', str(tmp_path))
+    assert [p.name for p in settings_profile.shipped_profiles()] == ['Good']
