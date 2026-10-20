@@ -8,8 +8,9 @@ from tests.unit import base  # noqa
 
 
 class Col:
-    def __init__(self, name):
+    def __init__(self, name, label):
         self.name = name
+        self.label = label
 
 
 class FakeEditor:
@@ -21,9 +22,9 @@ class FakeEditor:
             mem = chirp_common.Memory(row)
             mem.freq = 145000000
             self.memories[row] = mem
-        self.columns = [Col(n) for n in
-                        ('name', 'rtone', 'freq', 'comment', 'WARN',
-                         'duplex')]
+        self.columns = [Col(n, label) for n, label in (
+            ('name', 'Name'), ('rtone', 'Tone'), ('freq', 'Frequency'),
+            ('comment', 'Comment'), ('WARN', 'Warn'), ('duplex', 'Duplex'))]
         self.calls = []
 
     def memory_for_row(self, row):
@@ -91,8 +92,8 @@ def test_rejected_cell_is_reported_others_applied():
         cellops.CellEdit(1, 3, 'note'),
         cellops.CellEdit(2, 0, 'BAD'),
     ])
-    assert result.problems == [('1 name', 'bad value'),
-                               ('2 name', 'bad value')]
+    assert result.problems == [('1 Name', 'bad value'),
+                               ('2 Name', 'bad value')]
     assert [m.number for m in result.changed] == [1]
     assert result.changed[0].comment == 'note'
     assert result.changed[0].name == ''
@@ -198,8 +199,8 @@ def test_immutable_field_is_rejected():
         cellops.CellEdit(1, 3, 'ok'),
     ])
     assert result.problems == [
-        ('1 name', 'name cannot be changed on this memory'),
-        ('1 name', 'name cannot be changed on this memory')]
+        ('1 Name', 'Name cannot be changed on this memory'),
+        ('1 Name', 'Name cannot be changed on this memory')]
     assert editor.calls == [(1, 'comment', 'ok')]
     assert result.changed[0].comment == 'ok'
 
@@ -219,7 +220,7 @@ def test_extd_number_labels_the_problem():
     editor = FakeEditor()
     editor.memories[1].extd_number = 'VFO-A'
     result = cellops.apply_edits(editor, [cellops.CellEdit(1, 0, 'BAD')])
-    assert result.problems == [('VFO-A name', 'bad value')]
+    assert result.problems == [('VFO-A Name', 'bad value')]
 
 
 def test_row_with_only_rejected_edits_is_left_alone():
@@ -230,7 +231,7 @@ def test_row_with_only_rejected_edits_is_left_alone():
         cellops.CellEdit(2, 2, None),
     ])
     assert result.changed == []
-    assert [p[0] for p in result.problems] == ['2 freq', '2 name']
+    assert [p[0] for p in result.problems] == ['2 Frequency', '2 Name']
 
 
 def test_rejected_cell_leaves_no_partial_change():
@@ -239,7 +240,7 @@ def test_rejected_cell_leaves_no_partial_change():
         cellops.CellEdit(1, 0, 'HALF'),
         cellops.CellEdit(1, 3, 'note'),
     ])
-    assert result.problems == [('1 name', 'half done')]
+    assert result.problems == [('1 Name', 'half done')]
     mem, = result.changed
     assert mem.comment == 'note'
     assert mem.tmode == ''
@@ -257,6 +258,32 @@ def test_clearing_duplex_with_immutable_offset_changes_nothing():
         cellops.CellEdit(1, 5, None),
         cellops.CellEdit(1, 3, 'note'),
     ])
-    assert [p[0] for p in result.problems] == ['1 duplex']
+    assert [p[0] for p in result.problems] == ['1 Duplex']
     mem, = result.changed
     assert (mem.duplex, mem.offset, mem.comment) == ('-', 600000, 'note')
+
+
+def test_problems_name_columns_by_their_titles():
+    # Users see the column titles, never the internal field names
+    editor = FakeEditor(rows=(1,))
+    editor.columns[1].label = 'Tone\nSquelch'
+    editor.memories[1].immutable = ['comment']
+    result = cellops.apply_edits(editor, [
+        cellops.CellEdit(1, 2, None),
+        cellops.CellEdit(1, 1, 'BAD'),
+        cellops.CellEdit(1, 3, 'x'),
+    ])
+    assert result.problems == [
+        ('1 Frequency', 'Frequency has no empty value'),
+        ('1 Tone Squelch', 'bad value'),
+        ('1 Comment', 'Comment cannot be changed on this memory')]
+    missing = cellops.apply_edits(FakeEditor(rows=()),
+                                  [cellops.CellEdit(7, 0, 'A')])
+    assert missing.problems[0][0] == '7 Name'
+
+
+def test_column_title():
+    assert cellops.column_title(Col('ctone', 'Tone\nSquelch')) == \
+        'Tone Squelch'
+    assert cellops.column_title(Col('offset', 'Offset/\nTX Freq')) == \
+        'Offset/TX Freq'

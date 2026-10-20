@@ -277,6 +277,56 @@ def test_power_levels_by_label_and_decimal_comma(memedit):
                                  interactive=False)
 
 
+def test_choice_columns_take_numbers_as_excel_writes_them(memedit):
+    step = memedit._col_def_by_name('tuning_step')
+    for text, value in (('5', 5.0), ('25', 25.0), ('12,5', 12.5),
+                        ('6.25', 6.25), ('5.0', 5.0)):
+        out = memedit.apply_cell_value(memedit.memory_for_row(1), step,
+                                       text, interactive=False)
+        assert out.tuning_step == value, text
+    for text in ('7', 'abc'):
+        with pytest.raises(cellops.CellRejected) as e:
+            memedit.apply_cell_value(memedit.memory_for_row(1), step, text,
+                                     interactive=False)
+        assert str(e.value) == 'Invalid value for Tuning Step: %r' % text
+
+
+def test_bad_values_are_explained_not_raw_python(memedit):
+    for name, title in (('rtone', 'Tone'), ('dtcs', 'DTCS'),
+                        ('mode', 'Mode')):
+        with pytest.raises(cellops.CellRejected) as e:
+            memedit.apply_cell_value(memedit.memory_for_row(1),
+                                     memedit._col_def_by_name(name), 'abc',
+                                     interactive=False)
+        assert str(e.value) == "Invalid value for %s: 'abc'" % title
+
+
+def test_flag_extra_rejects_unknown_text(memedit):
+    mem = memedit.memory_for_row(1)
+    col = memedit_mod.get_column_for_extra(memedit._radio, mem.extra['bcl'])
+    assert isinstance(col, memedit_mod.ChirpFlagColumn)
+    out = memedit.apply_cell_value(mem, col, 'Enabled', interactive=False)
+    assert bool(out.extra['bcl'].value) is True
+    for text in ('Yes', 'enabled', ''):
+        with pytest.raises(cellops.CellRejected) as e:
+            memedit.apply_cell_value(memedit.memory_for_row(1), col, text,
+                                     interactive=False)
+        assert str(e.value).startswith('Invalid value for ')
+    assert bool(memedit.memory_for_row(1).extra['bcl'].value) is True
+    out = memedit.apply_cell_value(mem, col, 'Disabled', interactive=False)
+    assert bool(out.extra['bcl'].value) is False
+
+
+def test_variable_power_takes_decimal_comma_in_watts(memedit):
+    # The power column of CSV tabs: any watts
+    col = memedit_mod.ChirpVariablePowerColumn('power', memedit._radio)
+    for text in ('4,5W', '4,5 W', '4.5W'):
+        out = memedit.apply_cell_value(memedit.memory_for_row(1), col, text,
+                                       interactive=False)
+        assert float(out.power) == pytest.approx(
+            chirp_common.watts_to_dBm(4.5), abs=0.1), text
+
+
 def test_tone_column_sets_tmode(memedit):
     out = memedit.apply_cell_value(memedit.memory_for_row(1),
                                    memedit._col_def_by_name('rtone'), '100.0',
@@ -330,9 +380,9 @@ def test_settings_error_in_a_cell_does_not_stop_bulk_edit(memedit,
     assert [m.number for m in result.changed] == [1, 2]
     assert memedit._radio.get_memory(1).name == 'A'
     assert memedit._radio.get_memory(2).name == 'OK'
-    assert result.problems == [('1 name', 'Not for this radio')]
+    assert result.problems == [('1 Name', 'Not for this radio')]
     caption, message, extended = dialogs.shown[0]
-    assert extended == '[1 name]: Not for this radio'
+    assert extended == '[1 Name]: Not for this radio'
 
 
 def test_cell_commands_show_unexpected_errors(memedit, monkeypatch):
@@ -362,7 +412,7 @@ def test_protocol_for_cellops(memedit):
     # Row 1 is dropped: memory 1 of the image fails validation
     assert [m.number for m in result.changed] == [0]
     assert result.changed[0].name == memedit._radio.filter_name('Abc')
-    assert [p[0] for p in result.problems] == ['1', '999 name']
+    assert [p[0] for p in result.problems] == ['1', '999 Name']
 
 
 def test_validate(memedit):
@@ -1088,7 +1138,8 @@ def test_clear_cells(memedit, monkeypatch):
     _select(memedit, 1, 2, 'freq')
     result = memedit.clear_cells()
     assert not result.changed
-    assert [p[1] for p in result.problems] == ['freq has no empty value'] * 2
+    assert ([p[1] for p in result.problems] ==
+            ['Frequency has no empty value'] * 2)
     assert memedit._radio.get_memory(1).freq == 145525000
     assert len(dialogs.shown) == 1
     memedit._undo(None)

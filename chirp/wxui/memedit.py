@@ -309,7 +309,7 @@ class ChirpMemoryColumn(object):
             except (AttributeError, KeyError):
                 LOG.warning('Memory %s does not have field %s',
                             memory, self._name)
-                raise ValueError(
+                raise errors.InvalidValueError(
                     _('Unable to set %s on this memory') % self._name)
         else:
             self._set_mem_value(memory,
@@ -464,7 +464,8 @@ class ChirpVariablePowerColumn(ChirpMemoryColumn):
         return _('Power')
 
     def _digest_value(self, memory, value):
-        return chirp_common.parse_power(value)
+        # Watts with a decimal comma too, as Excel writes them: '4,5W'
+        return chirp_common.parse_power(value.strip().replace(',', '.'))
 
     @staticmethod
     def get_sortable_value(value):
@@ -506,8 +507,22 @@ class ChirpChoiceColumn(ChirpMemoryColumn):
         self._str_choices = [str(x) for x in choices]
 
     def _digest_value(self, memory, input_value):
-        idx = self._str_choices.index(input_value)
+        try:
+            idx = self._str_choices.index(input_value)
+        except ValueError:
+            # Numbers as a spreadsheet writes them: '5' for 5.0
+            idx = self._number_index(input_value)
         return self._choices[idx]
+
+    def _number_index(self, input_value):
+        number = grid_fill.to_number(str(input_value))
+        if number is not None:
+            for idx, choice in enumerate(self._str_choices):
+                value = grid_fill.to_number(choice)
+                if value is not None and abs(value - number) < 1e-9:
+                    return idx
+        raise ValueError(_('Invalid value for %s: %r') % (
+            cellops.column_title(self), input_value))
 
     def get_editor(self):
         return ChirpChoiceEditor(self._str_choices)
@@ -642,6 +657,9 @@ class ChirpFlagColumn(ChirpChoiceColumn):
 
     def _digest_value(self, memory, input_value):
         # Convert one of our string choices back to boolean
+        if input_value not in self._choices:
+            raise ValueError(_('Invalid value for %s: %r') % (
+                cellops.column_title(self), input_value))
         return input_value == self._choices[1]
 
 
@@ -2135,7 +2153,8 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
                 float(chirp_common.parse_power(text.replace(',', '.'))))
         except ValueError:
             raise cellops.CellRejected(
-                _('Invalid value for %s: %r') % (col_def.name, text))
+                _('Invalid value for %s: %r') % (
+                    cellops.column_title(col_def), text))
         mem.power = import_logic.find_closest_power(watts, levels)
 
     def apply_cell_value(self, mem, col_def, text, interactive=True):
@@ -2182,6 +2201,12 @@ class ChirpMemEdit(common.ChirpEditor, common.ChirpSyncEditor):
             # settings.InvalidValueError: from the memory's extra fields
             if interactive:
                 raise
+            if type(e) is ValueError:
+                # Python's own text ('list.index(x): x not in list') would
+                # mean nothing to the user
+                raise cellops.CellRejected(
+                    _('Invalid value for %s: %r') % (
+                        cellops.column_title(col_def), text))
             raise cellops.CellRejected(str(e))
 
         # If they edited the frequency, we assume that they are likely going

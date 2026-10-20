@@ -19,7 +19,7 @@ No wx here, so it can be tested without a GUI. The memory editor is
 reached through a small duck-typed protocol:
 
     memory_for_row(row) -> Memory   a copy; KeyError if there is none
-    column(col) -> col_def          with a .name
+    column(col) -> col_def          with a .name and a .label
     apply_cell_value(mem, col_def, text, interactive=False) -> Memory
                                     raises CellRejected
     validate(mem) -> (warnings, errors)
@@ -56,10 +56,22 @@ class BulkResult:
     problems: list[tuple[str, str]]
 
 
-def clear_cell(mem, name):
-    """Give the field `name` of `mem` its empty value."""
+def column_title(col_def):
+    """The title of a column on one line, as the user sees it.
+
+    Two-word titles are written on two lines in the grid header.
+    """
+    return col_def.label.replace('/\n', '/').replace('\n', ' ')
+
+
+def clear_cell(mem, name, title=None):
+    """Give the field `name` of `mem` its empty value.
+
+    `title` names the column in the messages (the field name if None).
+    """
+    title = title or name
     if name in NO_EMPTY:
-        raise CellRejected(_('%s has no empty value') % name)
+        raise CellRejected(_('%s has no empty value') % title)
     fresh = chirp_common.Memory()
     try:
         if name in _TEXT_FIELDS:
@@ -70,7 +82,7 @@ def clear_cell(mem, name):
         elif name in _DEFAULT_FIELDS:
             setattr(mem, name, getattr(fresh, name))
         else:
-            raise CellRejected(_('%s has no empty value') % name)
+            raise CellRejected(_('%s has no empty value') % title)
     except chirp_common.ImmutableValueError as e:
         raise CellRejected(str(e))
 
@@ -90,9 +102,10 @@ def _apply_one(editor, mem, col_def, text):
     """Apply a single edit and return the resulting memory."""
     name = col_def.name
     if name in mem.immutable:
-        raise CellRejected(_('%s cannot be changed on this memory') % name)
+        raise CellRejected(_('%s cannot be changed on this memory') %
+                           column_title(col_def))
     if text is None:
-        clear_cell(mem, name)
+        clear_cell(mem, name, column_title(col_def))
         return mem
     if name in NUMERIC_COLUMNS and grid_fill.to_number(text) is not None:
         text = text.strip().replace(',', '.')
@@ -105,8 +118,8 @@ def apply_edits(editor, edits):
     Edits are grouped by row, rows in the order they first appear; in
     each row the frequency goes first, then the other columns in grid
     order. A rejected cell is reported, changes nothing, and the others
-    go on; a row where
-    no edit applied is left out and not validated. If the resulting
+    go on; a row where no edit applied is left out and not validated.
+    Problems name the cells by memory and column title. If the resulting
     memory has validation errors the whole row is dropped; warnings are
     reported and the memory is kept.
     """
@@ -118,7 +131,7 @@ def apply_edits(editor, edits):
         except KeyError:
             for edit in row_edits:
                 problems.append(
-                    ('%s %s' % (row, editor.column(edit.col).name),
+                    ('%s %s' % (row, column_title(editor.column(edit.col))),
                      _('Unable to edit memory before radio is loaded')))
             continue
 
@@ -134,7 +147,8 @@ def apply_edits(editor, edits):
                 mem = _apply_one(editor, mem.dupe(), col_def, edit.text)
                 applied = True
             except CellRejected as e:
-                problems.append(('%s %s' % (label, col_def.name), str(e)))
+                problems.append(
+                    ('%s %s' % (label, column_title(col_def)), str(e)))
 
         if not applied:
             continue
