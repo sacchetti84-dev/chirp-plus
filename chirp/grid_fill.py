@@ -66,6 +66,14 @@ def _padding(digit_strings):
     return 0
 
 
+def _zero_padded(values):
+    """True for digits only with some zero padding ('001', '002'):
+    names to step with their padding, not numbers."""
+    values = [v.strip() for v in values]
+    return (all(v.isdigit() for v in values) and
+            bool(_padding(values)))
+
+
 def _numbers(start, step, count, decimals):
     return [_format(start + step * i, decimals) for i in range(count)]
 
@@ -86,7 +94,8 @@ def continue_series(values, count):
     """Return the `count` items that continue the series in `values`.
 
     Numbers continue with their constant difference, numbered names
-    ('CH08', 'CH09') with their constant step and zero padding. A single
+    ('CH08', 'CH09', also '001', '002') with their constant step and
+    zero padding. A single
     value, or anything else, is repeated cyclically.
     """
     if count <= 0 or not values:
@@ -95,7 +104,7 @@ def continue_series(values, count):
         return _cycle(values, count)
 
     numbers = [to_number(v) for v in values]
-    if None not in numbers:
+    if None not in numbers and not _zero_padded(values):
         diffs = [y - x for x, y in zip(numbers, numbers[1:])]
         if all(abs(d - diffs[0]) < _EPSILON for d in diffs):
             decimals = max(_decimals(v) for v in values)
@@ -124,7 +133,8 @@ def make_series(start, step, count):
         return []
     number = to_number(start)
     increment = to_number(step)
-    if number is not None and increment is not None:
+    if (number is not None and increment is not None and
+            not _zero_padded([start])):
         decimals = max(_decimals(start), _decimals(step))
         return _numbers(number, increment, count, decimals)
 

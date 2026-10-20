@@ -20,6 +20,15 @@ def test_numbered_names_keep_zero_padding():
     assert gf.continue_series(['RU0', 'RU1'], 2) == ['RU2', 'RU3']
 
 
+def test_zero_padded_digit_names_keep_padding():
+    assert gf.continue_series(['001', '002'], 2) == ['003', '004']
+    assert gf.continue_series(['09', '10'], 2) == ['11', '12']
+    assert gf.make_series('001', '1', 3) == ['001', '002', '003']
+    # Without a leading zero they are numbers
+    assert gf.continue_series(['1', '2'], 2) == ['3', '4']
+    assert gf.make_series('1', '0.5', 3) == ['1.0', '1.5', '2.0']
+
+
 def test_uneven_values_repeat_cyclically():
     assert gf.continue_series(['FM', 'NFM'], 3) == ['FM', 'NFM', 'FM']
 
