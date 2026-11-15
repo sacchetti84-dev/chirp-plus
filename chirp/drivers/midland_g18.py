@@ -269,6 +269,10 @@ class MidlandG18(chirp_common.CloneModeRadio):
     MODEL = 'G18'
     BAUD_RATE = 9600
     _memsize = MEMSIZE
+    # Plain handshake for CHIRP Plus radio detection (chirp/radio_detect)
+    _DETECT_MAGIC = b'BONLINE'
+    _DETECT_REPLY = IDENT
+    _DETECT_END = b'E'
 
     @classmethod
     def get_prompts(cls):

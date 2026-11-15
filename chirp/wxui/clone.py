@@ -1212,7 +1212,7 @@ class ChirpDownloadDialog(ChirpCloneDialog):
         self._persist_choices()
         rclass = self.get_selected_rclass()
         elapsed = time.monotonic() - answered_at
-        if pipe and elapsed < DETECT_REUSE_SECONDS:
+        if pipe and result.probe.reusable and elapsed < DETECT_REUSE_SECONDS:
             self._begin_download(rclass, pipe, ident=result.ident)
             return
         if pipe:

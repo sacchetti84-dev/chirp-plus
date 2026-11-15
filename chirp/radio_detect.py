@@ -20,6 +20,11 @@ an ident block (0xAA ... 0xDD). This module tries the magic strings known by
 the drivers, one at a time, exactly like the start of a download: it never
 reads or writes memory. Several models share a magic (and a memory layout),
 so the result is a list of compatible models, not always a single one.
+
+Other drivers can take part by declaring a plain text handshake:
+_DETECT_MAGIC (sent at once), _DETECT_REPLY (the start of the answer) and
+_DETECT_END (sent afterwards to leave program mode). Those probes go after
+the Baofeng ones, and their session is never reused for the download.
 """
 
 import collections
@@ -40,6 +45,13 @@ MAX_IDENT = 16
 class Probe:
     magic: bytes
     classes: list   # radio classes that use this magic
+    reply: bytes = None   # plain handshake: expected start of the answer
+    end: bytes = b''      # plain handshake: sent after the answer
+
+    @property
+    def reusable(self):
+        """Can the download continue the detection session?"""
+        return self.reply is None
 
     @property
     def label(self):
@@ -62,8 +74,11 @@ def model_name(rclass):
 
 
 def _magics(rclass):
-    """Magic strings a driver sends, for the Baofeng style families"""
+    """Magic strings a driver sends to start a clone"""
     from chirp.drivers import baofeng_common, uv5r
+    plain = getattr(rclass, '_DETECT_MAGIC', None)
+    if plain:
+        return [plain]
     if issubclass(rclass, baofeng_common.BaofengCommonHT):
         return list(getattr(rclass, '_magic', []) or [])
     if issubclass(rclass, uv5r.BaofengUV5R):
@@ -84,7 +99,12 @@ def build_probes(preferred=None):
             by_magic.setdefault(magic, [])
             if rclass not in by_magic[magic]:
                 by_magic[magic].append(rclass)
-    probes = [Probe(magic, classes) for magic, classes in by_magic.items()]
+    probes = [Probe(magic, classes,
+                    getattr(classes[0], '_DETECT_REPLY', None),
+                    getattr(classes[0], '_DETECT_END', b''))
+              for magic, classes in by_magic.items()]
+    # Plain handshakes last: Baofeng radios answer before ever seeing them
+    probes.sort(key=lambda p: not p.reusable)
     if preferred is not None:
         first = _magics(preferred)
         probes.sort(key=lambda p: (p.magic not in first,
@@ -128,6 +148,24 @@ def handshake(pipe, magic, timeout=1.0):
     pipe.write(ACK)
     pipe.read(1)
     return ident
+
+
+def plain_handshake(pipe, probe, timeout=1.0):
+    """Send a plain text handshake; return the answer or None"""
+    pipe.timeout = timeout
+    try:
+        pipe.reset_input_buffer()
+    except Exception:
+        pass
+    pipe.write(probe.magic)
+    answer = pipe.read(len(probe.reply) + 1)
+    if not answer.startswith(probe.reply):
+        if answer:
+            LOG.debug('Bad answer to %r: %s', probe.magic, answer.hex())
+        return None
+    if probe.end:
+        pipe.write(probe.end)
+    return answer
 
 
 def _driver_ident(rclass, ident):
@@ -189,7 +227,10 @@ def identify(pipe, probes, status=None, cancelled=None, pause=0.3):
         if status:
             status(i, len(probes), probe)
         try:
-            ident = handshake(pipe, probe.magic)
+            if probe.reusable:
+                ident = handshake(pipe, probe.magic)
+            else:
+                ident = plain_handshake(pipe, probe)
         except Exception as e:
             LOG.warning('Handshake with %s failed: %s', probe.magic.hex(), e)
             ident = None

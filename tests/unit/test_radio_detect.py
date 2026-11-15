@@ -113,3 +113,57 @@ class TestDetect(unittest.TestCase):
         radio.write.side_effect = OSError('cable unplugged')
         probes = radio_detect.build_probes()[:2]
         self.assertIsNone(radio_detect.identify(radio, probes, pause=0))
+
+
+class FakeG18:
+    """Midland G18: answers "BONLINE" with "PX-5282" + FF, nothing else"""
+    def __init__(self):
+        self.timeout = 1
+        self.written = b''
+        self._rx = b''
+
+    def reset_input_buffer(self):
+        self._rx = b''
+
+    def write(self, data):
+        self.written += data
+        if data == b'BONLINE':
+            self._rx += b'PX-5282\xff'
+
+    def read(self, n):
+        data, self._rx = self._rx[:n], self._rx[n:]
+        return data
+
+
+class TestDetectG18(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        directory.import_drivers()
+        cls.g18 = directory.get_radio('Midland_G18')
+
+    def test_g18_probe_comes_last(self):
+        probes = radio_detect.build_probes()
+        self.assertEqual(b'BONLINE', probes[-1].magic)
+        self.assertEqual([self.g18], probes[-1].classes)
+        self.assertFalse(probes[-1].reusable)
+        self.assertTrue(probes[0].reusable)
+
+    def test_g18_preferred_goes_first(self):
+        probes = radio_detect.build_probes(preferred=self.g18)
+        self.assertEqual(b'BONLINE', probes[0].magic)
+
+    def test_identify_g18_after_baofeng_magics(self):
+        radio = FakeG18()
+        result = radio_detect.identify(radio, radio_detect.build_probes(),
+                                       pause=0)
+        self.assertIsNotNone(result)
+        self.assertEqual([self.g18], result.classes)
+        self.assertEqual(b'PX-5282\xff', result.ident)
+        # handshake then 'E' to leave program mode: no read or write
+        self.assertTrue(radio.written.endswith(b'BONLINEE'))
+        self.assertNotIn(b'W', radio.written.replace(b'BONLINE', b''))
+
+    def test_baofeng_never_gets_g18_handshake_when_it_answers(self):
+        radio = FakeBaofeng()
+        radio_detect.identify(radio, radio_detect.build_probes(), pause=0)
+        self.assertNotIn(b'BONLINE', radio.written)
