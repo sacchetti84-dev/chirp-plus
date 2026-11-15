@@ -200,6 +200,19 @@ calcolo, con la validazione della radio e i colori del tema.
   colorato per funzione, con le zone che il driver non descrive (taratura).
 - **Import/export Excel** (`.xlsx` lettura/scrittura, `.xls` lettura).
 
+## Midland G18 (`chirp/drivers/midland_g18.py`)
+
+Driver nuovo per la Midland G18 (400-520 MHz, 256 canali), scritto
+osservando il software Midland "G18 v1.0.3": usa solo i comandi che manda
+quel software ("BONLINE", blocchi da 64 byte). Legge e scrive canali (nomi
+di 6 caratteri, toni, potenza, larghezza, BCL, PTT ID, scrambler, scansione)
+e le impostazioni delle finestre Midland (Optional Features, Optional Menus,
+tasti, radio FM, canale prioritario). Il blocco di taratura (0x1FC0) non
+viene mai scritto; i comandi DisStun (blocco a distanza) non sono mostrati e
+vengono sempre spenti al caricamento. Provato il 15/11/2026 su una G18 vera
+con cavo Prolific PL2303 (driver 3.2.0.0): lettura identica al software
+Midland, scrittura invariata e cambio dello squelch verificati rileggendo.
+
 ## Lingue
 Tutti i testi nuovi di CHIRP Plus (213 stringhe) sono tradotti nelle 17
 lingue di CHIRP più l'inglese di partenza, con la terminologia che ogni

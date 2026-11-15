@@ -257,6 +257,15 @@ On a real **UV-9R** with a CH340 cable on COM5:
 - import of every preset: frequencies, shifts, splits and tones stay
   intact.
 
+On a real **Midland G18** with a Prolific PL2303 cable (new driver,
+written from observations of the Midland software):
+
+- download identical byte for byte to the Midland software's own read;
+- upload of the unchanged image, then of a one-setting change (squelch):
+  reading back showed exactly that one byte changed;
+- the calibration block is never written and the remote-disable (stun)
+  flags are always cleared on upload.
+
 911 automated tests pass as well.
 
 ## Development
